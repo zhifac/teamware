@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="safe-common" default="all">
+  <import file="../lib/lib.xml" />
+
+  <property name="src.dir" location="src" />
+  <property name="build.dir" location="build" />
+  <property name="classes.dir" location="${build.dir}/classes" />
+  <property name="jar.location" location="${build.dir}/safe-common.jar" />
+
+  <path id="compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset refid="pattern.cxf" />
+      <patternset refid="pattern.commons-logging" />
+      <patternset refid="pattern.log4j" />
+      <patternset refid="pattern.commons-lang" />
+      <patternset refid="pattern.servletapi" />
+      <patternset refid="pattern.spring" />
+    </fileset>
+  </path>
+
+  <!-- Prepare for building - make necessary directories -->
+  <target name="prepare">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${classes.dir}" />
+  </target>
+
+  <!-- compile the common classes -->
+  <target name="compile" depends="prepare">
+    <javac srcdir="${src.dir}" destdir="${classes.dir}"
+           debug="true" debuglevel="lines,source" source="1.5" target="1.5"
+           encoding="UTF-8" classpathref="compile.classpath"/>
+  </target>
+
+  <!-- copy resoruces (non-.java files) from src to classes -->
+  <target name="copy.resources" depends="prepare">
+    <copy todir="${classes.dir}">
+      <fileset dir="${src.dir}" excludes="**/*.java" />
+    </copy>
+  </target>
+
+  <!-- build JAR file -->
+  <target name="jar" depends="compile, copy.resources">
+    <jar destfile="${jar.location}">
+      <fileset dir="${classes.dir}" />
+    </jar>
+  </target>
+
+  <!-- delete generated classes -->
+  <target name="clean.classes" >
+    <delete dir="${classes.dir}" />
+  </target>
+
+  <target name="clean" depends="clean.classes">
+    <delete file="${jar.location}" />
+  </target>
+
+  <target name="all" depends="jar" />
+
+  <target name="publish" depends="all">
+    <copy todir="${safe-common.dir}" file="${jar.location}" />
+  </target>
+</project>
+

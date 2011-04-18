@@ -1,0 +1,10 @@
+Dear ${userName},
+
+In the project '${processName}', new task '${taskName}' is assigned to you.
+
+Please login at: ${link}
+
+and check your pending task.
+
+Best regards,
+GATE Teamware Support

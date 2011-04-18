@@ -1,0 +1,252 @@
+<project name="annotation-diff-gui" default="all" basedir=".">
+  <import file="../lib/lib.xml" />
+  <import file="../common.xml" />
+  <!-- import ant-contrib tasks -->
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.ant-contrib" />
+      </fileset>
+    </classpath>
+  </taskdef>
+
+  <property file="../${instance.name}-build.properties" />
+  <property file="../build.properties" />
+  <property file="${ant.project.name}-build.properties" />
+  <property file="build.properties" />
+  <property name="srcDir" value="src" />
+  <property name="outputDir" value="classes" />
+  <property name="jws-guis.dir" location="../jws-guis" />
+  <property name="distDir" location="${jws-guis.dir}/dist" />
+  <property name="buildDir" value="build" />
+  <property name="unsignedDir" location="${jws-guis.dir}/unsigned" />
+  <property name="keystore" location="${jws-guis.dir}/resources/keystore" />
+  <property name="storepass" value="storepass" />
+  <property name="keypass" value="keypass" />
+  <property name="alias" value="GATE" />
+
+  <property name="conf.dir" location="resources/conf" />
+  <property name="cxf.xml" location="${conf.dir}/cxf.xml" />
+
+  <property name="annotationdiffgui.jar.location" location="annotation-diff-gui.jar" />
+
+  <patternset id="build.required.libs">
+    <patternset refid="pattern.gate" />
+    <patternset refid="pattern.junit" />
+    <patternset refid="pattern.jdom" />
+    <patternset refid="pattern.javamail" />
+    <patternset refid="pattern.cxf" />
+    <patternset refid="pattern.servletapi" />
+    <patternset refid="pattern.commons-discovery" />
+    <patternset refid="pattern.commons-logging" />
+
+    <patternset refid="pattern.docservice-api" />
+    <patternset refid="pattern.docservice-proxy" />
+    <patternset refid="pattern.executive-proxy-api" />
+    <patternset refid="pattern.safe-common" />
+	<patternset refid="pattern.executive-proxy" />
+    </patternset>
+
+  <patternset id="run.required.libs">
+    <patternset refid="pattern.executive-proxy" />
+    <patternset refid="pattern.docservice-proxy" />
+  </patternset>
+
+  <!-- The CLASSPATH -->
+  <path id="build.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset refid="build.required.libs" />
+    </fileset>
+  </path>
+
+
+  <!-- ===  All Target ====================================== -->
+  <target name="all" depends="build.deployment" />
+
+  <!-- ===  Clean Target ==================================== -->
+  <!--
+  The "clean" target deletes any previous "build" and "dist" directory,
+  so that you can be ensured the application can be built from scratch.
+  -->
+  <target name="clean">
+    <delete dir="${distDir}" />
+    <delete dir="${buildDir}" />
+    <delete dir="${unsignedDir}" />
+    <delete dir="${outputDir}" />
+    <delete file="${annotationdiffgui.jar.location}" />
+  </target>
+
+  <!-- ===  Prepare Target ==================================== -->
+  <!-- create build directory structure -->
+  <target name="prepare">
+    <mkdir dir="${outputDir}" />
+    <mkdir dir="${buildDir}" />
+    <mkdir dir="${unsignedDir}" />
+    <mkdir dir="${distDir}" />
+  </target>
+
+  <!-- ===  Compile Target ================================== -->
+  <!--
+  The "compile" target transforms source files (from your "src" directory)
+  into object files in the appropriate location in the build directory.
+  This example assumes that you will be including your classes in an
+  unpacked directory hierarchy under "/WEB-INF/classes".
+  -->
+  <target name="compile" description="Compile Java sources" depends="prepare">
+    <require lib="docservice-api" />
+    <require lib="docservice-proxy" />
+    <require lib="safe-common" />
+    <require lib="executive-proxy-api" />
+
+    <!-- Compile Java classes as necessary -->
+    <javac srcdir="${srcDir}" destdir="${outputDir}"
+      debug="true"
+      source="1.5"
+      target="1.5"
+      debuglevel="lines,vars,source"
+      deprecation="on"
+      optimize="off"
+      encoding="UTF-8"
+      classpathref="build.classpath" />
+    <copy todir="${outputDir}">
+      <fileset dir="${srcDir}">
+        <include name="**/*.gif" />
+        <include name="**/*.png" />
+        <include name="**/*.ico" />
+        <include name="**/*.html" />
+        <exclude name="**/CVS,**/CVS/**,**/.cvsignore" />
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- Include the HTTPS trust settings in the jar file if a truststore has
+  been configured. -->
+  <target name="copy-https-truststore" if="https.truststore">
+    <copy todir="${outputDir}" file="${cxf.xml}">
+      <filterset>
+        <filter token="TRUSTSTORE_PASSWORD" value="${https.truststore.password}" />
+      </filterset>
+    </copy>
+    <copy tofile="${outputDir}/trusted-certs.keystore" file="${https.truststore}" />
+  </target>
+
+  <!-- Create application JAR file -->
+  <target name="jar" depends="compile, copy-https-truststore">
+    <jar destfile="${annotationdiffgui.jar.location}" update="false" index="true">
+      <fileset dir="${outputDir}/" />
+    </jar>
+    <signjar jar="${annotationdiffgui.jar.location}" alias="${alias}" keystore="${keystore}" storepass="${storepass}" keypass="${keypass}" />
+  </target>
+
+
+  <!-- ===  Javadoc Target ================================== -->
+  <!--
+  The "javadoc" target creates Javadoc API documentation for the Java
+  classes included in your application.  Normally, this is only required
+  when preparing a distribution release, but is available as a separate
+  target in case the developer wants to create Javadocs independently.
+  -->
+  <target name="javadoc" description="Create Javadoc API documentation">
+    <delete dir="${distDir}/javadoc" />
+    <javadoc access="private" destdir="${distDir}/javadoc"
+      classpathref="build.classpath"
+      Encoding="UTF-8"
+      Use="yes"
+      Windowtitle="Annotation Diff GUI Java API Documentation"
+      link="http://java.sun.com/j2se/1.4.2/docs/api/"
+      docencoding="UTF-8"
+      charset="UTF-8" source="1.5"
+      useexternalfile="yes" breakiterator="true">
+      <packageset dir="${srcDir}">
+        <include name="gleam/annotationdiffgui/**" />
+      </packageset>
+    </javadoc>
+  </target>
+
+  <!-- ===  Build files for deployment  ================================ -->
+  <target name="build.deployment" depends="jar">
+    <require lib="executive-proxy-impl" />
+    <!-- stage JAR files into build dir first -->
+    <mkdir dir="${unsignedDir}/app" />
+    <copy todir="${unsignedDir}/app" flatten="true">
+      <fileset dir="${lib.dir}">
+        <patternset refid="build.required.libs" />
+        <patternset refid="run.required.libs" />
+        <exclude name="**/servletapi*.jar"/>
+      </fileset>
+      <fileset file="${annotationdiffgui.jar.location}" />
+    </copy>
+
+    <mkdir dir="${distDir}/app" />
+
+    <!-- work out which JARs need re-signing -->
+    <outofdate outputsourcespath="unsigned.jars.src.path"
+               outputtargetspath="unsigned.jars.dest.path">
+      <sourcefiles>
+        <fileset dir="${unsignedDir}/app">
+          <include name="*.jar" />
+          <include name="*.zip" />
+          <exclude name="activation.jar" />
+          <exclude name="mail.jar" />
+        </fileset>
+      </sourcefiles>
+      <mapper type="glob" dir="${unsignedDir}/app"
+              from="*" to="${distDir}/app/*" />
+    </outofdate>
+
+    <!-- Determine just the base names of the out-of-date JAR files -->
+    <pathconvert property="unsigned.jar.names" pathsep=","
+                 refid="unsigned.jars.src.path">
+      <map from="${unsignedDir}/app/" to="" />
+    </pathconvert>
+
+    <!-- copy updated JARs into dist directory, removing any existing
+         signatures -->
+    <for param="jar" list="${unsigned.jar.names}">
+      <sequential>
+        <zip destfile="${distDir}/app/@{jar}" encoding="UTF-8">
+          <zipfileset src="${unsignedDir}/app/@{jar}" encoding="UTF-8">
+            <exclude name="META-INF/*.SF" />
+            <exclude name="META-INF/*.DSA" />
+            <exclude name="META-INF/*.RSA" />
+          </zipfileset>
+        </zip>
+      </sequential>
+    </for>
+
+    <copy todir="${distDir}/app">
+      <!-- activation and mail are already signed -->
+      <fileset dir="${unsignedDir}/app">
+        <include name="mail.jar" />
+        <include name="activation.jar" />
+      </fileset>
+    </copy>
+
+    <!-- and sign them -->
+    <pathtofileset name="unsigned.jars.dest" pathrefid="unsigned.jars.dest.path"
+                   dir="${distDir}/app" />
+    <signjar alias="${alias}" keystore="${keystore}" storepass="${storepass}" keypass="${keypass}">
+      <fileset refid="unsigned.jars.dest" />
+    </signjar>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- The "deploy" target deploys the web application by packaging it as  -->
+  <!-- a WAR and then unpackaging it into Tomcat's webapps directory       -->
+  <!-- =================================================================== -->
+  <target name="deploy"
+      description="Copy distribution into the deployment directory">
+    <echo message="${deploy.dir}/${webapp.name}"/>
+    <mkdir dir="${deploy.dir}/${webapp.name}/app" />
+    <copy todir="${deploy.dir}/${webapp.name}/app">
+      <fileset dir="${distDir}/app"/>
+    </copy>
+  </target>
+
+  <!-- =================================================================== -->
+	<!-- runs annotation diff gui tests                                               -->
+  <!-- =================================================================== -->
+	<target name="test-all" description="Default test target">
+	</target>
+
+</project>

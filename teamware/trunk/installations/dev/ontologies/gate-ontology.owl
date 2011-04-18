@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:protonkm="http://proton.semanticweb.org/2005/04/protonkm#"
+	xmlns:protont="http://proton.semanticweb.org/2005/04/protont#"
+	xmlns:protonu="http://proton.semanticweb.org/2005/04/protonu#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:protons="http://proton.semanticweb.org/2005/04/protons#"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+<!-- All statement -->
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#hasRunTimeParameter">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEResource"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">hasRunTimeParameter</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#ResourceParameter"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#int">
+	<rdf:type rdf:resource="http://gate.ac.uk/ns/gate-ontology#JavaType"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">int</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#ResearchPaper">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Publication"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">ResearchPaper</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#IR">
+	<rdf:type rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEDeveloper"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">IR</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Ian</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#componentHasURL">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEComponent"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">componentHasURL</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#parameterHasType">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#ResourceParameter"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">parameterHasType</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#JavaType"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#documentationHasUrl">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Documentation"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">documentationHasUrl</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#analyserWorksOnCorpus">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageAnalyser"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Corpus"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#hasEndNode">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Annotation"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Node"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#isMutuallyExclusiveWith">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#ResourceParameter"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">isMutuallyExclusiveWith</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#ResourceParameter"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#GATEApplication">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEArtefact"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">GATE application</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#grammarHasInputAnnotations">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#JAPEGrammar"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Annotation"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#parameterHasName">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#ResourceParameter"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Node">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEArtefact"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#GATEArtefact">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#annotationSetName">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#AnnotationSet"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#authorOfComponent">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEDeveloper"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">authorOfComponent</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEComponent"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#NA">
+	<rdf:type rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEDeveloper"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">NA</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Niraj</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Publication">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Documentation"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Publication</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#datastoreHasName">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#DataStore"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#prProducesAnnotations">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#ProcessingResource"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Annotation"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#GATEPlugin">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">GATE Plugin</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Plugin</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">CREOLE Plugin</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#containsResource">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEPlugin"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEResource"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#analyserWorksOnDocument">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageAnalyser"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Orthomatcher">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageAnalyser"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Orthomatcher</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#VT">
+	<rdf:type rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEDeveloper"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">VT</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Valentin</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#documentHasFormat">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Document"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#DocumentFormat"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#corpusHasDocuments">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Corpus"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Document"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#hasInitTimeParameter">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEResource"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">hasInitTimeParameter</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#ResourceParameter"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Feature">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEArtefact"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Features</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#JAPEGrammar">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEArtefact"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">JAPE grammar</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">grammar</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#transducerHasJapeGrammar">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#JAPETransducer"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#JAPEGrammar"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#NamedEntityRecogniser">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageAnalyser"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Named entity recogniser</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">NE recogniser</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#datastoreHasFeatures">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#DataStore"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Feature"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Tokeniser">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageAnalyser"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">tokeniser</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#AnnotationDiff">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEComponent"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">AnnotationDiff</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">annotation diff</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#LanguageAnalyser">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#ProcessingResource"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Language Analyser</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#AnnotationSet">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEArtefact"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">annotation set</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#boolean">
+	<rdf:type rdf:resource="http://gate.ac.uk/ns/gate-ontology#JavaType"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">boolean</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#applicationHasPRs">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEApplication"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#ProcessingResource"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#DD">
+	<rdf:type rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEDeveloper"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">DD</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Danica</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#ResourceParameter">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEArtefact"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">resource parameter</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">parameter</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#isImplementedBy">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEArtefact"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">isImplementedBy</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#JavaClass"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#DataStore">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEArtefact"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">DataStore</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">datastore</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#SentenceAnnotation">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Annotation"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">sentence annotation</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Document">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageResource"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Document</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#ProcessingResource">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEResource"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Processing Resource</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">PR</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#LanguageResource">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEResource"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">LR</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Language Resource</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Manual">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Publication"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Manual</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#HC">
+	<rdf:type rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEDeveloper"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">HC</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Hamish</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#hasOffset">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Node"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://www.w3.org/2001/XMLSchema#long"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#GATEComponent">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEArtefact"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#JAPETransducer">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageAnalyser"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">JAPE Transducer</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#OntologyLR">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageResource"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">OntologyLR</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Ontology</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#LookupAnnotation">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Annotation"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">lookup annotation</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#containsAnnotations">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#AnnotationSet"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Annotation"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#POSTagger">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageAnalyser"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">POS tagger</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">part-of-speech tagger</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#TokenAnnotation">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Annotation"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">token annotation</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#CorpusAnnotationDiff">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEComponent"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">corpus benchmark tool</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">corpus annotation diff</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#JavaType">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">JavaType</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Corpus">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageResource"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Corpus</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#resourceHasName">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEResource"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Annotation">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEArtefact"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">annotation</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#documentHasAnnotationSet">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Document"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#AnnotationSet"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#GUK">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEComponent"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">GUK</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">GATE Unicode Kit</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#annotationHasFeatures">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Annotation"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Feature"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#JavaClass">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#JavaType"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">JavaClass</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#resourceHasComment">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEResource"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">resourceHasComment</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#SoftwareDocumentation">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Documentation"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">SoftwareDocumentation</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Gazetteer">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageAnalyser"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Gazetteer</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#javaFullyQualifiedName">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#JavaClass"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">javaFullyQualifiedName</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Documentation">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Documentation</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#SentenceSplitter">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageAnalyser"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">sentence splitter</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#Coreferencer">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageAnalyser"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Coreferencer</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#parameterHasComment">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#ResourceParameter"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">parameterHasComment</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#hasStartNode">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Annotation"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Node"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#DocumentFormat">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEArtefact"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">document format</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#datastoreStoresLRs">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#DataStore"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#LanguageResource"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#KB">
+	<rdf:type rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEDeveloper"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">KB</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Kalina</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#parameterHasDefaultValue">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#ResourceParameter"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">parameterHasDefaultValue</label>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#VisualResource">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEResource"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Visual Resouce</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">VR</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#GATEResource">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<subClassOf xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEComponent"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">Resource</label>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">GATE Resource</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#GATEDeveloper">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+	<label xmlns="http://www.w3.org/2000/01/rdf-schema#">GATEDeveloper</label>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://gate.ac.uk/ns/gate-ontology#resourceHasFeatures">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+	<domain xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#GATEResource"/>
+	<range xmlns="http://www.w3.org/2000/01/rdf-schema#" rdf:resource="http://gate.ac.uk/ns/gate-ontology#Feature"/>
+</rdf:Description>
+
+</rdf:RDF>

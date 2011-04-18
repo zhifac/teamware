@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MenuConfig>
+    <Displayers>
+        <Displayer name="Velocity" type="net.sf.navigator.displayer.VelocityMenuDisplayer"/>
+    </Displayers>
+    <Menus>
+        <Menu name="MainMenu" title="mainMenu.title" width="120" page="/mainMenu.html"  url="/mainMenu.html"/>
+        <Menu name="ResourceMenu" title="menu.resources" width="120" description="Resource Management" page="/resourceMenu.html" url="/resourceMenu.html*">
+            <Item name="DocumentService" title="menu.docService" forward="viewCorpora" url="/corpora.html*"/>
+            <Item name="AnnotationServices" title="menu.annotationServices" forward="viewAnnotationServices" url="/annotationServices.html*"/>
+            <Item name="Schemas" title="menu.schemas" forward="viewAnnoSchemas" url="/schemas.html*" />
+            <!--  
+            <Item name="Ontologies" title="menu.gos" forward="viewOntologyRepositories" url="/ontologyRepositoryList.html*" />
+            -->
+        </Menu>
+        <Menu name="ProjectMenu" title="menu.project" width="120" page="/workflowMenu.html" url="/workflowMenu.html*">
+            <Item name="ListProcessDefinitions" title="menu.workflow.process.definitions" forward="processDefinitionList" url="/processDefinitionList.html?method=list*" />
+            <!-- 
+            <Item name="MyTemplates" title="menu.workflow.myProjects" forward="viewProjects" url="/projects.html*"/>  
+            -->
+            <Item name="AllTemplates" title="menu.workflow.allProjects" forward="viewAllProjects" url="/projects.html?method=listAll*"/>
+            
+            <Item name="NewProject" title="menu.workflow.create.process.instance" forward="loadProject" url="/loadProject.html?method=load*" />
+            <Item name="AllProcessInstances" title="menu.workflow.allProcessInstances" forward="allProcessInstanceList" url="/processInstanceList.html?method=listAll*" />
+            <!-- 
+            <Item name="MyProcessInstances" title="menu.workflow.myProcessInstances" forward="myProcessInstanceList" url="/processInstanceList.html?method=listByUser*" />
+            <Item name="MyTaskInstances" title="menu.workflow.myTask.instances" forward="pendingTasksList" url="/taskInstanceList.html?method=listByActor*" />
+            <Item name="GroupTaskInstances" title="menu.workflow.groupTask.instances" forward="taskInstanceList" url="/taskInstanceList.html?method=list*" />
+             -->
+        </Menu>
+        <Menu name="SupportMenu" title="menu.support" width="120" page="/supportMenu.html" url="/supportMenu.html*" >
+            <Item name="Forum" title="menu.forum" forward="forum" url="/forum.html*" />
+            <!-- 
+            <Item name="Chat" title="menu.chat" forward="chat" url="/chat.html*" />
+             -->
+            <Item name="Help" title="menu.help" forward="helpInfo" url="/helpInfo.html*" />
+         </Menu>
+        <Menu name="AdminMenu" title="menu.admin" description="Admin Menu" width="120" page="/aMenu.html" url="/aMenu.html*">
+            <Item name="ViewUsers" title="menu.admin.users" forward="viewUsers" url="/users.html*"/>
+            <Item name="ActiveUsers" title="mainMenu.activeUsers" action="activeUsers" url="/activeUsers.html*" />
+            <Item name="ViewRoles" title="menu.admin.roles" forward="viewRoles" url="/roles.html*"/>
+            <Item name="ViewServices" title="menu.admin.services" forward="viewServices" url="/services.html*"/>
+            <Item name="ViewResources" title="menu.admin.resources" forward="viewResources" url="/resources.html*"/>
+            <Item name="Clickstream" title="menu.clickstream" page="/clickstreams.jsp" url="/clickstreams.jsp*"/>     
+        </Menu>
+    </Menus>
+</MenuConfig>

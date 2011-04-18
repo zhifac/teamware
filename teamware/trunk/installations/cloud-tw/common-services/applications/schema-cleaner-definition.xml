@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service xmlns="http://gate.ac.uk/gleam/gate-service/definition">
+  <annotationSets>
+    <annotationSet name="in" in="true" />
+    <annotationSet name="out" out="true" />
+  </annotationSets>
+  <parameters>
+    <param name="schemas" optional="true">
+      <documentFeature name="annotationSchemas" />
+    </param>
+  </parameters>
+</service>
+

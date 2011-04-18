@@ -1,0 +1,34 @@
+dao.driver=net.jforum.dao.hsqldb.HsqldbDataAccessDriver
+database.connection.driver=org.hsqldb.jdbcDriver
+database.connection.implementation=net.jforum.SimpleConnection
+database.connection.pool.max=5
+database.connection.pool.min=1
+database.connection.pool.timeout=2000
+database.connection.port=
+database.connection.string=jdbc\:hsqldb\:${config.dir}/database/hsqldb/${database.connection.dbname}
+database.driver.name=hsqldb
+database.support.autokeys=false
+database.support.subqueries=true
+
+dbencoding=utf-8
+dbunicode=true
+
+i18n.board.default=en_US
+installed=true
+mysql.encoding=
+mysql.unicode=
+org.quartz.context.summary.cron.expression=0 30 12 ? * MON
+org.quartz.scheduler.instanceId=AUTO
+org.quartz.scheduler.instanceName=JForumScheduler
+org.quartz.scheduler.threadName=JForumSchedulerThread
+org.quartz.threadPool.class=org.quartz.simpl.SimpleThreadPool
+org.quartz.threadPool.threadCount=2
+org.quartz.threadPool.threadPriority=3
+search.indexing.enabled=true
+user.hash.sequence=36fdf760505e30415d754aeb17b71417
+
+forum.name = SAFE Forum
+forum.page.title = ${forum.name} - supporting collaborative annotation
+
+forum.link=http://${http.server}/${webapp.instance.name}
+homepage.link=http://${http.server}/${webapp.instance.name}

@@ -1,0 +1,43 @@
+
+   <formset>
+   		<form name="processDefinitionUploadForm">
+            <field property="file" depends="required">
+                <arg0 key="processDefinitionUploadForm.file"/>
+            </field>
+        </form>
+      
+        <form name="bulkUploadUserForm">
+            <field property="file" depends="required">
+                <arg0 key="uploadForm.file"/>
+            </field>
+        </form>
+        
+        <form name="fileUploadForm">
+            <field property="encoding" depends="required">
+                <arg0 key="fileUploadForm.encoding"/>
+            </field>
+            <!-- Client-side Javascript won't catch this, but server-side will -->
+            <field property="file" depends="required">
+                <arg0 key="fileUploadForm.file"/>
+            </field>
+        </form>
+        
+         <form name="corpusUploadForm">
+           <field property="corpusName" depends="required">
+                <arg0 key="corpusForm.corpusName"/>
+            </field>
+            <field property="encoding" depends="required">
+                <arg0 key="fileUploadForm.encoding"/>
+            </field>
+            <!-- Client-side Javascript won't catch this, but server-side will -->
+            <field property="file" depends="required">
+                <arg0 key="fileUploadForm.file"/>
+            </field>
+        </form>
+        
+        <form name="annoSchemaForm">
+            <field property="file" depends="required">
+                <arg0 key="annoSchemaForm.file"/>
+            </field>
+        </form>
+    </formset>

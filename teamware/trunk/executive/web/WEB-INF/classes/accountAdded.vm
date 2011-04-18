@@ -1,0 +1,15 @@
+${title}
+
+${content}
+
+Username: ${userName}
+Password: ${confirmPassword}
+
+Login at: ${applicationURL}
+
+After you login, please change your password.
+If you are using application for the first time, click on Help link 
+or go directly to: ${applicationURL}/helpInfo.html
+
+Best regards,
+GATE Teamware Support

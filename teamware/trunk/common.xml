@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="safe">
+  <!-- the installation that will be used if the specified instance.name is not
+       a valid installation name (i.e. if instance.name=doesnotexist then the
+       resulting deployment will appear as
+       http://localhost:8080/doesnotexist/executive but the installation
+       used will be ${default.instance.name}). -->
+  <property name="default.instance.name" value="cloud-tw" />
+
+  <!-- default instalation - can be overridden from the command line -->
+  <property name="instance.name" value="teamware" />
+
+  <dirname property="safe.dir" file="${ant.file.safe}" />
+  <property file="${safe.dir}/${instance.name}-build.properties" />
+  <property file="${safe.dir}/build.properties" />
+  <dirname property="safe.dir.installations" file="${safe.dir}/installations/foo.xml" />
+
+  <!-- Location of the installation-specific extras, by default
+       installations/${instance.name} -->
+  <property name="instance.project.dir" location="${safe.dir.installations}/${instance.name}" />
+  <property name="default.instance.project.dir" location="${safe.dir.installations}/${default.instance.name}" />
+
+  <property name="specbuild" value="${instance.project.dir}/build.xml"/>
+  <available file="${specbuild}" property="specbuildexists"/>
+  
+  <import file="${safe.dir}/lib/lib.xml" />
+ 
+  <target name="init" description="defines custom tasks">
+    <property name="antcontribpath" location="${safe.dir}/lib"/> 
+    <echo message="${antcontribpath}"/>
+    <!-- Taskdefs -->
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+      <classpath>
+        <fileset dir="${safe.dir}/lib">
+          <patternset refid="pattern.ant-contrib" />
+        </fileset>
+      </classpath>
+    </taskdef>   
+  </target>
+
+  <macrodef name="generate-context">
+    <attribute name="webapp"/>
+    <sequential>
+      <if>
+        <equals arg1="@{webapp}" arg2="" />
+        <then>
+          <echo>generating ROOT context in ${tomcat.context.dir}</echo>
+          <touch file="${tomcat.context.dir}/${instance.name}.xml"/>
+          <echoxml file="${tomcat.context.dir}/${instance.name}.xml">
+            <Context docBase="${instance.dir}" />
+          </echoxml>
+        </then>
+        <else>
+          <echo>generating @{webapp} context in ${tomcat.context.dir}</echo>
+          <touch file="${tomcat.context.dir}/${instance.name}#@{webapp}.xml"/>
+          <!-- we put a literal '${catalina.home}' (hence the double $) in the
+          context XML file.  Tomcat will substitute the real directory
+          location at runtime.  This allows context files from one tomcat to
+          be copied to a tomcat in a different location and still work. -->
+          <echoxml file="${tomcat.context.dir}/${instance.name}#@{webapp}.xml">
+             <Context docBase="$${catalina.home}/${deploy.dir.name}/@{webapp}" />
+          </echoxml>
+        </else>
+      </if>
+        
+    </sequential>
+  </macrodef>
+
+  <macrodef name="generate-test-context">
+    <attribute name="webapp"/>
+    <attribute name="cargoId"/>
+    <sequential>
+      <if>
+        <equals arg1="@{webapp}" arg2="" />
+        <then>
+          <echo>generating ROOT context in ${safe.dir}/executive/build/test/@{cargoId}/conf/Catalina/${host.name}</echo>
+          <echoxml file="${safe.dir}/executive/build/test/@{cargoId}/conf/Catalina/${host.name}/${instance.name}.xml">
+            <Context docBase="${instance.dir}" />
+          </echoxml>
+        </then>
+        <else>
+          <echo>generating @{webapp} context in ${safe.dir}/executive/build/test/@{cargoId}/conf/Catalina/${host.name}</echo>
+          <touch file="${safe.dir}/executive/build/test/@{cargoId}/conf/Catalina/${host.name}/${instance.name}#@{webapp}.xml"/>
+          <!-- For the test context we can just put the absolute build-time
+          location of the tomcat directory, rather than using the runtime
+          ${catalina.home} trick. -->
+          <echoxml file="${safe.dir}/executive/build/test/@{cargoId}/conf/Catalina/${host.name}/${instance.name}#@{webapp}.xml">
+            <Context docBase="${safe.dir}/executive/build/test/@{cargoId}/${deploy.dir.name}/@{webapp}" />
+          </echoxml>
+        </else>
+      </if>     
+    </sequential>
+  </macrodef>
+
+  <macrodef name="delete-context">
+    <attribute name="webapp"/>
+    <sequential>
+      <if>
+        <equals arg1="@{webapp}" arg2="" />
+        <then>
+          <echo>delete ROOT context from ${tomcat.context.dir}</echo>
+          <delete file="${tomcat.context.dir}/${instance.name}.xml" />
+        </then>
+        <else>
+          <echo>delete @{webapp} context from ${tomcat.context.dir}</echo>
+          <delete file="${tomcat.context.dir}/${instance.name}#@{webapp}.xml" />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+    
+  <macrodef name="installation-build">
+    <attribute name="tgt"/>
+    <sequential>
+      <if>
+        <isset property="specbuildexists"/>
+        <then> 
+          <echo message="${specbuild} exists!" /> 
+          <ant dir="${instance.project.dir}" target="@{tgt}" />
+        </then>
+        <else>
+        <echo message="${specbuild} does not exist!" /> 
+          <ant dir="${default.instance.project.dir}" target="@{tgt}" />
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
+  <target name="create-context" depends="init">
+    <mkdir dir="${tomcat.context.dir}"/>
+    <generate-context webapp="${webapp}" />
+  </target>
+
+  <target name="create-test-context" depends="init">
+    <mkdir dir="${safe.dir}/executive/build/test/${cargoId}/conf/Catalina/${host.name}"/>
+    <generate-test-context webapp="${webapp}" cargoId="${cargoId}"/>
+  </target>
+
+  <target name="delete-context" depends="init">
+    <delete-context webapp="${webapp}" />
+  </target>
+
+  <target name="check-schema.dir" depends="init">
+    <condition property="check-schema.dir.notrequired">
+      <or>
+        <available file="${schema.dir.build}" />
+        <contains string="${schema.dir.build}" substring="@" />
+      </or>
+    </condition> 
+  </target>
+  
+  <target name="republish-schemas" depends="init">
+    <if>
+      <equals arg1="${check-schema.dir.notrequired}" arg2="true"/>
+      <then>
+        <echo message="schema.dir is present: Do not do anything!"/>
+      </then>
+      <else>
+        <property name="schemafolder" value="${instance.project.dir}/annotation-schemas"/>
+        <property name="defaulschemafolder" value="${default.instance.project.dir}/annotation-schemas"/>
+        <mkdir dir="${schema.dir.build}" />
+        <available file="${schemafolder}" property="schemafolderexists"/>
+        <if>
+          <isset property="schemafolderexists"/>
+          <then> 
+            <echo message="${schemafolder} exists!" /> 
+            <copy todir="${schema.dir.build}" overwrite="true">
+              <fileset dir="${schemafolder}" />
+            </copy>
+          </then>
+          <else>
+            <echo message="${schemafolder} doesn't exist! Use default one" /> 
+            <copy todir="${schema.dir.build}" overwrite="true">
+              <fileset dir="${defaulschemafolder}" />
+            </copy>
+          </else>
+        </if>
+     </else>
+    </if>
+  </target>
+
+</project>

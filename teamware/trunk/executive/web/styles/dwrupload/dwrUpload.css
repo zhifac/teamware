@@ -1,0 +1,56 @@
+/* - - - - - - - - - - - - - - - - - - - - -
+
+Title : DWR and struts upload mechanism
+Author : Helge Tesgaard
+- - - - - - - - - - - - - - - - - - - - - */
+#progressBar {
+    padding-top: 5px;
+}
+
+#progressBarBox {
+    width: 350px;
+    height: 20px;
+    border: 1px inset;
+    background: #eee;
+}
+
+#progressBarBoxContent {
+    width: 0;
+    height: 20px;
+    border-right: 1px solid #444; /*background: #9ACB34;*/
+    background: navy;
+}
+
+#progressBarText {
+    width: 350px;
+}
+
+#theMeter {
+	width: 350px;
+}	
+
+#progressDSBar {
+    padding-top: 5px;
+}
+
+#progressDSBarBox {
+    width: 350px;
+    height: 20px;
+    border: 1px inset;
+    background: #eee;
+}
+
+#progressDSBarBoxContent {
+    width: 0;
+    height: 20px;
+    border-right: 1px solid #444; /*background: #9ACB34;*/
+    background: red;
+}
+
+#progressDSBarText {
+    width: 350px;
+}
+
+#theDSMeter {
+	width: 350px;
+}

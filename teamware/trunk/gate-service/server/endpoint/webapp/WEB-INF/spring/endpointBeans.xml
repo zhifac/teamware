@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spring bean definitions required for the web service endpoint -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+         http://cxf.apache.org/jaxws
+         http://cxf.apache.org/schemas/jaxws.xsd
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <!-- The endpoint handler -->
+  <bean id="endpointHandler" scope="singleton" destroy-method="shutdown"
+    class="gleam.gateservice.endpoint.GateWebServiceHandler">
+    <property name="serviceDefinition" ref="serviceDefinition" />
+    <property name="jmsConnectionFactory" ref="connectionFactory" />
+    <property name="queue" ref="queue" />
+    <!-- Wait up to 20 seconds for a response in GATE mode -->
+    <property name="gateModeResponseTimeout" value="300000" />
+  </bean>
+
+  <!-- Defining the WS endpoints -->
+  <import resource="classpath:META-INF/cxf/cxf.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+  <bean id="gateWebService" class="gleam.gateservice.endpoint.GateWebServiceImpl">
+    <property name="endpointHandler" ref="endpointHandler" />
+  </bean>
+
+  <jaxws:endpoint id="gateWebServiceEndpoint"
+                  implementor="#gateWebService"
+                  implementorClass="gleam.gateservice.endpoint.GateWebServiceImpl"
+                  address="/GATEService">
+    <jaxws:properties>
+      <entry key="mtom-enabled" value="true" />
+    </jaxws:properties>
+       <jaxws:features>
+     <bean class="org.apache.cxf.transport.http.gzip.GZIPFeature"/>
+    </jaxws:features>
+    
+  </jaxws:endpoint>
+
+  <bean id="inlineAnnotationService" class="gleam.gateservice.endpoint.InlineAnnotationServiceImpl">
+    <property name="endpointHandler" ref="endpointHandler" />
+  </bean>
+
+  <jaxws:endpoint id="inlineAnnotationServiceEndpoint"
+                  implementor="#inlineAnnotationService"
+                  implementorClass="gleam.gateservice.endpoint.InlineAnnotationServiceImpl"
+                  address="/InlineAnnotationService" />
+</beans>

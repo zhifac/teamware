@@ -1,0 +1,336 @@
+GLEAM Talk at eScience Meeting, London 30/3/6
+
+%contents
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Annotation Factories for eScience
+
+o What is Annotation?
+o Why bother?
+  - examples from BBC archives, SOAs, librarian services
+o How to Annotate
+  - the GATE system, KIM
+  - trouble in paradise
+  - annotation factories, GLEAM
+o Where next?
+  - annotation factories for eScience
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 What?
+%2 What? (1) Databases from Texts
+
+*IE / Ryanair slide*
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 What? (2) Semantic Annotation, Ontologies, Metadata
+
+In the context of semantic webs or other conceptual knowledge management
+models, annotation is the glue that ties ontologies into document spaces.
+Without annotation the conceptual model and the Internet or intranet are
+disconnected.
+
+*KIM slide*
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Why? (1)
+%2 Why? (1) Augmenting BBC Archives
+
+Annotation is not an application in itself, but a component of various
+information seeking and management tasks.
+
+*Rich News slide*
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Why? (2) Service-Oriented Architectures
+
+The TAO story, which motivates annotation because we use it in the
+transitioning process
+
+Semantic Web Services (SWS), and Service-Oriented Architectures (SOA) that
+host them, will make a significant contribution to the competitiveness of
+European ICT in the coming period. This will happen in two ways. First,
+Enterprise Applications Integration (EAI) will become less costly and more
+reliable because of explicit modelling of the meaning of data and processes
+in the systems owned by different business units. Second, B2B and B2C
+eCommerce systems will become:
+- more reusable, with interfaces that are meaningful for machines as well as
+  for humans;
+- more dynamic and adaptive, with the possibility of virtual applications
+  composed from dynamically discovered components;
+- more scaleable, distributed across multiple machines;
+- saleable as discreet elements in the application service providers market.
+
+TAO is about how existing legacy applications can migrate to open,
+semantics-based SOA.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Why? (3) The Return of the Librarian?
+
+Some decades ago, if the chief engineer of a Sheffield steelworks needed to
+know the value of some constant in the equations describing the mixture of
+ingredients for a specialist job, he'd phone the city library. Even now, if
+you work for a large corporation you may well be able to call on the
+services of a skilled information scientist whose job is to know more about
+navigating the published universe than any normal mortal could ever learn.
+
+These skills are less and less available. The winding down of the welfare
+state public service in favour of private profit has closed a thousand
+libraries, and the information firehose has cheapened information to the
+degree that the little query box on Google's search page has become the only
+investigative tool for many.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 How?
+
+- GATE, a General Architecture for Text Engineering
+- What happens when we build applications
+- Beyond tools: Annotation Factories, GLEAM
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 How? (1) Text Mining with GATE
+
+GATE is:
+- the Eclipse of Natural Language Engineering, the Lucene of Information
+  Extraction, the leading toolkit for Text Mining
+- used worldwide by thousands of scientists, companies, teachers and
+  students
+- comprised of an architecture, a free open source framework (or SDK) and
+  graphical development environment
+- used for all sorts of language processing tasks, including Information
+  Extraction in many languages
+- funded by the EPSRC, BBSRC, AHRC, the EU and commercial users
+- 100% Java reference implementation of ISO TC37/SC4 and used with XCES in
+  the ANC
+- 10 years old in 2005, used in many research projects and under integration
+  with IBM's UIMA
+- based on MVC, mobile code, continuous integration, and test-driven
+  development, with code hosted on SourceForge 
+
+Some projects:
+- SEKT (EC); TAO (EC); NEON (EC); MC (EC); AKT; PrestoSpace; KWeb; MMKM;
+  ETCSL; MultiFlora; more. 
+
+A sample of users:
+- IBM; BBC; British Telecom; Imperial College; Hewlett Packard; OntoText;
+  Perseus; Greenstone; NCSA.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 ...
+
+*More GATE slides.*
+
+GATE has been around long enough to be around the first hit for "gate" on
+Google and Yahoo.
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+GATE: the Volkswagen Beetle of Language Processing
+
+- Ten years old, with 000s of users at 00s of sites.
+- Three main elements:
+  - An architecture A macro-level organisational picture for HLT software
+    systems.
+  - A framework For programmers, GATE is an object-oriented class library
+    that implements the architecture.
+  - A development environment For language engineers, computational
+    linguists et al, a graphical development environment.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Free and Open
+
+- Free software: “free” as in “free speech”, not as in “free beer” (though
+  GATE is also very cheap ;-) 
+- Under the GNU library licence (LGPL): download at
+  http://gate.ac.uk/download/
+- Anonymous CVS etc. on gate.sf.net
+- Active support list gate-discuss@dcs.shef.ac.uk 
+- 300 page user manual
+- Lots of components and wrappers for other people's
+- Tools for: evaluation; visualise/edit; persistence; IR; IE; dialogue;
+  ontologies; etc.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+GATE and standards
+
+- Computer scientists love standards, that’s why we have so many conflicting
+  ones to choose from
+- Two types: _de jure_ and _de facto_
+- GATE and de facto standards: more widely used than any comparable system
+  (see below)
+- GATE and de jure standards:
+  - ISO TC37/SC4 HLT standards suite
+  - LIRICS: reference implementation of ISO using GATE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 OntoText KIM
+
+KIM from OntoText, 
+
+Applications include providing conceptual search over entities and simple
+relations extracted from news text relative to the PROTON ontology.
+Functions:
+- answer questions like "show me all news relating to telecoms companies in
+  Eastern Europe"
+- in an EPG context answer queries like "find programmes which are
+  non-fiction, made between 1989 and 1995, and involve locations in Eastern
+  Europe"
+
+Evaluated as the leading semantic annotation tool at the eponymous workshop
+at ISWC 2005.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 How? (2) Trouble in Paradise: Accuracy / Specifity Trade-off
+
+*Deployment slide.*
+
+How do we ensure that our applications fall under the curve?
+
+There's been lots of research that attacks this problem from different
+angles; the rest of the talk is about a synthesis of previous research in a
+new framework.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 How? (3) From Annotation Tools to _Annotation Factories_
+
+We *have* lots and lots of tools and algorithms for annotation; what we
+*need* is
+
+o methodological instead of purely technological 
+o multi-role instead of single role
+o unifying previously disjoint annotation adaptation interventions
+o assistive instead of autonomous
+o diachronic, life-cycle orientated, not waterfall or "big bang" orientated
+o service-orientated, not monolithic
+
+GLEAM, the GATE Layer for Extraction, Annotation and Mining, is a software
+suite and a methodology for the implementation and support of annotation
+Factory services with the above characteristics.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 Annotation: the Missing Manual
+
+Despite the breadth and depth of literature describing algorithms,
+evaluation protocols and performance statistics for annotation the
+technology lacks a clear statement of how to go about specifying and
+implementing annotation functionality for a new task or domain.
+
+The methodology will cover:
+- how to decide if annotation is applicable to your problem
+- how to define the problem with reference to a corpus of examples
+- how to identify similarities with other problems and thence to estimate
+  likely performance levels
+- how to design a balance of adaptation interventions for system setup and
+  maintenance
+- how to measure success
+
+Overall the idea is not "get this great new bit of software and it will
+transform your life" but "this is how to implement robust and maintainable
+services" - i.e. less of the software and more of the method.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 A Division of Labour (Multi-role Methodology)
+
+GATE has both a class library for programmers embedding LE in applications
+and a development environment for skilled language engineers. GLEAM, however,
+has to support a wider constituency of users. There are two main cases.
+
+First, annotation of training data for learning algorithms should be a task
+requiring little skill beyond that of a computer-literate person. That's a
+requirement because training data volumes are typically large and therefore
+the labour involved has to be cheap to make the process economic. For the
+same reason the annotation environment should be as productive as possible,
+for example by bootstrapping the annotation process with mixed-initiative
+learning and by providing a voting mechanism for multiple simultaneous
+annotators (this is necessary to guarantee quality with low-skilled staff).
+
+Second, data curation or systems administration staff may become involved in
+customising extraction systems. These types of people would take a training
+course of a week or two, and be expected to use a richer toolset, perhaps
+including things like ANNIC-based JAPE rule authoring.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 Unifying Adaptation Interventions for Custom Extraction Services (CuES)
+
+Information Extraction (IE) is the process of automatically analysing text
+(and, less often, speech) to populate fixed-format, unambiguous data
+structures such as spreadsheets, link-analysis engines or databases. An IE
+system is a dynamic object which represents a compromise between information
+need and development cost. Almost never do the information need and the data
+remain static. Therefore applications software using IE has to provide a
+mechanism to tailor the extraction components to new information needs and to
+new types of data. Up to now, no single mechanism has been discovered that
+covers all cases, meaning that IE software has to support a wide spectrum of
+adaptation interventions, from skilled computational linguists, through
+content administrators and technical authors, to unskilled end-users
+providing behavioural exemplars. In each area significant research streams
+exist and have made good progress over the past decade or so. What has not
+been done is to construct a unified environment in which all the different
+adaptation interventions work together in a complementary manner.
+
+The three principal mechanisms for IE adaptation in leading HLT research
+streams are:
+- assisted authoring of finite state transduction rules, including: generation
+  of rules from annotation pattern searches across corpora (annotations in
+  context); graphical debugging of transduction rule execution
+- supervised mixed-initiative learning of extraction models
+- unsupervised clustering of terms for purposes such as populating
+  domain-specfic gazetteers
+
+In addition, underlying the adaptation process are automated measurement and
+visualisation tools, and frequency-based document search (or information
+retrieval) tools. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 Assistive vs. Autonomous
+
+A modern factory engaged in the production of high-tech goods combines a
+large degree of automation with skilled labour of various types and
+quantities. Robots often play a significant role, although they are never
+altogether unaccompanied: at the very least service engineers must attend
+their operation, and in most cases there will also be staff who take care of
+reconfiguring robotic equipment for new product lines or refinements to the
+existing processes and products.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 Diachronic, Life-cycle Orientated, not Waterfall or "Big Bang"
+
+...
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 Service-Orientated, not Monolithic
+
+...
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Where next? Future eScience Annotation Services
+
+

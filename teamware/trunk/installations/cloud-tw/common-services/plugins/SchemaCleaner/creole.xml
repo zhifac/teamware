@@ -1,0 +1,5 @@
+<CREOLE-DIRECTORY>
+  <CREOLE>
+    <JAR scan="true">SchemaCleaner.jar</JAR>
+  </CREOLE>
+</CREOLE-DIRECTORY>

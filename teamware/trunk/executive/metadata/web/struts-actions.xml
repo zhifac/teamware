@@ -1,0 +1,75 @@
+    <!-- Forwards to the mainMenu tile definition -->
+    <!-- action path="/mainMenu" type="org.apache.struts.actions.ForwardAction" parameter="/WEB-INF/pages/mainMenu.jsp"/-->
+
+    <action path="/helpInfo" type="org.apache.struts.actions.ForwardAction" parameter="/WEB-INF/pages/helpInfo.jsp"/>
+
+    <action path="/annicgui" type="org.apache.struts.actions.ForwardAction" parameter="/WEB-INF/pages/annicGUIInvoker.jsp"/>
+
+    <action path="/chat" type="org.apache.struts.actions.ForwardAction" parameter="/WEB-INF/pages/chat.jsp"/>
+
+    <action path="/forumList" type="org.apache.struts.actions.ForwardAction" parameter="/forums/list.page"/>
+
+	<action path="/supportMenu" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/supportMenu.jsp"/>
+        
+    <action path="/resourceMenu" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/resourceMenu.jsp"/>
+        
+    <action path="/aMenu" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/adminMenu.jsp"/>    
+
+    <!-- Action to flush cache -->
+    <action path="/flush" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/flushCache.jsp" />
+
+    <!-- Forward to page to begin file upload -->
+    <action path="/bulkUpload" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/bulkUploadUserForm.jsp"/>
+
+    <!-- Forward to view Active Users -->
+    <action path="/activeUsers" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/activeUsers.jsp" />
+    
+    <action path="/corpusUploadInfo" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/corpusUploadInfo.jsp"/>
+        
+     <action path="/popupCorpusUploadInfo" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/corpusUploadInfo.jsp"/>    
+        
+        
+    <action path="/schemaUploadInfo" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/schemaUploadInfo.jsp"/>
+        
+      <action path="/popupSchemaUploadInfo" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/schemaUploadInfo.jsp"/>
+    
+     <action path="/annotationServiceInfo" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/annotationServiceInfo.jsp"/>
+      
+        <action path="/popupAnnotationServiceInfo" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/annotationServiceInfo.jsp"/>  
+        
+    
+    <action path="/processDefinitionUploadDisplay" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/processDefinitionUploadDisplay.jsp"/>
+
+    <!-- Forward to Annic Search Page -->
+    <action path="/annicSearch" type="org.apache.struts.actions.ForwardAction"
+        parameter="/WEB-INF/pages/annicSearch.jsp" />
+
+    <!-- Forward to Annotation Differ Popup Page -->
+    <action path="/popupAnnDiffer" type="gleam.executive.webapp.action.AnnotationDifferAction"
+       name="annotationDifferResultForm" scope="request" validate="false" parameter="method">
+      <set-property property="cancellable" value="true" />
+      <forward name="list" path="/WEB-INF/pages/popupAnnDiffer.jsp" redirect="false" />
+      <forward name="failure" path="/WEB-INF/pages/popupAnnDiffer.jsp" redirect="false" />
+      <forward name="success" path="/WEB-INF/pages/popupAnnDiffer.jsp" redirect="false" />
+    </action>
+
+    <action path="/popupCaculateIAA" type="gleam.executive.webapp.action.IAACaculateAction"
+       name="iAAResultForm" scope="request" validate="false" parameter="method">
+      <set-property property="cancellable" value="true" />
+      <forward name="showQueries" path="/WEB-INF/pages/popupCaculateIAA.jsp" redirect="false" />
+      <forward name="failure" path="/WEB-INF/pages/popupCaculateIAA.jsp" redirect="false" />
+      <forward name="success" path="/WEB-INF/pages/popupCaculateIAA.jsp" redirect="false" />
+    </action>

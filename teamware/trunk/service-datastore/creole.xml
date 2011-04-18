@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!-- $Id$ -->
+<CREOLE-DIRECTORY>
+  <!-- creole.xml for GLEAM Document Service -->
+  <CREOLE>   
+    <RESOURCE>
+      <JAR>conf/</JAR>
+      <JAR>lib/service-datastore.jar</JAR>
+      <!-- Other lib JARs are referenced by the service-datastore.jar manifest -->
+      <NAME>DocService Datastore Viewer</NAME>
+      <CLASS>gleam.docservice.gate.DocServiceDataStoreViewer</CLASS>
+      <GUI TYPE="large">
+        <MAIN_VIEWER/>
+        <RESOURCE_DISPLAYED>gleam.docservice.gate.DocServiceDataStore</RESOURCE_DISPLAYED>
+      </GUI>
+    </RESOURCE>
+    
+    <RESOURCE>
+      <NAME>GATE DocService Corpus</NAME>
+      <CLASS>gleam.docservice.gate.DocServiceCorpusImpl</CLASS>
+      <COMMENT>GATE persistent corpus (DocService)</COMMENT>
+      <INTERFACE>gate.Corpus</INTERFACE>
+      <!-- <ICON>corpus</ICON>-->
+      <ICON>/gleam/docservice/gate/network.png</ICON>
+      <PRIVATE/>
+    </RESOURCE>
+    
+   </CREOLE>
+</CREOLE-DIRECTORY>

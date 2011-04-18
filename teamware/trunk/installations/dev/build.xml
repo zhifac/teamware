@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="dev-gate-service" default="dist">
+  <import file="../common.xml" />
+
+  <target name="dist" depends="gate-service.war.complete">
+    <ant dir="default-gas" target="dist" />
+  </target>
+
+  <target name="unwar" depends="dist">
+      <unwar src="dist/gate-service.war" dest="${deploy.dir}/gate-service" />
+  </target>
+
+  <target name="deploy-all" depends="unwar"> 
+
+    <!-- create context file -->
+    <ant antfile="../../common.xml" target="create-context"> 
+        <property name="webapp" value="gate-service"/>
+    </ant>
+  </target>
+
+  <target name="undeploy-all">
+    <delete dir="${deploy.dir}/gate-service" />
+    <!-- deletes context file -->
+    <ant antfile="../../common.xml" target="delete-context">
+	 <property name="webapp" value="gate-service"/>
+    </ant>
+  </target>
+</project>

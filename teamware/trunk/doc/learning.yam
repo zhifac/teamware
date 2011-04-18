@@ -1,0 +1,755 @@
+Batch, Mixed Initiative and Active Learning in SAFE
+
+Note: we should also look at including material from OLLIE:
+%cite(Tab03a), %(http://gate.ac.uk/sale/hlt03/ollie-sealts.pdf).
+
+
+Machine learning will get involved in two scenarios in SAFE. One is in batch learning. 
+Another is in the mixed initiative (MI) semantic annotation. Active learning 
+can be used in MI annotating to speed up the annotating and/or improve the
+annotation accuracy.
+
+The batch learning can be the case that language engineers execute the ML for 
+fully automatic annotation. For batch learning the current implementation of 
+the learning api in GATE should be ok. A GAS service calling the GATE learning api
+would be an easy way. We may need to extend the learning api to 
+deal with new problems and/or to include new learning algorithms. More important, 
+we need implement the clustering algorithm --- it should not be difficult as 
+the learning api can create feature vectors in different formats. Hence we 
+focus on the MI annotating.
+
+The basic concept of MI approaches is to start with a model which is learnt
+from some initial annotations and keep updating the model with new user
+annotations. The procedure continues until it reaches a specific accuracy
+threshold. Then it is the trained model which generates new annotations for
+unseen documents and shows them as suggestions to the annotators. Annotators
+then accept or discard, add new or correct the existing ones.  The model gets
+updated with the provided feedback and thus generates annotations with
+increasing accuracy with each subsequent attempt. 
+
+In other words, the MI annotationg has the following three stages:
+1. Initial stage: the annotators are given some documents and manually annotate 
+them. 
+2. Learning and evaluation stage: After annotating some documents, an ML process 
+is triggered to learn models from those annotations and to evaluate the learned
+ models. Both the manual annotation process and the ML process continue, and new 
+annotation material is added to the training data for the ML to improve its 
+accuracy. 
+3. Suggestion stage: once the accuracy of ML arrives at a satisfied level, the 
+ML will suggest annotations to the annotator to speed up the manual annotation.
+
+For the implementation of the MI annotating in SAFE, we may have many choices, 
+such as learning algorithm and features used. However, in the start, we may need 
+keeping thing simple. Since we have evaluated the SVM combined with the 
+linguistic features from ANNIE on several corpora, which achieved state of the 
+art results, and implemented it already in GATE, we may just use it. Later on we 
+may want to implement other learning algorithms and maybe combine them with SVM, 
+but  only after we or somebody else have showed the effectiveness 
+of the algorithms and the combinations. We could implement the PAUM and Hieron 
+for different application requirements.
+
+Active learning is an ML technique which can be used in the MI annotating for 
+speeding up the annotation. It applies the current learned models to the 
+available unlabelled data, and selects the most informative example from them 
+for manually annotating and then being as additional training data in order to 
+improve the prediction capability of the ML model as big as possible. 
+
+If we use active learning in the MI annotating, we need modify a bit the MI 
+process listed above. The main modification is that the ML is used not only for 
+suggesting annotations in the third stage, but also for selecting document for 
+manually annotating in the second and third stage. It will also be beneficial 
+if we shorten the initial stage for using active learning --- e.g. start the ML 
+process after only one or two documents are annotated.
+
+Active learning should be set as an option in the MI annotating, because it is 
+only effective for some learning algorithms such as SVM but may not be effective 
+for other learning algorithms, and it would certainly increase system load 
+(or cost). 
+
+Some considerations of the MI annotating:
+
+1. It's better to evaluate the ML model for each type of annotations and start 
+suggestions at different times for different types of annotation, because, as we 
+know, some types of annotation (e.g. date) are easier to learn than others. 
+
+2. When does it start making the suggestions? The answer is that when the ML 
+model's prediction is at a satisfication level. How to define the  satisfication
+level? I think that's dependent on individual annotator. One possible way
+is as the following. 
+
+First ask the annotator to specify the maximal number M of 
+instances in a document s/he would like to check for one particular annotation type.
+Then check the latest ML model to see if the recall is at 1.0 for the top M instances
+of the test document. If yes, the ML model will start suggestions for that
+particular annotation type on next documen. The suggestion is a list of the top M 
+instances of the document for that particular annotation type, which are in the 
+order from high confidences to low ones. Otherwise, the annotator has to wait 
+for better learned ML model. On the other hand, the annotator may increase or 
+decrease the number M at any time to control the ML suggestions.
+
+There are several advantages of the above approach. It's more intuitive and easier 
+for the annotator or curator to specify the maximal 
+number M of the instances in a document for checking than a threshold of the
+F-measure such as precsion, recall or F1. Also it sets the recall level as 1.0
+for starting suggestions so that the suggestions have a very good coverage.
+Finally it avoids specifying a threshold of the SVM outputs for computing the F-measures.
+
+3. For the suggestion list, the system can show different levels of confidence.
+E.g. we may set them into three levels, reliable, suggested, and uncertain.
+Again there is a way of defining the three levels without using thresholds.
+First obtain the averaged number N of the annotations of that particular type
+in one document from the annotated documents. Then set e.g. the first N/2 instances
+as reliable, the next N/2+1 -- 3N/2 as suggested, and other instances as
+uncertain.
+
+4. Evaluate the learned ML model. We can the annotations obtained during the MI 
+annotating (plus the golden standard ones if available). Suppose we have N0 documents
+with annotations, doing the N0-1 fold cross-validation 
+or one document hold-out test would be a good evaluation.
+
+5. Distribute the documents to ML and do the evaluation for MI annotating? The 
+SAFE has some fucntions for distributing documents to annotators, doing the 
+evaluation on the annotators' annotations and obtaining the annotations by 
+using e.g. voting mechanism. How to integrate the two parts efficiently is a 
+question which we should thingk about.
+
+6. Post processing rules. It would be good to provide some facility 
+for writing the post processing rules and applying them to fine-tune the 
+annotations obtained from the ML. At first, we can experiment by 
+using the TBL for automatically correcting the IE results of the SVM to see
+if it is good at it. On the other hand, as SAFE is designed 
+for human and automatic system collaboration, the skilled human (language 
+engineer) could check the results of the automatic annotation and hopefully 
+spot some systematic errors and write some simple rules to correct them. Of 
+course SAFE could provide the useful facility to help the language engineer do it.
+
+7. Kalina's idea: in order to gain quickly a large number of instances with 
+minimal manual annotation effort, we can implement an interface where once the
+ user has annotated one string as some class and instance (e.,g. Mr
+ Blair), then a background process (different thread) collects all 
+ occurences of this string in the corpus (using ANNIC) and suggests 
+ them in a KWIC-like GUI similar to that done by Christopher or Thomas 
+ (probably limited by a number, e.g., no more than 50). Then the user 
+ has a chance of changing their class or instance if they are not 
+ correct and this info will get fed to the ML algorithm as positive and
+ negative examples. In this way quickly we acquire many examples, they
+ get passed to the algorithm, which based on the surrounding context 
+ can hopefully learn some rules and return some annotations on other 
+ docs in the corpus. Then the top x% with highest confidence can get 
+ displayed to the user as suggestions and the user corrects them. Then 
+ all their occurences get suggested, etc. This will allow some 
+ instance-based and some document-based annotation models to be mixed.
+
+Yaoyong's comments on it:
+For the combination of the document based annotations with instance based 
+annotations, I think that the instance annotations would be useful in term of 
+getting more training examples quickly in the beginning of annotating. On the 
+other hand, it would make the process a bit more complicated. E.g. we need to 
+put the instance based annotations into the original documents, because at the 
+end we want the document based annotation. And we also need avoid those 
+annotations when applying the learned models to un-annotated documents for 
+active learning purpose.
+
+Hamish's comments:
+The instance based annotations would make the annotation process a bit tricky. So
+we may just stick to the document based annotations.
+
+8. Kalina's point: Provenance: In general, do we also need to track the provenance of the
+annotations (gold-standard, vs user-created vs machine-created)?
+ Perhaps it makes sense to add such features to annotations, so we can 
+ treat them differently. It's a small overhead, but worth it?
+
+Niraj's comments:
+I think, we can use our existing annic setup to solve the above two 
+points. While reviewing the previous systems, one suggestion was to add 
+the author feature to the annotation.  This will be helpful in 
+identifying the author of the annotation.  Not to mention, this 
+information can be helpful in many other ways, for example while 
+comparing the documents, if system  has found a certain annotation as 
+being incorrectly annotated, the respective user can be informed such 
+that he doesn't make such mistake again.
+
+Yaoyong's comments:
+For the provenance, I also think that it would be helpful to have a feature recording the source(s) of the annotation. It may also be helpful if having another feature to record how many annotators agreed on this annotation.
+
+9. Niraj's point: Melita allows users to choose the threshold value from the GUI itself.  
+This is a very nice feature which did not exist in my short demo of the 
+yale based MI. We should probably add this to the slide.  They have two 
+types of threashold (certanity threashold and suggestion threashold).  
+In their GUI they highlight the annotations with above certainity 
+threshold with filled solid rectangles where as those above the 
+suggestion thresholds are highlighted with unfilled solid rectangles.  
+Probably we should also provide these two types of threasholds.
+
+Yaoyong's comments:
+see the second point for a way of starting suggestions without setting
+the thresholds.
+
+10. Niraj's point: In the yale based demo Julien had provided a parameter which 
+specified 
+after how many new instances of additions the algorithm should start 
+retraining.  We might want to consider this incase we don't want to 
+retrrain the model after each new addition.
+
+Yaoyong's comments:
+As for the re-training timing, in my opinion, the document based timing may be 
+better than instance based timing, because it looks to me that the SAFE is the 
+document based process. We can set the number of added documents for one 
+re-training, e.g. do one re-training after each added document or after two added
+ documents. Note that, even an added document doesn't contain any annotation of
+ one type, it may be still useful to re-train model because the document certainly 
+contain lots of negative examples for that type of annotation. As for the 
+computation cost of learning, I think it's better to see if it's problem when 
+we actually implement it and, if it's a problem indeed, of course we should think 
+about ways to deal with it.
+
+11. Kalina's thought about avoiding users becoming overly reliable on the 
+ML suggestions. Precision/recall tuning: Some systems like Amilcare [3] support
+ precision/recall tuning as a faster process not requiring full 
+ re-training. We can aim to support this in a similar fashion. Or we 
+ can implement it as we have done before, where the ML algorithm 
+ outputs confidence measure for each of the annotations and if this 
+ measure is below a given threshold, the annotation is eliminated by a 
+ subsequent module.
+
+ The advantage of the latter approach is that it can help to overcome
+ the problem of users becoming overly reliable on the suggestions by 
+ the adaptive system and not correcting them. Melita [1] (section 5 in 
+ the end) acknowledges this problem, but there is no good suggested 
+ solution (except for the idea of removing randomly suggestions to 
+ check if the user is paying attention ?!). The idea here is that based
+ on the confidence measures the GUI can _/classify/_ on the side in
+ special windows the /annotations _as reliable, suggested, and 
+ uncertain_/. In this way, the user can move away from looking at the 
+ document as a whole and having to read it, to a more KWIC-style 
+ contextual annotation, where the focus is on the annotated examples in
+ a narrow context, rather than the entire document.
+
+Yaoyong's comments: it's an important problem of users becoming overly 
+reliable on the ML suggestions. The point 2 in the above suggests one
+way to avoid the problem by making the suggestions have a good coverage.
+
+But the MI process itself is very complicated and there are several issues to be
+addressed. The following list highlights some of such issues (with some comments
+from Yaoyong):
+
+- What specific type of task the model should be trained for? Should we only
+  support some specific tasks or users should be allowed to create new tasks?
+
+ML can be used in batch learning mode or in MI annotating mode.
+The MI annotating could support all the tasks as long as our learning api supports 
+those tasks.  The Annotator should not be allowed to create new tasks. Creating
+ new tasks should be done by information curator or language engineer.
+
+- What features are best for a given specific task? (Should we allow users to
+  choose them? How?)
+
+That is not a problem for SVM learning and other margin based learning 
+algorithms. Basically we should use all the available linguistic features for 
+the SVM learning �C as showed by our experiments, more features can get better 
+results but the simple features would give near optimal results and complicated 
+features only give marginal improvement. On the other hand, I understand that 
+feature selection is a problem for some other learning algorithm.  In general, 
+since we have done a lot of experiments for evaluating the effect of features 
+for the SVM for the IE as well as for relation extraction, I think the system 
+may just stick to what was best in our experiments. Feature selection is a 
+difficult task and users may not be good at it.
+
+- Is it possible to learn such features automatically?
+
+That's feature selection. Doing feature selection is not an easy task and it 
+may be dependent on the learning algorithm. Fortunately, the SVM doesn't 
+require feature selection in most cases --  you can just provide to it as many 
+features as possible and the SVM can choose the most useful ones during the l
+earning (in other words, that's what the SVM learning for).
+
+- How to produce such features? What linguistic resources (PRs) are needed and
+  which ones to use? Should we allow users to choose them?
+
+ANNIE can produce the features for IE, and we need some parsers and WordNet 
+for relation extraction.
+
+- What learning algorithm to use for a given task?
+
+As said above, we may stick to SVM in the beginning.
+
+- How difficult it is to configure a learning algorithm?
+
+It shouldn't be difficult for the SVM. As we have done extensive experiments 
+on the SVM and the SVM active learning for IE, we know what kind of settings 
+is best.
+
+- Is model updatable?
+
+The SVM is not updatable -- but its implementation in SVM-light can be set as 
+semi-updatable. The PAUM can be used as an updatable (in on-line mode) or in 
+batch mode. On the other hand, batch mode can get more accurate model than 
+the on-line mode.
+
+- What would be the optimum threshold before a model starts suggesting new
+  annotations?
+
+The optimum threshold should be the one when recall^1.0 ---  then the suggestions 
+would have a very good coverage so that the annotator wouldn't miss anything 
+if he just use the suggestion. Practically I think the question has more to do 
+with the individual annotator than with ML. If an individual annotator wants 
+the ML��s suggestions earlier, he could have it early. See the second one of the
+considerations listed above.
+
+- How to decide which annotations to accept from users and which ones to
+  discard?
+
+That's a annotations merging task for the information curator who is in charge 
+of the annotators, with the help from the annotation evaluation module.
+
+- Do we need post editing rules to correct the results? If yes, what type of
+  rules? Which post editing rules to accept and which ones to discard?
+
+It would be nice if we have some post processing rules to correct the 
+systematic mistakes made by the ML. It could be some Jape rule. It should be 
+specific enough so that it wouldn��t modify other correct annotations.
+
+- What tools are required for allowing users to create and submit new
+  annotations?
+
+That's a question for the document distributing and annotation evaluation 
+module.
+
+
+The following sections summarise some of the systems which are relevant to the
+discussion. Some of the points raised in the above list are discussed with new
+thoughts of improving such systems.
+
+Alembic: The main goal of the Alembic workbench is to provide a natural
+language engineering environment for the development of tagged corpora. When
+users, after annotating documents, submit their annotations to the system, the
+underlying rule based system (Alembic text processing system), tries to induce
+new rules from the context of these annotations.  The learned rules are then
+presented in a human readable format. During the annotation session, users are
+allowed to alter or remove these rules. They are also allowed to introduce new
+manual rules.  The analysis of such rules and to monitor their effects on the
+corpus, the workbench provides a set of corpus analysis tools (not listed any
+at the moment). The outcome of annotating documents within the alembic
+workbench is a domain-specific training set that has been acquired with
+minimum human effort, a set of information extraction/annotation rules for
+annotating unseen data and a better understanding of the data through the use
+of corpus analysis techniques.
+
+Callisto: Callisto is a new annotation tool from MITRE which is being
+developed as part of the Alembic Workbench.  It provides an environment for
+annotating documents aimed at different tasks (e.g. co-reference annotations,
+part of speech tagging etc).  For each new session, the system asks users to
+choose one of the tasks for which s/he wants to annotate the documents.  Based
+on the user’s choice, the relevant environment settings are loaded. For
+example to annotate tokens in a document with their POS information user is
+provided with a list of POS tags and s/he’s asked to choose one of the values
+(something similar to our annotation schemas).
+
+The paper titled "Active Learning for Part-of-Speech Tagging: Accelerating
+Corpus Annotation" gives a very good explanation of the concept of Active
+Learning.  They explain how they learn a POS tagger using MEMM and how does
+the active learning help them to accelerates the efficiency of a human
+annotator even with a small amount of training and data.  They explain what
+data should be considered for training a model and for what data the users
+should be asked for their feedback on. In order to determine what sentences
+provide more information and should be used for training, they experiment with
+various policies - Query by Committee (QBC), Query by Uncertainty (QBU) (may
+be some one needs to explain me this in details L), and their variants - QBUV
+(viterbi), QBCV, Weighted QBC and Weighted QBV. They show that QBUV is a cheap
+approach to active learning, but QBU performs best when a small amount of data
+is available (more details in their paper). They explain that active learning
+is an approach to machine learning in which a model is trained with the
+selective help of an oracle. The oracle provides labels on "tough" cases, as
+identified by the model. Easy cases are assumed to be understood by the model
+and assumed to require no additional annotation by the oracle.
+
+Amaya: Amaya is an annotation tool created under the Annotea project.  The
+main difference is in the way they store annotations which allows users work
+offline. They store annotations separate from the actual document content. It
+can be saved either on a server or on a local file system. They use a special
+RDF annotation schema to store these annotations. For each annotation they
+store, at least, its location (e.g. local file system or annotation server),
+scope (e.g. if it is applicable to the entire document or a piece of text),
+annotation type (e.g. if it is an annotation, comment or query) and the
+author.  Initially annotations are stored on a local system, which can then be
+copied over to the server if user instructs to do so.  When a document is
+loaded, annotations from the local file are loaded automatically and user is
+given an option to show annotations or get relevant annotations from the
+server. Amaya allows changing annotation boundaries within the document. It is
+a three clicks drama where user first places a cursor where s/he wants to move
+annotations and saves it as a stored location and then selects the annotations
+and clicks to move to the stored location. This moves all the selected
+annotations to the stored position.
+
+S-CREAM: S-CREAM stands for Semi-automatic CREATion of Metadata. From the
+first read it looks very similar to the ALEMBIC workbench. The most similar
+things are their architecture and the approach for inducing new rules. S-CREAM
+is an annotation framework that integrates a learnable information extraction
+component (Amilcare).  Amilcare is a tool for adaptive IE from text designed
+for supporting active annotation of documents for KM.  The workflow of the
+S-CREAM processing is as below:  User annotates the documents manually with
+the given ontology.  The information about new entities found in the document
+(using the learnt rules from previous training) is extracted. Finally,
+anaphora resolution among the found entities and the establishment of new
+logical relationships among the entities is derived as part of the discourse
+resolution phase.
+
+Rule induction: Its learners induce rules that are able to reproduce the text
+annotation. They use Ont-o-Mat to allow users to create manual annotations.
+The learner starts inducing wrapper like rules that make no use of linguistic
+information where rules are sets of conjunctive conditions on adjacent words.
+Then the linguistic information provided by ANNIE is used in order to
+generalise rules: conditions on words are substituted with conditions on the
+linguistic information (e.g. conditions matching either the lexical category,
+or the class provided by the gazetteer etc.). All the generalizations are
+tested in parallel by using a variant of the AQ algorithm and the best k
+generalizations are kept for IE. The learner induces two types of rules
+(tagging rules and correction rules). Tagging rules add mark-ups to the
+document where as correction rules decide the correct positions of these
+mark-ups if needed.  Similar to Alembic, they also allow users to make
+modifications to these rules and in addition they allow balancing precisions
+and recall.
+
+Annotation framework: CREAM allows generation of annotation in three different
+modes (Note: from paper the last two looked almost same).  Firstly,
+annotations by typing statements - this involves working almost exclusively
+with the ontology browser and the fact templates and filling up the
+information where required.  Secondly, annotation by marking up - this
+involves loading data in document editor, marking parts of the document and
+then drag and dropping them on the ontology. I think, what they mean here is
+that they also allow adding new instances and classes to the ontology.
+Finally, annotation by authoring web pages - this involves the reuse of data
+from the ontology and the fact browser in the document editor by drag and
+drop. I think, they only allow clicking on the existing instances and classes
+in the ontology and not adding new resources. It embeds resulting tags in the
+HTML file itself but can be stored separately in a file or database.  They
+support three annotations mode: 1) Highlighting mode - all annotations are
+highlighted in a single click and user is given an option of accepting or
+rejecting the annotation 2) Interactive mode - one by one annotation is
+highlighted and on each highlight user is asked to either accept or reject the
+annotation before proceeding to the next suggestion and 3) Automatic mode -
+this is something similar to batch learning (a bunch of documents is processed
+altogether) except that when user edits these documents, a feed back is sent
+back.
+
+Setting up a new task: S-CREAM is for training a model or learning rules for a
+specific domain (user can choose which domain) and therefore user has to
+provide an ontology + a set of web-pages specific to that domain for the
+training purpose (and for manual annotation purpose) and a subset of ontology
+concepts to be learned.
+
+Knowtator: Knowtator is a Protege plug-in for annotating documents in order to
+prepare a gold standard data. It provides an editor to create annotation
+schemas, which can be later used while creating annotations.  They allow
+various annotators to annotate the same document simultaneously, and when they
+all submit annotations back, the annotations in common are considered as
+consolidated annotations and the rest are considered or shown to the user for
+further reviewing. They provide the detailed analysis of which users agree/or
+don't agree on what features of what annotations via Inter-annotator agreement
+metrics. They have implemented several match criteria (to be investigated
+later) (i.e. what counts as agreement between multiple annotations). The
+report based on this reveals the systematic differences. They allow saving
+data (along with annotation) or only the annotations separately in a file with
+the choice of annotations to be exported.
+
+In the paper titled "Knowledge Extraction by using Ontology based Annotation
+Tool", they describe an approach where the user is presented with a set of
+possible tags which could be used during the mark-up process. They use a
+system called Crystal to learn new rules. Crystal works using the bottom-up
+approach and finds rules for specific instances and generalises them.  Crystal
+takes similar instances and generalises them into a more general rule by
+preserving the properties from each of the instance definitions. Using these
+rules, the Crystal locates the entities of interest in the document, which
+automatically become candidates for the annotations. For example, from
+patterns "John visits IBM" and "Bill visits Microsoft", Crystal learns a
+pattern "X visits Y" and if "John" and "Bill" were annotated as Visitor and
+IBM and Microsoft were annotated as Organization, Crystal creates a pattern
+"Visitor visits Organization".   They use Badger to fill up these templates.
+Badger considers one sentence at a time and tries to fill up these templates.
+Finally they do reasoning over ontology to find answers to the question such
+as which person visited Microsoft. In order to do that, they have a sub class
+called Visitor of the class called Person. From the template Visitor visits
+Organization, they know that Bill is a visitor, but they check if visitor is a
+subclass of Person. If found any pattern, they say that Bill is a person who
+visited the Microsoft.
+ 
+
+Thoughts
+
+Post editing rules
+
+Alembic is a rule based system whereas not all learners we would want to use
+would be rule based.  Hence we cannot expect our system to present the rules
+in a human readable format or allow them to alter them.  However, we can allow
+users to create post editing rules manually (JAPE grammars and may be ANNIC as
+an interface to author) or using something similar to Crystal. Alternatively,
+we can start with asking system to annotate a copy of the available gold
+standard data, which we can later use to compare the two sets and obtain the
+post editing rules for missing and unwanted annotations.
+
+
+Suggestion rules
+
+The idea here is to find out the general mistakes that users make. For
+example, annotating some text T as A where as it should be annotated as B.
+Such a behaviour can be detected by asking users to annotate some of the
+example documents from gold standard.  Once the user has annotated the
+document, the document can be compared with the gold standard document and the
+usual mistakes can be identified and shown to the user with a suggestion (e.g.
+system thinks this should be X, are you sure it is Y?).
+
+
+Learn what features to use
+
+When user annotates something in the corpus, we can index them using ANNIC
+(which is done automatically now). On time to time basis, run ANNIC to
+retrieve patterns for each individual annotation. From these patterns collect
+statistics for frequently occurring patterns and make a rule out of it. Create
+a rule and then apply it to the clean subset of the training data and thus
+collect features for underlying annotations of the patterns and measure
+accuracy by comparing the results with that of the training data. This way
+user doesn't have to specify the dataset definition, and the features can be
+learnt automatically.
+ 
+
+Multiple tasks at the same time
+
+GATE Document Editor allows us to plug-in various tabs (no idea if document
+annotator allows us to do that?) Thus, we can allow users to switch among
+various tasks by simply allowing him to click on respective tabs.  Annotations
+created in different tabs, can be used for different tasks and sent to
+appropriate models.  Thus, allowing users to achieve multiple tasks at the
+same time.
+ 
+
+What annotations to consider for training and suggestions
+
+When a document opens, an option to run pre-set models to generate annotation
+suggestions should be provided (this may result into overhead for a user if
+the model is not very accurate and therefore should be an optional thing).
+In the context of ML Service in SAFE, users will provide a lot of annotations,
+but a choice of appropriate data can not only reduce the learning time but
+also increase the accuracy of the model being trained (i.e. appropriate use of
+filters).  At the same time, users should not be asked for their feedback on
+the annotations with higher probabilities but only for the ones with lower
+probability. This does surely help in reducing the annotation time.
+
+
+Required features for a specific task
+
+The annotations for contextual features should be created only when the
+annotations are submitted to the model.  The settings for what pre and post
+processing applications to execute can be set initially while setting up the
+specific task. This can be done either automatically or manually.  In the case
+of automatic settings, a table with mappings among available features and
+their respective PRs can be maintained.  User is then given an option of
+choosing one or more features from this table.
+ 
+
+Annotation templates and change in boundaries
+
+Although we have an option for expanding or shrinking annotation boundaries,
+it doesn't allow changing the offsets directly.  If we allow this option, we
+can actually provide pre-created annotations (e.g. a person with some specific
+feature value pairs) to allow users to choose one of them or may be allow
+users to create template annotations which they can reuse later for faster
+annotation. GATE does have an LR that allows loading an XML Annotation Schema
+configuration file, but it will be nice to have a wizard or an editor that
+allows creating new annotation schemas at run-time and use them in the
+document editor. The idea can be borrowed from Knowtator.
+ 
+
+What is available?
+
+While developing the YALE-based learning API, Julien and I had implemented a
+small MI demo (i.e. OBIEEngine) for which different java classes were written.
+Those interfaces would provide us a good example to begin with.
+
+
+*Work flow of the ML service in SAFE*
+
+Language Engineers will be responsible for setting up the configurations for the
+ML task.  This will include configuring the engines.xml and the pre and post
+processing gapp files.  The Information Curator will be responsible for
+assigning different annotators the different ML tasks.  As part of the process
+of configuring engines.xml, the LEs will have to specify the following
+parameters:
+
+o combination parameter: In case of the multiple engines being used, the combination parameter will specify how to combine the annotations suggested by the different engines.
+o evaluation parameter: The evaluation parameter will tell how to split the data (i.e. split or k-fold) into test and training set for the evaluation purpose.
+o newex parameter: The newex parameter will tell the system after how many new documents the model should be retrained or re-learnt.
+
+It will be the responsibility of IC to set up an annotation task and decide a
+strategy for who annotates what.  For example, IC may decide that a document
+should be annotated by some n number of annotators or by some specific
+annotators before it can be submitted to the annotation merging module.  He may
+specify or choose the annotation schema to be used for the given annotation
+task.  He may disable a part of ontology or enable a specific part of ontology
+for a given annotation task.  Enabling and disabling functionalities will be
+implemented as part of the annotation editor and the OCAT.  (Changes to the OCAT
+tool will be implemented first).
+
+*When and How to suggest new annotations? (the strategy is being reviewed.)*
+
+In practice there might be different thresholds for different types of
+annotations or just one threshold for all.  Therefore, the annotators or a
+curator of the ML task should have a flexibility to modify the threashold
+value(s) in order to obtain/suggest more or lesser annotations.
+
+One of the ways to implement this is to have a module which is kept somewhere
+before the annotator GUI which passes only the annotations above a specified
+threashold to the annotators.  Thus this module will be responsible for
+filtering out the annotations which are below the specified threshold.   In the
+case if we decide that it will be the annotators who decide a value for the
+threashold, it will mean that the filtering module would have to be called
+everytime the annotators want to change the threashold value.
+
+A simpler approach is to try adding a threshold element to the annotation
+schemas specifying a feature name and a certain numeric value of between 0 and 1
+(optionally also a comparison), then the doc viewer makes use of it. It'll be
+great if it's possible to have this per annotation type or for any annotation
+type. Then if user decides to lower the threashold value, we can provide a GUI
+component to do that which internally changes the filter configuration and shows
+more highlights.
+
+Rather than fixing the threshold in the annotation schema such that one has to
+edit the schema to change the threshold, it would be better to have something
+like a slider in the GUI where you can set the threshold.  Maybe accessible via
+a right-click menu item on each annotation type in the right hand tree (i.e. the
+menu that currently just contains "change colour"). The slider thing only
+applies to the "numeric" features whereas it would be useful  to have a facility
+for "specific" or "oneOf" values as well and therefore the ability to change
+them should one decides to do so.
+
+Below is an example of annotation schema that supports specifying a threshold
+value per annotation type.
+
+<schema xmlns="http://www.w3.org/2000/10/XMLSchema" xmlns:gas="http://gate.ac.uk/ns/annotation-schema"> %br
+%\ %\ <element name="Person"> %br
+%\ %\ <complexType> %br
+%\ %\ %\ %\ <attribute name="rule" type="string" /> %br
+%\ %\ %\ %\ <attribute name="certainty" type="float"> %br
+%\ %\ %\ %\ %\ %\ <annotation> %br
+%\ %\ %\ %\ %\ %\ %\ %\ <appinfo> %br
+%\ %\ %\ %\ %\ %\ %\ %\ %\ %\ <gas:confidenceAttribute defaultValue="0.5" showWhen="greater" /> %br
+%\ %\ %\ %\ %\ %\ %\ %\ </appinfo> %br
+%\ %\ %\ %\ %\ %\ </annotation> %br
+%\ %\ %\ %\ </attribute> %br
+%\ %\ </complexType> %br
+%\ %\ </element> %br
+</schema> %br
+
+i.e. the confidence feature is the one that's labelled with a
+<gas:confidenceAttribute> appinfo annotation.  
+
+Here are just some of the advantages we can benefit from the modified annotation
+schemas.
+
+a) Either users or curators will modify the schemas depending on the workflow of
+the specific application and thus obtain more or lesser annotations without
+contacting the original service  
+
+b) Even though the document will have all annotations suggested by the machine,
+it will show only the annotations which meet the constraints as specified in the
+annotation schemas.
+
+c) It will reduce the complexity of integrating the filtering module in SAFE and
+will speeds up the annotator GUI. (i.e. The logic will be implemented as part of
+the annotation sets view itself and therefore there will be no need for
+contacting the filtering module again and again).
+
+d) Not only specific to the ML TASK, even in the normal GATE AnnotationSetsView,
+user will have flexibility to disable/enable annotations which he/she is not
+interested in. Something similar to this is the OCAT which allows disabling
+certain classes in the ontology tree which eventually results in hiding mentions
+of the disabled classes.  This will extend it a bit more allowing users to
+disable annotations with specific feature values as well.
+
+*Explanation of the MI process*
+
+o Before sending a document to an annotator, the current model will be applied
+on it (this will be a GAS service).  Executive will call this service to execute
+it over the document. If a new or updated model is available, the executive
+before loading this document into the annotator gui, will call the Application
+GAS service. The Application GAS service will apply the learnt model on the
+document.  The annotations generated by the learnt model will have three special
+features called "source", "confidence" and "location" (note: the "location"
+parameter is for the future use should we decide to allow users to do offline
+annotating).  When annotations are suggested by the model, the "source" feature
+will have some value indicating that it was suggested by the ML model.
+Otherwise the "source" feature will have a value of the annotator's id to
+indicate who created the annotation.  The "confidence" feature will contain a
+double value indicating the model's or respective user's confidence in that
+particular annotation. Annotators of the document will be sent a document with a
+copy of relevent annotation set(s) that s/he should use to add new annotations
+or modify or delete the existing annotations. The suggested annotations will be
+placed under this annotation set.  Based on the value of the feature "source",
+the GUI will distinguish between the suggested annotations and the ones created
+by the annotators.                    
+
+o While annotating new annotations, user will have to mention their confidence
+for each annotation they annotate (e.g. by selecting one of the options:
+confident, not sure and so on).  User will be given several options to see the
+suggested annotations.  For example: 1) highlight all or specific annotations 2)
+highlight all or specific annotations above the specified threshold 3) show only
+one suggestion at a time and the order in which they should be highlighted (e.g.
+offset sorting or confidence sorting etc.)  User will then have to either accept
+or discard it. Discarded annotations will be deleted whereas the source of the
+annotation will be changed to the respective annotator's id for the accepted
+annotations.
+
+o Once the annotators have submitted their annotations, they will be sent to the
+information curator for the merging process. It will be the responsibility of a
+IC to decide what to do when annotators submit their annotations.  For instance,
+the IC may decide to use a fully automatic merging module or to do a partial
+merging by using the automatic module and do the rest himself or may be not to
+use any merging module at all.  Different strategies can be implemented for
+merging annotations.  For example, common annotations can be identified and the
+rest, on which the merging module can not take any decision, can be rescheduled
+for another annotator to have a look. Since a copy of the annotation set prior
+to sending it to the annotors remains on the server, the merging module will be
+able to find out the discarded and the accepted annotations.
+
+o The the executive will call the Updating GAS service, which will consider the
+newly arrived annotations for updating the model, if needed. Every time a new
+document is submiited, it will be processed with the pre-processing application
+to generate new annotations (features).  The document will be sent to the
+learning algorithm.
+
+*Changes to the OCAT Tool*
+
+It has been decided that an additional property will be added to the tool which
+will be used to enable or disable the specific part of ontology.  In other
+words, users will be allowed to specify the names of classes and instances s/he
+does or doesn't want to see in the ocat tool.  Thus limiting the annotator to
+annotate the text with a selected classes or instances from the ontology.
+
+*Different measures for starting the ML suggestions and the efficiency 
+and accuracy of using ML in MI annotating*
+
+I have run some experiments for it some time ago. One conclusion of the 
+experiments is that the annotator should read through the whole document rather 
+than just checking the ML suggested annotations (even in a ranked list of those 
+suggestions), in particular in the early stage of annotating. Missing true 
+positive examples in the training data is harmful for the generalization 
+capability of the learned model -- but if filtering out some negative examples 
+which are close to the classification hyper-plane, one could reduce the harm caused 
+by the missed positive examples. Looking for and annotating new positive examples 
+which are not in the ML suggestions is important for improving model.
+
+When are the ML suggestions sent to annotators? I think there are two cases to 
+consider here. One is that the annotation type is pre-annotated by JAPE grammar, 
+in which it may be when the pre-processing + ML accuracy is higher than the JAPE grammar. Another 
+case is that there is no pre-annotation for the annotation type. In this case it 
+may be better to let individual annotator decide when to use the ML suggestions. 
+Note that in the early stage a higher threshold for the ML suggestions would 
+prevent annoying annotator with too many incorrect ML suggestions. Later on may 
+decrease the threshold to get better coverage.
+
+Which measure is used for the accuracy of ML suggestions? F-measure including 
+precision, recall and F1 is better than other measures such as error rate and 
+averaged precision for semantic annotation, because F-measure is intuitive for 
+user and sensible for semantic annotation, while error rate is often overwhelmed 
+by the large number of negative examples and averaged precision is quite low in 
+the early stage and has not a way for balance between coverage and precision.
+

@@ -1,0 +1,91 @@
+<project name="common-services" default="dist">
+
+  <import file="../../../lib/lib.xml" />
+  
+  <property name="safe.home" location="../../.." />
+  <property name="gate.home" location="../../../../gate" />
+  <property name="build.dir" location="build" />
+  <property name="dist.dir" location="dist" />
+  <property name="warfile" location="${dist.dir}/common-services.war" />
+  <property name="applications.dir" location="applications" />
+  <property name="original.gas.war" location="${safe.home}/gate-service/server/gate-service.war" />
+
+  <path id="tasks.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset refid="pattern.gate" />
+      <patternset refid="pattern.jdom" />
+      <patternset refid="pattern.jaxen" />
+      <patternset refid="pattern.woodstox" />
+    </fileset>
+  </path>
+  
+  <target name="build-plugins">
+    <ant dir="plugins/SchemaCleaner">
+      <target name="build" />
+      <target name="distro.prepare" />
+    </ant>
+  </target>
+
+  <target name="dist" depends="build-plugins">
+
+    <!-- build a comma-separated list of services -->
+    <pathconvert pathsep="," property="services.list">
+      <map from="${applications.dir}/" to="" />
+      <globmapper from="*.xgapp" to="*" />
+      <path>
+        <fileset dir="${applications.dir}" includes="*.xgapp" />
+      </path>
+    </pathconvert>
+
+    <!-- load the packagegapp task -->
+    <typedef resource="gate/util/ant/antlib.xml"
+             classpathref="tasks.classpath" />
+
+    <!-- Load ant-contrib -->
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+      <classpath>
+        <fileset dir="${lib.dir}">
+          <patternset refid="pattern.ant-contrib" />
+        </fileset>
+      </classpath>
+    </taskdef>   
+
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.dir}/spring" />
+    <for list="${services.list}" param="service">
+      <sequential>
+        <echo>Packaging application for @{service}</echo>
+        <packagegapp destfile="${build.dir}/@{service}.xgapp"
+                     src="${applications.dir}/@{service}.xgapp"
+                     copyplugins="yes"
+                     copyresourcedirs="no"
+                     onUnresolved="recover" />
+        <copy tofile="${build.dir}/spring/@{service}ServiceBeans.xml"
+              file="webapp/WEB-INF/spring/template.xml">
+          <filterset>
+            <filter token="SERVICE" value="@{service}" />
+          </filterset>
+        </copy>
+      </sequential>
+    </for>
+    <!-- generate property file -->
+    <propertyfile file="${build.dir}/common-services.properties"
+              comment="Auto-generated - do not edit!">
+      <entry key="schema.dir" value="${schema.dir}" />
+    </propertyfile>
+    
+    <mkdir dir="${dist.dir}"/>
+    <jar destfile="${warfile}">
+      <zipfileset src="${original.gas.war}" />
+      <fileset dir="webapp" excludes="WEB-INF/spring/template.xml" />
+      <zipfileset dir="${build.dir}" prefix="WEB-INF" />
+      <zipfileset dir="applications" includes="*-definition.xml"
+                  prefix="WEB-INF" />
+    </jar>
+  </target>
+
+   <target name="clean"> 
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+   </target> 
+</project>

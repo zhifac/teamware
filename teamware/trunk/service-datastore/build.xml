@@ -1,0 +1,96 @@
+<project name="service-datastore" default="build" basedir=".">
+  <import file="../lib/lib.xml" />
+  <import file="../common.xml" />
+
+  <description>
+        A plugin for GLEAM document service Integration.
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src" />
+  <property name="build" location="build" />
+  <property name="jar.name" value="service-datastore.jar" />
+  <property name="jar.location" location="lib/${jar.name}" />
+
+  <patternset id="pattern.runtime.libs">
+    <patternset refid="pattern.cxf" />
+    <patternset refid="pattern.javamail" />
+    <patternset refid="pattern.safe-common" />
+    <patternset refid="pattern.commons-discovery" />
+    <patternset refid="pattern.commons-logging" />
+    <patternset refid="pattern.docservice-api" />
+  </patternset>
+
+  <path id="classpath">
+    <fileset dir="${lib.dir}">
+      <patternset refid="pattern.gate" />
+      <!-- include runtime libs as well -->
+      <patternset refid="pattern.runtime.libs" />
+    </fileset>
+  </path>
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp />
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}" />
+    <mkdir dir="lib" />
+  </target>
+
+  <target name="compile" depends="init" description="compile the source">
+    <require lib="safe-common" />
+    <require lib="docservice-api" />
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}" debug="true" source="1.5">
+      <classpath refid="classpath" />
+    </javac>
+  </target>
+
+  <target name="jar" depends="compile" description="generate the distribution">
+    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+    <jar jarfile="${jar.location}" basedir="${build}" />
+  </target>
+
+  <target name="clean.classes" description="clean up">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}" />
+    <delete dir="${dist}" />
+  </target>
+
+  <target name="clean" depends="clean.classes">
+    <!-- full clean also removes the generated JAR file and lib dir -->
+    <delete file="${jar.location}" />
+    <delete dir="lib" />
+  </target>
+
+  <target name="copy-https-conf" if="https.truststore">
+    <copy todir="conf" file="${src}/cxf.xml">
+      <filterset>
+        <filter token="TRUSTSTORE_PASSWORD" value="${https.truststore.password}" />
+      </filterset>
+    </copy>
+    <copy tofile="conf/trusted-certs.keystore" file="${https.truststore}" />
+  </target>
+
+  <!-- Targets used by the main GATE build file -->
+  <target name="build" depends="jar, copy-https-conf">
+    <copy todir="lib" flatten="true">
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.runtime.libs" />
+      </fileset>
+    </copy>
+    <manifestclasspath property="manifest.class.path" jarfile="${jar.location}">
+      <classpath>
+        <fileset dir="lib" includes="*.jar" excludes="${jar.name}" />
+      </classpath>
+    </manifestclasspath>
+    <jar update="true" destfile="${jar.location}">
+      <manifest>
+        <attribute name="Class-Path" value="${manifest.class.path}" />
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="test" />
+  <target name="distro.prepare" depends="clean.classes" />
+</project>
+

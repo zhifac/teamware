@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-access="field">
+
+  <subclass name="gleam.executive.workflow.core.JbpmTaskInstance"
+         extends="org.jbpm.taskmgmt.exe.TaskInstance"
+         discriminator-value="C">
+
+         <property name="documentId" column="DOCUMENT_" />
+         <property name="annotationSetName" column="ANNOTATIONSETNAME_" />
+         <property name="lastOpened" column="LASTOPENED_" />
+         <property name="lastSaved" column="LASTSAVED_" />
+         <property name="timeWorkedOn" column="TIMEWORKEDON_" />
+  </subclass>
+
+</hibernate-mapping>

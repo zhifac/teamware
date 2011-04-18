@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!-- $Id: creole.xml 8656 2007-04-25 13:42:32Z andrey $ -->
+<!-- creole.xml directory file for Annotation Schema definition -->
+<CREOLE-DIRECTORY>
+	<!-- Language Resources -->
+	<CREOLE>
+		<!-- Annotation schema -->
+		<RESOURCE>
+			<NAME>Annotation schema</NAME>
+			<CLASS>gate.creole.AnnotationSchema</CLASS>
+			<COMMENT>An annotation type and its features
+                        (http://gate.ac.uk/sale/tao/#sec:schemas)</COMMENT>
+			<PARAMETER NAME="xmlFileUrl"
+				COMMENT="The url to the definition file" SUFFIXES="xml;xsd">
+				java.net.URL
+			</PARAMETER>
+		</RESOURCE>
+	</CREOLE>
+</CREOLE-DIRECTORY>

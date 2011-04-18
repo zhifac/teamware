@@ -1,0 +1,282 @@
+<project name="rich-ui" default="all" basedir=".">
+  <import file="../lib/lib.xml" />
+	<import file="../common.xml" />
+
+  <!-- import ant-contrib tasks -->
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+    <classpath>
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.ant-contrib" />
+      </fileset>
+    </classpath>
+  </taskdef>
+
+  <property file="../${instance.name}-build.properties" />
+  <property file="../build.properties" />
+  <property file="${ant.project.name}-build.properties" />
+  <property file="build.properties" />
+  <property name="srcDir" value="src" />
+  <property name="outputDir" value="classes" />
+  <property name="distDir" value="${safe.dir}/${ant.project.name}/dist" />
+  <property name="buildDir" value="build" />
+  <property name="keystore" value="keystore" />
+  <property name="storepass" value="storepass" />
+  <property name="keypass" value="keypass" />
+  <property name="alias" value="AnnotatorGUI" />
+
+  <property name="war.location" location="${annotator-gui.custom.app.name}.war" />
+  <property name="richui.jar.location" location="rich-ui.jar" />
+  <property name="plugins.dir" location="resources/plugins" />
+
+  <path id="run.class.path">
+    <fileset dir="${distDir}/app">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+  <patternset id="build.required.libs">
+    <patternset refid="pattern.gate" />
+    <patternset refid="pattern.gate.plugin.ontology-tools" />
+    <patternset refid="pattern.junit" />
+    <patternset refid="pattern.jdom" />
+    <patternset refid="pattern.javamail" />
+    <patternset refid="pattern.cxf" />
+    <patternset refid="pattern.servletapi" />
+    <patternset refid="pattern.commons-discovery" />
+    <patternset refid="pattern.commons-logging" />
+
+    <!-- only api is required to compile -->
+    <patternset refid="pattern.docservice-proxy-api" />  	
+    <patternset refid="pattern.executive-proxy-api" />
+    <patternset refid="pattern.safe-common" />
+	  <patternset refid="pattern.executive-proxy" />
+  </patternset>
+
+  <patternset id="run.required.libs">
+    <!-- full executive and docservice proxy (api and impl) only required at runtime -->
+    <patternset refid="pattern.executive-proxy" />
+    <patternset refid="pattern.docservice-proxy" />
+    <patternset refid="pattern.commons-httpclient" />
+    <patternset refid="pattern.commons-codec" />
+  </patternset>
+
+  <fileset id="plugin.base-plugin" dir="${plugins.dir}" includes="base-plugin/**/*" />
+
+  <!-- The CLASSPATH -->
+  <path id="build.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset refid="build.required.libs" />
+    </fileset>
+  </path>
+
+
+  <!-- ===  All Target ====================================== -->
+  <target name="all" depends="stage-web" />
+
+  <!-- ===  Clean Target ==================================== -->
+  <!--
+  The "clean" target deletes any previous "build" and "dist" directory,
+  so that you can be ensured the application can be built from scratch.
+  -->
+  <target name="clean">
+    <delete dir="${distDir}" />
+    <delete dir="${buildDir}" />
+    <delete dir="${outputDir}" />
+  </target>
+
+  <!-- ===  Run Targets ==================================== -->
+  <target name="run-direct">
+    <java classname="gleam.annotatorgui.AnnotatorGUI"
+          classpathref="run.class.path"
+          fork="true"
+          dir="${distDir}/app" maxmemory="1024m">
+	  <arg value="mode=direct"/>
+	  <arg value="sitecfg=file:gate.xml"/>
+	  <arg value="load-plugins="/>
+          <arg value="enable-oe=false"/>
+          <!-- arg value="classes-to-hide=class1;class2"/ -->
+          <!-- arg value="classes-to-show=class1;class2"/ -->
+	  <arg value="enable-application-log=false"/>
+	  <arg value="owlimservice-url=http://localhost:8080/owlim-service/services/OWLIMService"/>
+	  <arg value="docservice-url=http://localhost:8080/docservice/services/docservice"/>
+ 	  <arg value="select-as=a"/>
+	  <arg value="select-ann-type=t1,t2"/>
+    </java>
+  </target>
+
+  <target name="run-pool">
+    <java classname="gleam.annotatorgui.AnnotatorGUI"
+          classpathref="run.class.path"
+          fork="true"
+          dir="${distDir}/app"
+	      maxmemory="1024m">
+	  <arg value="mode=pool"/>
+	  <arg value="debug=true"/>
+	  <arg value="sitecfg=file:gate.xml"/>
+	  <arg value="load-plugins="/>
+          <arg value="enable-oe=false"/>
+	  <arg value="enable-application-log=false"/>
+          <!-- arg value="classes-to-hide=class1;class2"/ -->
+          <!-- arg value="classes-to-show=class1;class2"/ -->
+	  <arg value="owlimservice-url=http://localhost:8080/owlim-service/services/OWLIMService"/>
+	  <arg value="executiveservice-url=http://localhost:8080/executive/services/ExecutiveCallbackService"/>
+	  <arg value="executive-proxy-factory=gleam.executive.proxy.impl.ExecutiveProxyFactoryImpl"/>
+	  <arg value="user=annotator1"/>
+	</java>
+  </target>
+
+  <!-- ===  Prepare Target ==================================== -->
+  <!-- create build directory structure -->
+  <target name="prepare">
+    <mkdir dir="${outputDir}" />
+    <mkdir dir="${buildDir}" />
+    <mkdir dir="${distDir}" />
+  </target>
+
+  <!-- ===  Compile Target ================================== -->
+  <!--
+  The "compile" target transforms source files (from your "src" directory)
+  into object files in the appropriate location in the build directory.
+  This example assumes that you will be including your classes in an
+  unpacked directory hierarchy under "/WEB-INF/classes".
+  -->
+  <target name="compile" description="Compile Java sources" depends="prepare">
+    <require lib="docservice-api" />
+    <require lib="safe-common" />
+    <require lib="executive-proxy-api" />
+
+    <!-- Compile Java classes as necessary -->
+    <javac srcdir="${srcDir}" destdir="${outputDir}"
+      debug="true"
+      source="1.5"
+      target="1.5"
+      debuglevel="lines,vars,source"
+      deprecation="on"
+      optimize="off"
+      encoding="UTF-8"
+      classpathref="build.classpath"/>
+    <copy todir="${outputDir}">
+      <fileset dir="${srcDir}">
+        <include name="**/*.gif" />
+        <include name="**/*.png" />
+        <include name="**/*.ico" />
+        <include name="**/*.html" />
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- Create application JAR file -->
+  <target name="jar" depends="compile">
+    <jar destfile="${richui.jar.location}" update="false" index="true">
+      <fileset dir="${outputDir}"/>
+    </jar>
+    <signjar jar="${richui.jar.location}" alias="${alias}" keystore="${keystore}" storepass="${storepass}" keypass="${keypass}" />
+  </target>
+
+
+  <!-- ===  Javadoc Target ================================== -->
+  <!--
+  The "javadoc" target creates Javadoc API documentation for the Java
+  classes included in your application.  Normally, this is only required
+  when preparing a distribution release, but is available as a separate
+  target in case the developer wants to create Javadocs independently.
+  -->
+  <target name="javadoc" description="Create Javadoc API documentation">
+    <delete dir="${distDir}/javadoc" />
+    <javadoc access="private" destdir="${distDir}/javadoc"
+      classpathref="build.classpath"
+      Encoding="UTF-8"
+      Use="yes"
+      Windowtitle="Annotator Pool Java API Documentation"
+      link="http://java.sun.com/j2se/1.4.2/docs/api/"
+      docencoding="UTF-8"
+      charset="UTF-8" source="1.5"
+      useexternalfile="yes" breakiterator="true">
+      <packageset dir="${srcDir}">
+        <include name="gate/teamware/richui/**" />
+      </packageset>
+    </javadoc>
+  </target>
+
+  <!-- ===  Staging Target ====================================== -->
+  <target name="stage-web" depends="jar">
+    <require lib="executive-proxy-impl" />
+    <require lib="docservice-proxy-impl" />
+    <!-- stage JAR files into build dir -->
+    <mkdir dir="${buildDir}/app" />
+    <copy todir="${buildDir}/app" flatten="true">
+      <fileset dir="${lib.dir}">
+        <patternset refid="build.required.libs" />
+        <patternset refid="run.required.libs" />
+        <exclude name="**/servletapi*.jar"/>
+      </fileset>
+      <fileset file="${richui.jar.location}" />
+    </copy>
+
+    <mkdir dir="${buildDir}/app/plugins" />
+    <copy todir="${buildDir}/app/plugins">
+      <fileset refid="plugin.base-plugin" />
+      <fileset dir="${gate.plugin.dir}">
+      	<include name="Ontology_Tools/**/**"/>
+        <include name="Schema_Annotation_Editor/**" />
+      </fileset>
+    </copy>
+    <jar destfile="${buildDir}/app/plugins.jar" update="true" index="true">
+      <fileset dir="${buildDir}/app/plugins" />
+    </jar>
+
+    <!-- work out which JARs need re-signing -->
+    <outofdate outputsourcespath="unsigned.jars.src.path"
+               outputtargetspath="unsigned.jars.dest.path">
+      <sourcefiles>
+        <fileset dir="${buildDir}/app">
+          <include name="*.jar" />
+          <include name="*.zip" />
+          <exclude name="activation.jar" />
+          <exclude name="mail.jar" />
+        </fileset>
+      </sourcefiles>
+      <mapper type="glob" dir="${buildDir}/app"
+              from="*" to="${distDir}/app/*" />
+    </outofdate>
+
+    <!-- copy updated JARs into dist directory -->
+    <pathtofileset name="unsigned.jars.src" pathrefid="unsigned.jars.src.path"
+                   dir="${buildDir}/app" />
+    <copy todir="${distDir}/app">
+      <fileset refid="unsigned.jars.src" />
+      <!-- activation and mail are already signed -->
+      <fileset dir="${buildDir}/app">
+        <include name="mail.jar" />
+        <include name="activation.jar" />
+      </fileset>
+
+    </copy>
+
+    <!-- and sign them -->
+    <pathtofileset name="unsigned.jars.dest" pathrefid="unsigned.jars.dest.path"
+                   dir="${distDir}/app" />
+    <signjar alias="${alias}" keystore="${keystore}" storepass="${storepass}" keypass="${keypass}">
+      <fileset refid="unsigned.jars.dest" />
+    </signjar>
+  </target>
+
+  <target name="deploy"
+      description="copy into the deployment directory under the executive webapp.">
+
+     <echo message="${deploy.dir}/${webapp.name}"/>
+  	 <mkdir dir="${deploy.dir}/${webapp.name}/app" />
+      <copy todir="${deploy.dir}/${webapp.name}/app">
+	  <fileset dir="${distDir}/app"/>
+     </copy>
+
+  </target>
+
+
+  <!-- =================================================================== -->
+	<!-- runs annotator gui tests                                               -->
+  <!-- =================================================================== -->
+	<target name="test-all" description="Default test target">
+	</target>
+
+</project>

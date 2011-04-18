@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service xmlns="http://gate.ac.uk/gleam/gate-service/definition">
+  <annotationSets>
+    <annotationSet name="safe.preprocessing" out="true" />
+  </annotationSets>
+  <parameters />
+</service>
+

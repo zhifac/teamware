@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset xmlns:tw="http://gate.ac.uk/ns/teamware/sample-data">
+  <!-- Common annotation services provided by the cloud installation -->
+  <annotation_service name="pre-manual gas"
+        url="/common-services/services/ast"
+        description="GAS for preparing manual annotation task"
+        can_use_private_urls="Y"
+        tw:type="gas">
+    <tw:parameters><![CDATA[<map><entry><string>parameterValue</string><string></string></entry><entry><string>parameterKey</string><string></string></entry><entry><string>asExtraMappings</string><string>in=safe.preprocessing</string></entry><entry><string>asKey</string><string>out</string></entry><entry><string>asValue</string><string></string></entry></map>]]></tw:parameters>
+  </annotation_service>
+
+  <annotation_service name="copy gas"
+        url="/common-services/services/copy"
+        description="copy Section, Reference, Measurement annotations from annotator1/2 annotation sets to consensus annotation set"
+        can_use_private_urls="Y"
+        tw:type="gas">
+    <tw:parameters><![CDATA[<map><entry><string>parameterValue</string><string></string></entry><entry><string>parameterKey</string><string></string></entry><entry><string>asExtraMappings</string><string></string></entry><entry><string>asKey</string><string></string></entry><entry><string>asValue</string><string></string></entry></map>]]></tw:parameters>
+  </annotation_service>
+
+  <annotation_service name="merge gas"
+        url="/common-services/services/merge"
+        description="copy annotator1/2 to annotator1/2.original as a backup, merge annotator1/2 annotations into consensus, delete annotator1/2 annotations that have been merged"
+        can_use_private_urls="Y"
+        tw:type="gas">
+    <tw:parameters><![CDATA[<map><entry><string>parameterValue</string><string></string></entry><entry><string>parameterKey</string><string></string></entry><entry><string>asExtraMappings</string><string></string></entry><entry><string>asKey</string><string></string></entry><entry><string>asValue</string><string></string></entry></map>]]></tw:parameters>
+  </annotation_service>
+
+  <annotation_service name="annie gas"
+        url="/common-services/services/annie"
+        description="ANNIE Annotation Service"
+        can_use_private_urls="Y"
+        tw:type="gas">
+    <tw:parameters><![CDATA[<map><entry><string>parameterValue</string><string></string></entry><entry><string>parameterKey</string><string></string></entry><entry><string>asExtraMappings</string><string></string></entry><entry><string>asKey</string><string></string></entry><entry><string>asValue</string><string></string></entry></map>]]></tw:parameters>
+  </annotation_service>
+
+  <annotation_service name="reset gas"
+        url="/common-services/services/reset"
+        description="Deletes all annotations"
+        can_use_private_urls="Y"
+        tw:type="gas">
+    <tw:parameters><![CDATA[<map><entry><string>parameterValue</string><string></string></entry><entry><string>parameterKey</string><string></string></entry><entry><string>asExtraMappings</string><string></string></entry><entry><string>asKey</string><string></string></entry><entry><string>asValue</string><string></string></entry></map>]]></tw:parameters>
+  </annotation_service>
+
+  <annotation_service name="example schema-aware pre-manual gas"
+        url="/common-services/services/schema-cleaner"
+        description="GAS for preparing manual annotation task, only copies annotations from the preprocessing set that are valid according to the specified schemas"
+        can_use_private_urls="Y"
+        tw:type="gas">
+    <tw:parameters><![CDATA[<map><entry><string>parameterValue</string><string>Person, Location, Organization</string></entry><entry><string>parameterKey</string><string>schemas</string></entry><entry><string>asExtraMappings</string><string>in=safe.preprocessing</string></entry><entry><string>asKey</string><string>out</string></entry><entry><string>asValue</string><string></string></entry></map>]]></tw:parameters>
+  </annotation_service>
+</dataset>

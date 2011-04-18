@@ -1,0 +1,168 @@
+<html>
+<head>
+</head>
+<body>
+<font face="Verdana">
+
+<h1>GLEAM document service</h1>
+
+<!-- ==================================== -->
+<h2>Project files</h2>
+
+<p>
+<b><code>build.xml</code></b><br>
+Ant build file to build the project.
+</p>
+
+<p>
+<b><code>deploy.wsdd</code></b><br>
+Docservice deployment descriptor.
+</p>
+
+<p>
+<b><code>./src/gleam/docservice</code></b><br>
+Java sources of the doc service.
+</p>
+
+<p>
+<b><code>./src/gleam/docservice/test</code></b><br>
+Java sources of the Unit tests for the doc service.
+</p>
+
+<p>
+<b><code>./src/gleam/docservice/xml</code></b><br>
+Java code for GZIP compression of SOAP messages.<br>
+You don't need to change your Java code at all, it's just a couple of extra JAR files on the classpath and a couple of configuration file changes. Java sources of the doc service. There is useful <A href="http://www.thomas-bayer.com/soap-compression-howto.htm" title="GZIP compression of SOAP messages in AXIS">tutorial</A> on how to set up your Axis web services to compress the SOAP requests and responses.
+</p>
+
+<p>
+<b><code>./conf/</code></b><br>
+Configuration files of the web application.
+</p>
+
+<p>
+<b><code>./conf/web.xml</code></b><br>
+If you add any extra servlets to your application, this is where they need to be listed.
+</p>
+<p>
+<b><code>./conf/context.xml</code></b><br>
+The context XML file for tomcat.
+</p>
+  
+<p>
+<b><code>./conf/services/</code></b><br>
+Configuration files for the XML data encoding.
+</p>
+
+<p>
+<b><code>./lib</code></b><br>
+Libraries used to compile the project.<br>
+Doesn't include the gate.jar which also needed.
+</p>
+
+<p>
+<b><code>./resources</code></b><br>
+Project resource files.
+</p>
+
+<p>
+<b><code>./webapp</code></b><br>
+Root directory of the web application.
+</p>
+
+<p>
+<b><code>./webapp/WEB-INF</code></b><br>
+WEB-INF directory of the web application.<br>
+Also this is a gate.home directory. The place of gate.xml, user-gate.xml and plugins.
+</p>
+
+<p>
+<b><code>./webapp/WEB-INF/plugins</code></b><br>
+All the GATE plugins needed by your application (including ANNIE).
+</p>
+
+  
+
+<!-- ==================================== -->
+<h2>Building and deploying</h2>
+
+<p>
+You will need to set catalina.home and gate.home in the file "build.properties"
+to point at your Tomcat and GATE directories, as the build process picks up JAR
+files from both these locations.
+</p>
+
+<p>
+Full deployment procedure consists from several steps: create WAR --> deploy WAR --> deploy the web service.<br>
+</p>
+
+<p>
+<b>Create WAR:</b></p>
+<p>
+Once you have the correct build.properties, simply running "ant" should compile the code and create a <code>docservice.war</code> file in the project root directory.
+</p>
+
+<p>
+<b>Deploy WAR:</b></p>
+<p>
+Put the generated <code>docservice.war</code> file in tomcat's webapps directory and restart the tomcat server to deploy the application.
+</p>
+
+<p>
+<b>Deploy the web service:</b></p>
+<p>
+Run ant target <code>deploy-service</code> which performs the deployment of the web service.<br>
+You will need to correct build.xml if docservice deployed not locally. You need to change the URL of the AXIS Admin web service according to your docservice deployment:<br>
+<code>&lt;property name="admin.url" value="http://localhost:8080/docservice/services/AdminService"/&gt;</code>
+</p>
+
+<p><b>Configure Tomcat:</b></p>
+<p>Add following lines to tomcat's server.xml</p>
+<p>
+<code>
+&lt;Context path="/docservice" docBase="docservice" debug="5" reloadable="true" crossContext="true"&gt;<br>
+&nbsp;&nbsp;&lt;Resource name="jdbc/docservicedb" auth="Container" type="javax.sql.DataSource"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;maxActive="100" maxIdle="30" maxWait="10000"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;username="docservice" password="docservice" driverClassName="com.mysql.jdbc.Driver"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;url="jdbc:mysql://localhost:3306/docservicedb?autoReconnect=true"/&gt;<br>
+&lt;/Context&gt;<br>
+</code>
+</p>
+
+<p>
+After successful deployment the docservice web application will be available at:
+<ul>
+<li><code>http://server-name:port/docservice</code> - the root of the application (index page)</li>
+<li><code>http://server-name:port/docservice/javadoc</code> - docservice JavaDoc</li>
+<li><code>http://server-name:port/docservice/services</code> - all AXIS services on the server</li>
+<li><code>http://server-name:port/docservice/services/docservice?wsdl</code> - docservice WSDL</li>
+</ul>
+
+<!-- ==================================== -->
+<h2>Configuring database for LockManager</h2>
+
+<p><b>Create database and user:</b></p>
+<p>
+<code>
+create database docservicedb;<br>
+create user 'docservice'@'localhost' identified by 'docservice';<br>
+grant all on docservicedb.* to 'docservice'@'localhost';<br>
+grant show databases on *.* to 'docservice'@'localhost';<br>
+</code>
+</p>
+
+<p><b>Create table:</b></p>
+<p>
+<code>
+create table locks (<br>
+  task_id int not null auto_increment primary key,<br>
+  ann_set_name varchar(100),<br>
+  doc_pers_id varchar(100),<br>
+  timestamp bigint<br>
+);<br>
+</code>
+</p>
+
+</body>
+</html>
+

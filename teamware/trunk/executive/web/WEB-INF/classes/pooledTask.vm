@@ -1,0 +1,10 @@
+Dear ${userName},
+
+In the project '${processName}', you can accept new task '${taskName}'.
+
+Please login at: ${link}
+
+and check your group tasks.
+
+Best regards,
+GATE Teamware Support

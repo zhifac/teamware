@@ -1,0 +1,53 @@
+all:  about-backlog.html backlog.html gas-user-guide.html gate-training-course-talk.html gos-in-safe.html index.html learning.html london-escience-talk.html pics.html safe-develop.html safe-jocch.html safe-method.html safe-reqs.html safe.html salzburg-eculture-talk.html search-gui.html xp-scrum-safe.html
+
+about-backlog.html: about-backlog.yam
+	yam2html about-backlog
+
+backlog.html: backlog.yam
+	yam2html backlog
+
+gas-user-guide.html: gas-user-guide.yam
+	yam2html gas-user-guide
+
+gate-training-course-talk.html: gate-training-course-talk.yam
+	yam2html gate-training-course-talk
+
+gos-in-safe.html: gos-in-safe.yam
+	yam2html gos-in-safe
+
+index.html: index.yam
+	yam2html index
+
+learning.html: learning.yam
+	yam2html learning
+
+london-escience-talk.html: london-escience-talk.yam
+	yam2html london-escience-talk
+
+pics.html: pics.yam
+	yam2html pics
+
+safe-develop.html: safe-develop.yam
+	yam2html safe-develop
+
+safe-jocch.html: safe-jocch.yam
+	yam2html safe-jocch
+
+safe-method.html: safe-method.yam
+	yam2html safe-method
+
+safe-reqs.html: safe-reqs.yam
+	yam2html safe-reqs
+
+safe.html: safe.yam
+	yam2html safe
+
+salzburg-eculture-talk.html: salzburg-eculture-talk.yam
+	yam2html salzburg-eculture-talk
+
+search-gui.html: search-gui.yam
+	yam2html search-gui
+
+xp-scrum-safe.html: xp-scrum-safe.yam
+	yam2html xp-scrum-safe
+

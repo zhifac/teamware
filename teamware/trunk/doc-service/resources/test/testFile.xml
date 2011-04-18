@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<GateDocument>
+<!-- The document's features-->
+
+<GateDocumentFeatures>
+<Feature>
+  <Name className="java.lang.String">gate.SourceURL</Name>
+  <Value className="java.lang.String">file:/C:/Documents and Settings/Julien Nioche/Desktop/4739424.stm.htm</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">MimeType</Name>
+  <Value className="java.lang.String">text/html</Value>
+</Feature>
+</GateDocumentFeatures>
+<!-- The document content area with serialized nodes -->
+
+<TextWithNodes><Node id="0"/>BBC NEWS | Europe | Ratko Mladic &apos;is still at large&apos;<Node id="52"/>
+
+<Node id="54"/>Ratko Mladic &apos;is still at large&apos;<Node id="86"/> <Node id="87"/>The UN&apos;s chief war crimes prosecutor has denied reports suggesting that top war crimes suspect General Ratko Mladic had been arrested.<Node id="221"/>
+<Node id="222"/>&gt; Carla del Ponte said &quot;the false rumours have absolutely no basis&quot;, and there was no indication that his surrender was being negotiated.<Node id="359"/>
+
+<Node id="361"/>&gt; But she said the former Bosnian Serb wartime general &quot;can and must be arrested immediately&quot;.<Node id="455"/>
+
+<Node id="457"/>&gt; The Hague tribunal has charged Gen Mladic with war crimes in Bosnia.<Node id="527"/>
+<Node id="528"/>
+<Node id="529"/>&gt; European Union Enlargement Commissioner Olli Rehn is due to present a report early next week to EU foreign ministers on whether Serbia is co-operating with the tribunal.<Node id="700"/>
+
+<Node id="702"/>&gt; The EU warned Serbia last month that moves towards membership could be halted if Belgrade does not hand over Gen Mladic.<Node id="824"/>
+
+<Node id="826"/>&gt; He has been indicted over the siege of Sarajevo, which claimed at least 10,000 lives, and the 1995 Srebrenica massacre, in which at least 7,500 Muslim men and boys were killed.<Node id="1004"/>
+
+<Node id="1006"/>&gt; It was the worst atrocity in Europe since World War II.<Node id="1063"/>
+
+<Node id="1065"/>&gt; <Node id="1067"/>&apos;Within reach&apos;<Node id="1081"/>
+
+<Node id="1083"/>&gt; Ms del Ponte told reporters that Belgrade had assured her on Tuesday that &quot;Mladic remains at large&quot;.<Node id="1185"/>
+
+<Node id="1187"/>&gt;<Node id="1188"/>
+<Node id="1189"/>Ratko Mladic is in Serbia, there is no doubt about it<Node id="1242"/>
+&gt; Carla del Ponte<Node id="1260"/>
+&gt;<Node id="1262"/>
+<Node id="1263"/>
+<Node id="1264"/>&gt; However, she said there was &quot;no doubt&quot; he was in Serbia, and had been since 1998.<Node id="1347"/>
+
+<Node id="1349"/>&gt; &quot;During all this time he has been and remains within reach of the Serbian authorities,&quot; Ms del Ponte said.<Node id="1457"/>
+
+<Node id="1459"/>&gt; &quot;I urge all Serbian authorities to work much more intensively.&quot;<Node id="1524"/>
+
+<Node id="1526"/>&gt; The prosecutor also called for the &quot;strong support&quot; of the EU to get Gen Mladic to The Hague.<Node id="1621"/>
+
+<Node id="1623"/>&gt; &quot;Clear deadlines associated with clear sanctions will produce early results,&quot; she said.<Node id="1712"/>
+
+<Node id="1714"/>&gt; Her statement follows a flurry of Serbian media reports that the net is closing around the top war crimes suspect, despite official denials of his capture.<Node id="1871"/>
+
+<Node id="1873"/>&gt; The fugitive was Bosnian Serb leader Radovan Karadzic&apos;s army chief during the Bosnian war from 1992 to 1995.<Node id="1983"/>
+
+<Node id="1985"/>&gt; Gen Mladic lived openly in Belgrade for some time after the conflict, but he disappeared from view when former Yugoslav President Slobodan Milosevic was arrested in 2001.<Node id="2157"/>
+
+<Node id="2159"/>&gt; Some of the suspect&apos;s former aides have surrendered to the war crimes tribunal to face charges of ethnic cleansing.<Node id="2276"/>
+
+<Node id="2278"/>&gt;<Node id="2279"/>
+
+<Node id="2281"/>&gt;<Node id="2282"/>
+
+<Node id="2284"/>&gt;<Node id="2285"/>
+<Node id="2286"/>Story from BBC NEWS:<Node id="2306"/>
+http://news.bbc.co.uk/go/pr/fr/-/2/hi/europe/4739424.stm<Node id="2363"/>
+<Node id="2364"/>
+Published: 2006/02/22 12:55:36 GMT<Node id="2399"/>
+<Node id="2400"/>
+&#169;BBC MMVI<Node id="2410"/>
+<Node id="2411"/></TextWithNodes>
+<!-- The default annotation set -->
+
+<AnnotationSet>
+</AnnotationSet>
+<!-- Named annotation set -->
+
+<AnnotationSet Name="Original markups" >
+<Annotation Id="15" Type="p" StartNode="222" EndNode="359">
+</Annotation>
+<Annotation Id="30" Type="td" StartNode="1189" EndNode="1189">
+<Feature>
+  <Name className="java.lang.String">isEmptyAndSpan</Name>
+  <Value className="java.lang.String">true</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">width</Name>
+  <Value className="java.lang.String">5</Value>
+</Feature>
+</Annotation>
+<Annotation Id="43" Type="p" StartNode="1985" EndNode="2157">
+</Annotation>
+<Annotation Id="16" Type="p" StartNode="361" EndNode="455">
+</Annotation>
+<Annotation Id="31" Type="td" StartNode="1189" EndNode="1262">
+<Feature>
+  <Name className="java.lang.String">class</Name>
+  <Value className="java.lang.String">fact</Value>
+</Feature>
+</Annotation>
+<Annotation Id="48" Type="div" StartNode="2286" EndNode="2411">
+<Feature>
+  <Name className="java.lang.String">class</Name>
+  <Value className="java.lang.String">footer</Value>
+</Feature>
+</Annotation>
+<Annotation Id="32" Type="b" StartNode="1189" EndNode="1242">
+</Annotation>
+<Annotation Id="34" Type="br" StartNode="1260" EndNode="1260">
+</Annotation>
+<Annotation Id="41" Type="p" StartNode="1714" EndNode="1871">
+</Annotation>
+<Annotation Id="1" Type="head" StartNode="0" EndNode="54">
+</Annotation>
+<Annotation Id="29" Type="tr" StartNode="1189" EndNode="1262">
+</Annotation>
+<Annotation Id="14" Type="b" StartNode="87" EndNode="221">
+</Annotation>
+<Annotation Id="47" Type="p" StartNode="2284" EndNode="2285">
+</Annotation>
+<Annotation Id="18" Type="div" StartNode="528" EndNode="1189">
+<Feature>
+  <Name className="java.lang.String">class</Name>
+  <Value className="java.lang.String">bo</Value>
+</Feature>
+</Annotation>
+<Annotation Id="3" Type="meta" StartNode="54" EndNode="54">
+<Feature>
+  <Name className="java.lang.String">content</Name>
+  <Value className="java.lang.String">BBC, News, BBC News, news online, world, uk, international, foreign, british, online, service</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">name</Name>
+  <Value className="java.lang.String">keywords</Value>
+</Feature>
+</Annotation>
+<Annotation Id="12" Type="img" StartNode="54" EndNode="54">
+<Feature>
+  <Name className="java.lang.String">src</Name>
+  <Value className="java.lang.String">/nol/shared/img/printer_friendly/news_logo.gif</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">width</Name>
+  <Value className="java.lang.String">163</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">alt</Name>
+  <Value className="java.lang.String">BBC NEWS</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">height</Name>
+  <Value className="java.lang.String">34</Value>
+</Feature>
+</Annotation>
+<Annotation Id="27" Type="div" StartNode="1189" EndNode="1263">
+<Feature>
+  <Name className="java.lang.String">class</Name>
+  <Value className="java.lang.String">ibox</Value>
+</Feature>
+</Annotation>
+<Annotation Id="44" Type="p" StartNode="2159" EndNode="2276">
+</Annotation>
+<Annotation Id="17" Type="p" StartNode="457" EndNode="527">
+</Annotation>
+<Annotation Id="2" Type="title" StartNode="0" EndNode="52">
+</Annotation>
+<Annotation Id="13" Type="div" StartNode="54" EndNode="86">
+<Feature>
+  <Name className="java.lang.String">class</Name>
+  <Value className="java.lang.String">headline</Value>
+</Feature>
+</Annotation>
+<Annotation Id="28" Type="table" StartNode="1189" EndNode="1263">
+</Annotation>
+<Annotation Id="38" Type="p" StartNode="1459" EndNode="1524">
+</Annotation>
+<Annotation Id="37" Type="p" StartNode="1349" EndNode="1457">
+</Annotation>
+<Annotation Id="51" Type="br" StartNode="2364" EndNode="2364">
+</Annotation>
+<Annotation Id="8" Type="meta" StartNode="54" EndNode="54">
+<Feature>
+  <Name className="java.lang.String">content</Name>
+  <Value className="java.lang.String">text/html;charset=iso-8859-1</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">http-equiv</Name>
+  <Value className="java.lang.String">Content-Type</Value>
+</Feature>
+</Annotation>
+<Annotation Id="23" Type="p" StartNode="1065" EndNode="1081">
+</Annotation>
+<Annotation Id="40" Type="p" StartNode="1623" EndNode="1712">
+</Annotation>
+<Annotation Id="35" Type="div" StartNode="1263" EndNode="2286">
+<Feature>
+  <Name className="java.lang.String">class</Name>
+  <Value className="java.lang.String">bo</Value>
+</Feature>
+</Annotation>
+<Annotation Id="7" Type="meta" StartNode="54" EndNode="54">
+<Feature>
+  <Name className="java.lang.String">content</Name>
+  <Value className="java.lang.String">NOARCHIVE</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">name</Name>
+  <Value className="java.lang.String">ROBOTS</Value>
+</Feature>
+</Annotation>
+<Annotation Id="54" Type="br" StartNode="2410" EndNode="2410">
+</Annotation>
+<Annotation Id="49" Type="br" StartNode="2306" EndNode="2306">
+</Annotation>
+<Annotation Id="22" Type="p" StartNode="1006" EndNode="1063">
+</Annotation>
+<Annotation Id="53" Type="br" StartNode="2400" EndNode="2400">
+</Annotation>
+<Annotation Id="9" Type="link" StartNode="54" EndNode="54">
+<Feature>
+  <Name className="java.lang.String">href</Name>
+  <Value className="java.lang.String">/shared/css/printthispage.css</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">rel</Name>
+  <Value className="java.lang.String">stylesheet</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">type</Name>
+  <Value className="java.lang.String">text/css</Value>
+</Feature>
+</Annotation>
+<Annotation Id="21" Type="p" StartNode="826" EndNode="1004">
+</Annotation>
+<Annotation Id="33" Type="br" StartNode="1242" EndNode="1242">
+</Annotation>
+<Annotation Id="6" Type="meta" StartNode="54" EndNode="54">
+<Feature>
+  <Name className="java.lang.String">content</Name>
+  <Value className="java.lang.String">/2/hi/europe/4739424.stm</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">name</Name>
+  <Value className="java.lang.String">IFS_URL</Value>
+</Feature>
+</Annotation>
+<Annotation Id="52" Type="br" StartNode="2399" EndNode="2399">
+</Annotation>
+<Annotation Id="24" Type="b" StartNode="1067" EndNode="1081">
+</Annotation>
+<Annotation Id="42" Type="p" StartNode="1873" EndNode="1983">
+</Annotation>
+<Annotation Id="4" Type="meta" StartNode="54" EndNode="54">
+<Feature>
+  <Name className="java.lang.String">content</Name>
+  <Value className="java.lang.String">2006/02/22 12:55:36</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">name</Name>
+  <Value className="java.lang.String">OriginalPublicationDate</Value>
+</Feature>
+</Annotation>
+<Annotation Id="19" Type="p" StartNode="529" EndNode="700">
+</Annotation>
+<Annotation Id="36" Type="p" StartNode="1264" EndNode="1347">
+</Annotation>
+<Annotation Id="26" Type="p" StartNode="1187" EndNode="1188">
+</Annotation>
+<Annotation Id="11" Type="div" StartNode="54" EndNode="54">
+<Feature>
+  <Name className="java.lang.String">isEmptyAndSpan</Name>
+  <Value className="java.lang.String">true</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">class</Name>
+  <Value className="java.lang.String">logo</Value>
+</Feature>
+</Annotation>
+<Annotation Id="50" Type="br" StartNode="2363" EndNode="2363">
+</Annotation>
+<Annotation Id="39" Type="p" StartNode="1526" EndNode="1621">
+</Annotation>
+<Annotation Id="45" Type="p" StartNode="2278" EndNode="2279">
+</Annotation>
+<Annotation Id="20" Type="p" StartNode="702" EndNode="824">
+</Annotation>
+<Annotation Id="46" Type="p" StartNode="2281" EndNode="2282">
+</Annotation>
+<Annotation Id="25" Type="p" StartNode="1083" EndNode="1185">
+</Annotation>
+<Annotation Id="10" Type="body" StartNode="54" EndNode="2411">
+<Feature>
+  <Name className="java.lang.String">marginwidth</Name>
+  <Value className="java.lang.String">0</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">bgcolor</Name>
+  <Value className="java.lang.String">#ffffff</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">text</Name>
+  <Value className="java.lang.String">#000000</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">marginheight</Name>
+  <Value className="java.lang.String">0</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">topmargin</Name>
+  <Value className="java.lang.String">0</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">leftmargin</Name>
+  <Value className="java.lang.String">0</Value>
+</Feature>
+</Annotation>
+<Annotation Id="5" Type="meta" StartNode="54" EndNode="54">
+<Feature>
+  <Name className="java.lang.String">content</Name>
+  <Value className="java.lang.String">/1/hi/world/europe/4739424.stm</Value>
+</Feature>
+<Feature>
+  <Name className="java.lang.String">name</Name>
+  <Value className="java.lang.String">UKFS_URL</Value>
+</Feature>
+</Annotation>
+<Annotation Id="0" Type="html" StartNode="0" EndNode="2411">
+</Annotation>
+</AnnotationSet>
+</GateDocument>

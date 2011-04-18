@@ -1,0 +1,86 @@
+Evaluate the SAFE Process Experimentally
+
+The SAFE process typically incorporates manually annotating with automatic 
+annotation extracting. The SAFE also provides several facilities (e.g. the 
+annotation schema dialog, the ANNIC, etc.). We need to figure out how efficient 
+of manually annotating, how useful of the aiding facilities, how effective of 
+automatic annotation extraction, and the best way of combining the two. 
+We assess those aspects of the SAFE process experimentally. Note that  
+(%cite(Day97)) presented some experimental results for evaluating the 
+annotating process using the Alembic system.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Accuracy of Automatic Annotation Extracting
+
+The SAFE process attempts to do as much work fully automatically as possible.
+In the workflow an automatic extraction pipeline pre-processes each
+document before sending it to human annotators.  As a result, a document presented
+to an annotator has some pre-annotation already for those annotation types
+required to be annotated. Then the annotator must check and correct the
+pre-annotations, as well as reading the text to identify what additional
+annotations are needed. 
+
+The pre-processing includes two techniques - the JAPE grammars created
+manually and a machine learning (ML) model learned automatically from
+previously annotated documents and applied to new documents to generate
+annotations. In the following we present some experimental results for the
+accuracies of the two pre-processing techniques - JAPE grammars and ML.
+
+*TODO* Accuracy for JAPE grammar: calculate the F-measures for the results from
+the JAPE grammars against the human annotated, for different annotation types.
+
+*TODO* Accuracy for ML: the learning curves of ML for different annotation types.
+
+*TODO* Compare the costs of JAPE grammar and ML at the same accuracy level:
+the cost of ML can be measured by the documents required for training, and the
+time spent on annotating those documents. The cost of JAPE grammar can be
+measure by the time of creating it. Note however that manual annotation is a
+less skilled process than JAPE pattern authoring.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Effectiveness of the SAFE Facilities
+
+We can assess the effectiveness of the facilities provided in the SAFE system
+and the automatically pre-annotating for helping annotator by comparing the 
+time spent by annotator with and without those facilities and/or automatic 
+annotating.
+
+*TODO* Evaluate the effectiveness of the SAFE annotating tools: compare
+the human effort using the SAFE with using other annotating tools (e.g. 
+Wordfreak, Jena, Alembic) by annotating the similar documents.
+
+*TODO* Evaluate the helpfulness of the pre-processing: compare the human 
+effort with and without the pre-processing (e.g. the JAPE grammars and ML).
+
+The human effort is estimated by the time spent by annotator in
+the experiment. The estimates are subject to several sources of inaccuracy. 
+First, the annotators were skilled staff who are knowledgeable about GATE 
+and SAFE. Second, the length of the documents varies widely (therefore we 
+also report a figure averaged over document length in KB). Third, the 
+annotation density varies widely (therefore we also report a figure averaged 
+over number of annotations).
+
+In detail we need the following composite figures for each experimental setting:
+
+- XXXs per document
+- XXXs per KB 
+- XXXs per annotation
+
+Source data from which the above figures are obtained:
+
+
+%[
+| Document name | Starting time | Finishing time | Annots before | Annots after  | Doc KB |
+----
+|               |               |                |               |               |        |
+%]
+
+When an annotator annotates one document, s/he needs write down the first three 
+items in the following table. Other three items can be deduced later from the 
+document. The annotating time spent on the document can be computed from the
+starting time and finishing time. Note that the starting time is also needed for
+assessing the ML in the mixed-initiative annotating, as the ML suggestions
+at late stage could be more accurate and hence more useful than those at 
+early stage.
+

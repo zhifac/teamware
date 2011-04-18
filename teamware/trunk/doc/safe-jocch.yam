@@ -1,0 +1,574 @@
+Semantic Annotation Factories for Cultural Heritage
+
+Hamish Cunningham, Kalina Bontcheva, Valentin Tablan %br
+Department of Computer Science, %br
+University of Sheffield
+
+%contents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Introduction
+
+Consider three characteristics of cultural artefacts, their study and their
+manipulation in a digital world:
+
+First, many routine actions that scholars perform can be modelled
+computationally as annotation. For example:
+- Reference to other works; note taking; summarising; citation; quotation;
+  footnotes.
+- The apparatus of critical editions describing variants, sources,
+  cross-references.
+- Transcription of manuscript images; formal description and cataloging;
+  documentation of artifact/folio additions, changes, deletions.
+When modelled as annotation machines can help us act on the documents in new
+ways as *living editions* that capture multiple viewpoints and flexibly
+combine multiple levels of interpretation and description.
+
+Second, popular websites such as Flikr and Delicious also use annotation in
+the form of collaborative tagging (or _folksonomies_). Wikipedia and other
+wikis and blogs use annotation for article interlinking, backlinks and so on.
+These technologies are successful because they promote collaboration and feed
+back the results of the annotation process to improve their services (for
+example users of Delicious get more efficient at managing and retrieving
+bookmarked web pages).
+
+Third, formal and authoritative annotation by scholars is most useful when
+accompanied by a machine-interpretable semantics or ontology. Just as XML has
+transformed the interchange of structured data by providing a universal
+syntax, the richer schema languages developed in semantic web research can
+facilitate the provision of higher-level information services. (They are not
+a panacea, of course, but have certainly demonstrated their worth in a number
+of scenarios.)
+
+This paper, then, is about *collaborative semantic annotation*.
+
+The University of Sheffield and others have developed and deployed semantic
+annotation systems for diverse purposes using
+%(http://gate.ac.uk/,GATE), a General Architecture for Text Engineering.
+This technology has been used to supply a range of web services and tools to a
+wide community of users and developers. Here we'll look at how these types of
+services might be adapted and extended for a Cultural Heritage (CH) agenda and
+propose a Semantic Annotation Factory Environment (SAFE) for the creation and
+evolution of metadata supporting rich search, navigation, browsing and
+collaborative critical commentary over CH collections.
+
+The rest of the paper
+- looks at some recent successes of semantic annotation (section 2)
+- discusses why the technology is not spreading as rapidly as might be
+  expected (section 3)
+- describes the ways in which systems need to change in order to promote
+  easier adoption (section 4)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Semantic Annotation Successes
+
+Semantic Annotation is about attaching meaningful structures to resources like
+documents or video streams in such a way that they can be used by computers to
+enhance the usefulness of those resources.
+
+One simple kind of annotation that has been used in the Perseus digital
+library is named entity annotation. This is where the dates, names of people
+and places and so on that appear in the documents (in this case one of the
+largest collections of classical literature) are annotated. This allows
+Perseus to do some of the things illustrated in these screen shots: at the top
+there is a map of references to places in the literature, which can also be
+graphed over time; below there is a new search tool that allows you to specify
+particular people, or locations, etc.
+
+%[
+  | %image(http://gate.ac.uk/sale/images/perseus-maps.PNG)              |
+  ---
+  | %image(http://gate.ac.uk/sale/images/perseus-name-search.PNG)       |
+%]
+
+A second semantic annotation success story arose as an element of ``Web 2.0'',
+viz. the annotation of web resources via a process of collaborative tagging.
+The resultant community-maintained metadata has come to be known as a
+_folksonomy_ and has been notably successful in bookmark and image sharing.
+%(http://del.icio.us/, Delicio.us) is a shared bookmarks hosting service
+which exploits redundancy in the web to generalise and to facilitate
+categorisation and search of bookmark lists.
+%% %image(http://gate.ac.uk/sale/images/digital-libraries-delicious.png)
+%(http://www.flickr.com, Flickr) is a photo tagging and publishing service
+"solves" the image analysis problem by soliciting annotation from users which
+then serve as search terms for retrieval purposes.
+In both cases the resultant folksonomy constitutes annotation as behaviour
+mining (or DIY indexing) and is a significant current application of
+annotation.
+
+More complex models of annotation are also proving successful, for example in
+companies specialising in extracting specific and detailed information from
+the web. When combined with structured data sources this annotation can meet
+a variety of emerging needs for enhanced control, security and access.
+Examples include
+- %(http://garlik.com, Garlik), which mines data about consumers present in
+  various sources including the web
+- %(http://innovantage.co.uk, Innovantage), which mines job advertisement data
+
+The service provided by Garlik (a 2006 start-up company from the founders of
+Egg PLC, an early Internet bank) is to answer the question "who's saying what
+about me?" and therefore to give individuals more power over their personal
+information.
+
+Innovantage is another new company who provide services to the UK recruitment
+industry based on mining the web for employment vacancies. The process:
+- searches for vacancies from 150,000+ companies across all UK industry
+  sectors
+- annotates information about jobs by SIC code, location, job title, essential
+  skills, salary, reference, contact etc.
+- uses ontology-based information extraction and conceptual search based on
+  GATE and KIM from OntoText (KIM - %(http://www.ontotext.com/kim)
+  %cite(Kiryakov04a,Pop04a) - was evaluated the leading semantic annotation
+  tool at the eponymous ISWC 2005 workshop)
+
+The result is a service which increases productivity in recruitment agencies
+and complements existing structured data sources used by those agencies.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Trouble in Paradise: Why Isn't Semantic Annotation More Widespread?
+
+Given that annotation has a number of significant uses, why isn't it in use
+more widely?
+
+First, most cases aren't as bounded as Perseus, where only classics texts are
+dealt with. For example, the %(http://www.prestospace.org, PrestoSpace
+project) for European audio-visual archive preservation estimates the contents
+of these archives at 
+
+  %[
+  | *Carrier type*                  | *# items*   |
+  -----
+  | Film in Broadcast Archives      | 4.238.857   |
+  -----
+  | Film in Film Archives           | 1.665.708   |
+  -----
+  | Video tapes                     | 6.232.352   |
+  -----
+  | Audio recordings                | 5.321.301   |
+  -----
+  | Total audiovisual items         | 17.458.218  |
+  %]
+
+If we guesstimate around 20-minute per item for a human being to manually
+annotate these materials we would need around *6 million person-hours* -
+clearly an infeasible quantity. If we extrapolate from the time takeing in
+archiving high-value video materials like the BBC's Newsnight programme where
+the rate is eight hours per hour we get a figure of *18 million person years*!
+
+Secondly, there aren't enough DIY case.  Flikr and Delicio.us have tapped into
+obvious and widespread needs, and Innovantage and Garlik hope to do the same,
+but in many cases we don't have the necessary folk for a folksonomy.
+Broadcast archives, for example, suffer from this Catch-22: 
+- you don't know you need it until you use it,
+- you can't use it until widespread need generates funding.
+
+Thirdly, fully automatic annotation processes suffer from what we may refer to
+as Square Fish Syndrome. Imagine that you're looking at a river under which a
+fish swims by leaving traces of its passing in ripples and eddies on the
+surface of the water. What does the fish look like, you wonder?  Two of the
+options for finding out are to show the ripples and eddies
+- to an artist and ask them to draw a fish
+- to a statistician and ask them to model a fish.
+
+In both case you're liable to get a square fish, because both methods only
+approximate to the deep structure of the river and its denizens using purely
+surface phenomema. Similarly, human language processing by machine can be done
+by
+- linguists intuiting about grammar and codifying their theory in parsers of
+  one sort or another
+- machine learning creating statistical models from annotated corpora.
+
+Unfortunately language also appears to be a surface phenomenon, and in
+practice the accuracy of these machine processing is often not sufficient for
+practical applications. This leads to a trade-off between application domain
+specificity and task complexity:
+
+%image(http://gate.ac.uk/sale/images/spec-vs-comp.png, "Specificity vs.
+Complexity", 900)
+
+In this diagram useful performance levels lie beneath the curve: if you have
+a complex task, for example extracting opinions from web forums, you can only
+expect useable performance if the opinions that you're interested in a very
+specific and the language they are expressed in is in some way predictable.
+
+Simple tasks include document clustering, full-text search, entities, simple
+descriptions. Complex tasks include relations and events extraction,
+cross-document reference resolution, opinion mining.  Examples of specific
+domains might be chemical engineering job descriptions, football match
+reports. Examples of general domains might be all news sites, a corporate
+intranet, the web.
+
+In sum, these three factors currently form barriers to the uptake of semantic
+annotation. The rest of the paper considers technological and methodological
+solutions to this problem.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 From Annotation Tools to _Annotation Factories_
+
+This section discusses a number of steps that can make semantic annotation
+more applicable to humanities information processing.
+
+A note on terminology: below we will sometimes refer to the technology that
+allows automation of semantic annotation which is derived from Information
+Extraction (IE %cite(Cun05a,Gri96,Gri97a)): the process of automatically
+analysing text (and, less often, speech) to populate fixed-format, unambiguous
+data structures such as spreadsheets, link-analysis engines, databases or,
+more recently, semantic repositories.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Annotation: the Missing Manual
+
+The first thing that we lack is not about technology but about how and where
+to apply it.  Despite the breadth and depth of literature describing
+algorithms, data structures, evaluation protocols and performance statistics
+for annotation technology lacks a clear statement of how to go about
+specifying and implementing annotation functionality for a new task or domain.
+This methodology must cover at least:
+- how to decide if annotation is applicable to your problem
+- how to define the problem with reference to a corpus of examples
+- how to identify similarities with other problems and thence to estimate
+  likely performance levels
+- how to design a balance of adaptation interventions for system setup and
+  maintenance
+- how to measure success
+
+(I.e.: we need less work that proposes "develop this great new bit of software
+and it will transform our lives", and more that defines "how to implement
+robust and maintainable services"!)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 A Division of Labour (Multi-role Methodology)
+
+Systems like GATE provide tools for computational linguists and language
+engineers, but there are other categories of staff that need to be involved in
+an annotation factory.
+
+%/*
+*(Human) Annotators*
+- training data volumes large: labour has to be cheap!
+- bootstrap annotation process with mixed-initiative learning 
+- voting mechanism for multiple simultaneous annotators
+
+*Information Curators*
+- larger skill set but small enough to be in-house
+- librarians, data curation or sys admin 
+- training course of a week or two
+- toolset including e.g. ANNIC (annotations in context corpus query tool),
+  JAPE (pattern matching information extraction tool)
+- managing annotators, liaising with engineers
+%*/
+
+First, annotation of training data for learning algorithms should be a task
+requiring little skill beyond that of a computer-literate person. That's a
+requirement because training data volumes are typically large and therefore
+the labour involved has to be cheap to make the process economic. For the
+same reason the annotation environment should be as productive as possible,
+for example by bootstrapping the annotation process with mixed-initiative
+learning and by providing a voting mechanism for multiple simultaneous
+annotators (this is necessary to guarantee quality with low-skilled staff).
+
+Second, data curation or systems administration staff may become involved in
+customising extraction systems. These types of people would take a training
+course of a week or two, and be expected to use a richer toolset, perhaps
+including things like ANNIC-based JAPE rule authoring. They would be able to
+maintain the IE system, convene and manage annotation staff and liaise with
+language engineers as necessary.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Unifying Adaptation Interventions
+
+An IE system is a dynamic object which represents a compromise between
+information need and development cost. Almost never do the information need
+and the data remain static.  Therefore applications software using IE has to
+provide a mechanism to tailor the extraction components to new information
+needs and to new types of data.  Up to now, no single mechanism has been
+discovered that covers all cases, meaning that IE software has to support a
+wide spectrum of adaptation interventions, from skilled computational
+linguists, through content administrators and technical authors, to unskilled
+end-users providing behavioural exemplars. In each area significant research
+streams exist and have made good progress over the past decade or so. What has
+not been done is to construct a unified environment in which all the different
+adaptation interventions work together in a complementary manner.
+
+The three principal mechanisms for IE adaptation in leading HLT research
+streams are:
+- assisted authoring of finite state transduction rules, including: generation
+  of rules from annotation pattern searches across corpora (annotations in
+  context); graphical debugging of transduction rule execution
+- supervised mixed-initiative learning of extraction models
+- unsupervised clustering of terms for purposes such as populating
+  domain-specfic gazetteers
+
+In addition, underlying the adaptation process are automated measurement and
+visualisation tools, and frequency-based document search (or information
+retrieval) tools. 
+
+%/*
+- Problem: annotation systems are dynamic objects because the information
+  need and the data don't remain static
+- Therefore we need mechanisms for adaptation
+- Three current disparate research streams:
+  - assisted authoring of finite state transduction rules, including:
+    generation of rules from annotation pattern searches across corpora
+    graphical debugging of transduction rule execution
+  - supervised mixed-initiative learning of extraction models
+  - unsupervised clustering of terms for purposes such as populating
+    domain-specfic gazetteers or taxonomies
+- Should be complementary, not competitive
+%*/
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Assistive vs. Autonomous
+
+A modern factory engaged in the production of high-tech goods combines a large
+degree of automation with skilled labour of various types and quantities.
+Robots often play a significant role but they are never altogether
+unaccompanied: at the very least service engineers must attend their
+operation, and in most cases there will also be staff who take care of
+reconfiguring robotic equipment for new product lines or refinements to the
+existing processes and products.  An annotation factory should take the same
+approach: automatic where possible, assistive where necessary.
+
+%/*
+- technology can make labour cheap enough
+- net helps access, cf. Amazon's Mechanical Turk
+%*/
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Iterative Processes vs. Waterfall or "Big Bang"
+
+How to construct a failing software project:
+
+The most effective method is to work for the government. If that isn't
+possible, another good way is to define your plan as:
+- first we (highly-paid developers) decide what to build (requirements)
+- then we (middle-level developers) decide how to build it (design)
+- then we (lower-level developers) implement it (coding)
+- then we (support staff) deploy it (disaster)
+
+A better model: iteration, XP, do something useful now and get it out there
+
+The same with annotation: we need iterative methods that account for
+changing needs and gradual refinement of requirements.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Service-Orientated vs. Monolithic
+
+- Software has evolved: modules, objects, components, now services
+- Gartner reports that
+  - _"By 2008, SOA will be a prevailing software engineering practice,
+    ending the 40-year domination of monolithic software architecture"_ 
+  - _"Through 2008, SOA and web services will be implemented together in
+    more than 75 percent of new SOA or web services projects."_
+- EAI less costly / more reliable via explicit modelling of meaning of
+  data and processes
+- B2B and B2C eCommerce systems will become:
+  - more reusable: interfaces meaningful for machines, not just people;
+  - more dynamic and adaptive, virtual apps composed from discovered
+    components;
+  - more scaleable, distributed across multiple machines;
+  - saleable as discreet elements in application service providers market
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Sustainability, Open Source, Community Support
+
+Section: why OSS is good; why OSS is not enough; GATE's engineering and
+community practices
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 General vs. specific
+
+If we look towards digital scholarship in 10 or 20 years time we should expect
+the specificity of the computational tools in use to be much lower than is
+currently the case. The history of computer science is of the progressive
+capture of patterns that describe families of problems and the implementation
+of progressively higher-level languages and software abstractions to
+facilitate the creation of problem solutions.%footnote(There's a parallel
+history of corporations over-selling incremental change as revolutionary
+advance. Grids and Semantic Webs are certainly an advance but as usual they
+are neither panacea nor magic bullet and we must ground our deployment of new
+technology with evaluations of its efficacy in use.) This process of
+generalisation is important for a number of reasons, including the prohibitive
+cost of developing each computational technique afresh for each new problem
+domain. In an arts and humanities context the generality of the techniques
+imported from computing and eScience is a measure of how well those techniques
+will support collaboration: the more that tools and data formats diverge, the
+harder for researchers to share insights.
+
+There's an important counter-argument to generalisation which relates to the
+necessity of systems that are sensitive to domain-specific practice, and as
+Greengrass argues in %cite(Gre06a) the prospects of fully general ontologies
+for subjects like history are remote. We have to show how higher-level
+abstractions can serve specific cases, and this means user trials, qualitative
+and quantitative evaluation.
+
+The key foundation stones of this edifice are:
+- interoperation
+- integration
+- reuse
+- longevity
+...
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Grounded
+
+As Greengrass points out in %cite(Gre06a) there cannot be an ontology of
+history because so much of that discpline involves sifting and weighing
+competing viewpoints in changing contexts and with evolving evidence. In fact
+the logical mechanisms deployed in current ontology modelling languages are a
+bad fit for the decidedly un-logical (if not illogical) nature of human
+discourse when viewed from any sufficiently general perspective, and this
+point can be regarded as proven by the results (and frequently lack of them)
+from the past half-century of AI research. Therefore we should also not expect
+any single ontology of the present or the future to emerge. What then of
+semantic annotation? The simple answer is that while there will be no semantic
+web singular there is already a percolation of semantics into the web and
+other information sharing systems that suggests that multiple partial and
+domain specific ontologies are likely to succeed, at least where their mission
+is not to replace human faculties but to assist and augment them.
+
+.... e.g. CIDOC CRM, modularity of Proton, ....
+
+Neither are the new semantic web technologies a solution to the well-known
+problems of AI....
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Conclusion
+
+To summarise, we *have* lots and lots of tools and algorithms for annotation;
+what we *need* is
+
+# methodological instead of purely technological 
+# collaborative and multi-role instead of single role
+# inclusive of previously disjoint adaptation interventions
+# assistive instead of autonomous
+# diachronic, life-cycle orientated, not waterfall or "big bang" orientated
+# service- and grid- orientated, not monolithic
+# open source and sustainable
+# capable of generalisation to many applications
+# grounded in specific domain practice
+
+Another way of thinkng about this work is about how GATE generalises over
+R&D-level patterns and how safe generalises over application-level patterns
+(see tutorial gleam talk)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Postscript
+
+Truth is stranger than fiction:
+
+%image(http://gate.ac.uk/sale/images/square-fish.jpg)
+
+(A real square fish.)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Misc text that may not fit anywhere
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Semantic Annotation and Human Language Processing
+
+Automation of Semantic Annotation relies on computational processing of
+natural languages, commonly configured in this context as (ontology-based)
+Information Extraction (IE).
+
+A widely used system for Information Extraction (and other language processing
+tasks) is GATE, a General Architecture for Text Engineering%footnote(Anecdotal
+support for the popularity of GATE is furnished by Google: of around 250
+million web pages containing the word "gate" Google considers
+http://gate.ac.uk/ - the home page of GATE - to be the most likely search
+result for that word.)
+
+- 4 types of IE, OBIE, coreference (de-duplication)
+- empirical annotation loop: annic, jape, annot diff, obie, ...
+- Empirical methods and distributed collaborative semantic annotation for
+  digital scholarship and research knowledge management.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Implementation
+
+We have defined semantic annotation quite broadly as the addition of
+machine-interpretable data to unstructured information such as text, pictures
+or audiovisual streams. This definition allows many computational
+instantiations; the configuration that we will discuss here is structured
+around an ontology specified in a formal language such as OWL%footnote(OWL:
+Ontology Web Language.) and stores instances of concepts, their properties and
+relations between them in a semantic repository. The connection between
+conceptual data and the unstructured sources is maintained by an annotation
+graph which references text via character offsets, pictures via spatial
+coordinates and audiovisual material via time codes.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Semantic Web Standards and Semantic Annotation
+
+The great strength of XML has been to become a universal language for
+structured data exchange. XML specialisations like RDF and OWL
+(%cite(RDF,RDFS,OWL)) add standardised mechanisms for defining the meaning of
+XML data and thus minimise the interpretation overheads involved in data
+exchange.
+
+_*Un*_structured data resources such as text, pictures or audiovisual streams
+are harder to deal with. Semantic Annotation (SA) is about the addition of
+machine-interpretable metadata to unstructured resources. This is done in such
+a way that the results can be used by computers to enhance the usefulness of
+the resources and allow the application of methods previously only possible
+for structured data.
+
+The uses of these new semantic technologies include data transformation for
+purposes of interoperability and interchange, richer navigation, browsing and
+search, and to facilitate open distributed systems composed of knowledge-rich
+services. (They do not constitute a general solution to the problems of AI
+...)
+
+This will result in technology and demonstration systems with the following
+characteristics:
+- *Collaborative.* To use annotation as a facilitator of scholarship,
+  discussion and debate; therefore its creation, visualisation and editing
+  must be a collaborative and distributed process.
+- *Grid enabled.* Data grids and computation grids reduce the need for
+  organisations to maintain their own computer hardware facilities and help
+  turn informatics into a commodity service.
+- *VRE enabled.* Virtual Research Environments (VREs) exploit ubiquitous
+  networks to move discrete and paper-based practices into connected
+  electronic environments supporting research _in silico_ that shares
+  resources and access points across the internet.
+- *Service-based.* Gartner reports that "By 2008, SOA%footnote(SOA:
+  Service-Oriented Archiveture.) will be a prevailing software engineering
+  practice, ending the 40-year domination of monolithic software
+  architecture". Service-based sstems are: more reusable, with interfaces
+  meaningful for machines as well as people; more dynamic and adaptive, with
+  virtual applications composed from discovered components; more scaleable,
+  with processing distributed across multiple machines.
+- *Multi-format.* Annotation is a good way to deal with format
+  incompatibilites from legacy systems and that arise from current closed
+  systems. For example we deal with Word and PDF via standoff markup which
+  doesn't change the originals but references them via pointers.
+- *Supporting annotation creation, analysis and evolution.* sophisticated
+  query and concordancing over large corpora; pattern matching and machine
+  learning for automatic annotation; differencing and measurement; efficient
+  distributed storage.
+- *Interoperable.* Standardised description of both the syntactic or data
+  structure level and the semantic or interpretative level of information
+  coupled with open software platforms and protocols means minimum overhead
+  for interoperation with other systems.
+- *Referential.* The arts and humanities use reference much more intensively
+  and precisely than science and engineering. Quotation, footnoting, citation
+  and all the complex apparatus of a critical editing and publication can be
+  represented at a structural level as annotation.

@@ -1,0 +1,68 @@
+Annotator GUI: implementation guidelines
+
+%1 Overview
+
+The AnnotatorGui will be used by Human Annotators (HA) who can be located
+anywhere in the world. The features of this GUI will be more restricted than
+the full-fledged GATE GUI and provide features mainly for the annotation of
+documents.
+
+
+%1 Architecture
+
+The AnnotatorGUI connects to an AnnotatorPool service which returns a list of
+tasks to be achieved by the HA. The AnnotatorPool gets the documents from a
+docservice and modifies them. Once the modifications have been finished, the
+AnnotatorGUI informs the AnnotatorPool that the task has been completed.
+
+
+%1 Functionalities
+
+%2 Installation
+
+The AnnotatorGUI will be implemented as a WebStart application
+(%(http://java.sun.com/products/javawebstart/)). The application will have to
+be signed in order to be able to connect to the web etc...  The application
+will be installed on the user computer by accessing a link containing a jnlp
+file (description of java webstart application). The application will be
+automatically updated should a newer version be available on the server.
+
+
+%2 Login
+
+A HA has to be idenfied - the first screen will enable him to enter his
+login/password but also the URL of the AnnotatorPool service. The
+login/password will be checked on the AnnotatorPool service before going any
+further. A checkbox will provide the possibility to store this information
+locally and save the user the trouble of having to enter them every time. If
+the AnnotatorPool service is not available or if the login/password is not
+correct, an error message will be displayed on the interface.
+
+
+%2 Stack of tasks
+
+A task can be defined as a document to be annotated with regard to a set of
+Named Entities or an Ontology. A task is defined minimally by:
+- URL of a docservice
+- ID of a document
+- a priority
+- a set of parameters
+
+A task can be paused by a HA in which case the data are stored on the
+docservice and can be resumed later. A task is completed when the changes have
+been submitted to the docservice and some information is returned to the
+AnnotatorPool. It is not possible to do any change to a document once it has
+been completed - the reference will disappear from the stack of tasks.
+
+
+%2 Editor
+
+The editor will be derived from the existing GATE VR's. A main panel will
+display the text of the document, a panel on the side will contain a list of
+named entities or an ontology. The editor will have to be easily
+configurable/pluggable/extendable in order to be customized for a specific
+application. 
+
+
+
+

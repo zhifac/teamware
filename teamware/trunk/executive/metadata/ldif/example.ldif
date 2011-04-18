@@ -1,0 +1,29 @@
+
+
+# Define Manager Role to authenticate with
+dn: cn=Manager,dc=example,dc=com
+objectclass: organizationalRole
+cn: Manager
+description: Directory Manager
+
+
+# Define a user entry for Tomcat User
+dn: uid=tomcat,ou=people,dc=example,dc=com
+objectClass: inetOrgPerson
+uid: tomcat
+sn: user
+cn: tomcat
+mail: tomcat@example.com
+userPassword: tomcat
+
+# Define an entry to contain LDAP groups
+# searches for roles are based on this entry
+dn: ou=groups,dc=example,dc=com
+objectClass: organizationalUnit
+ou: groups
+
+# Define an entry for the "developer" role
+dn: cn=developer,ou=groups,dc=example,dc=com
+objectClass: groupOfUniqueNames
+cn: developer
+uniqueMember: uid=tomcat,ou=people,dc=example,dc=com

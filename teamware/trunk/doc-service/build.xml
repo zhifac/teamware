@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<project name="docservice" default="all" basedir=".">
+	<import file="../common.xml" />
+	<import file="../lib/lib.xml" />
+  
+  <description>
+     DocService implementation for TEAMWARE
+  </description>
+
+  <!-- set global properties for this build -->
+  <property file="${ant.project.name}-build.properties" />
+  <property file="build.properties" />
+  <property name="src.dir" location="src" />
+  <property name="test.src.dir" location="test" />
+  <property name="lib.dir" location="lib" />
+  <property name="conf.dir" location="conf" />
+  <property name="web.xml" location="${conf.dir}/web.xml" />
+  <property name="https-client.xml" location="${conf.dir}/https-client.xml" />
+  <property name="context.xml" location="${conf.dir}/context.xml" />
+  <property name="log4j.properties" location="${conf.dir}/log4j.properties" />
+  <property name="webapp.location" location="webapp" />
+
+  <property name="build.dir" location="${basedir}/build" />
+  <property name="build.webapp.location" location="${build.dir}/webapp" />
+  <property name="classes.dir" location="${build.dir}/classes" />
+  <property name="test.classes.dir" location="${build.dir}/test-classes" />
+  <property name="api.jar.location" location="${build.dir}/docservice-api.jar" />
+  <property name="impl.jar.location" location="${build.dir}/docservice.jar" />
+  <property name="test.jar.location" location="${build.dir}/docservice-test.jar" />
+  <property name="war.location" location="${build.dir}/${docservice.custom.app.name}.war" />
+  
+  <property name="test.doc" value="resources/test/alice-and-cat.xml" />
+  <property name="test.result.file.name" value="test-results" />
+ 	<!--
+	 <path id="instance.dir.path">
+	      <pathelement location="${instance.dir}"/>
+	    </path>
+	 <pathconvert targetos="unix" property="instance.dir.fixed" refid="instance.dir.path"/>
+   -->  
+  <!-- List of variables in .properties files that will be replaced at build time -->
+  <filterset id="variables.to.replace">
+    <filter token="APPNAME" value="${ant.project.name}"/>
+    <filter token="INSTANCE-DIR" value="${instance.dir}"/>
+  </filterset>
+
+  <path id="api.compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset id="pattern.api.compile.classpath">
+        <patternset refid="pattern.gate" />
+        <patternset refid="pattern.cxf" />
+        <patternset refid="pattern.safe-common" />
+      </patternset>
+    </fileset>
+  </path>
+
+  <path id="impl.compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset id="pattern.impl.compile.classpath">
+        <patternset refid="pattern.api.compile.classpath" />
+        <patternset refid="pattern.commons-logging" />
+        <patternset refid="pattern.log4j" />
+        <patternset refid="pattern.javamail" />
+        <patternset refid="pattern.servletapi" />
+        <patternset refid="pattern.jstl" />
+    	<patternset refid="pattern.gate.plugins.inter_annotator_agreement" />
+      </patternset>
+    </fileset>
+    <pathelement location="${api.jar.location}" />
+  </path>
+
+  <path id="run.classpath">
+    <path refid="impl.compile.classpath" />
+    <pathelement location="${impl.jar.location}" />
+  </path>
+
+  <path id="test.compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset refid="pattern.impl.compile.classpath" />
+      <patternset refid="pattern.junit" />
+    </fileset>
+    <pathelement location="${api.jar.location}" />
+    <pathelement location="${impl.jar.location}" />
+  </path>
+
+  <path id="test.run.classpath">
+    <path refid="test.compile.classpath" />
+    <pathelement location="${test.jar.location}" />
+  </path>
+
+  <macrodef name="compile">
+    <attribute name="module" />
+    <sequential>
+      <!-- Compile the java code from ${src} into ${build} -->
+      <javac srcdir="${src.dir}/@{module}" destdir="${classes.dir}/@{module}" source="1.5" target="1.5" debug="true">
+        <classpath refid="@{module}.compile.classpath" />
+      </javac>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="package">
+    <attribute name="module" />
+    <sequential>
+      <jar destfile="${@{module}.jar.location}">
+        <fileset dir="${classes.dir}/@{module}" />
+      </jar>
+    </sequential>
+  </macrodef>
+
+  <target name="clean">
+    <delete dir="${classes.dir}" />
+    <delete dir="${test.classes.dir}" />
+    <delete dir="${build.dir}" />
+    <delete dir="${stubs.location}" />
+  </target>
+
+	 <target name="init" description="defines custom tasks">
+	        <!-- Taskdefs -->
+	        <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+	            <classpath>
+	                <fileset dir="${lib.dir}">
+	                    <patternset refid="pattern.ant-contrib" />
+	                </fileset>
+	            </classpath>
+	        </taskdef>
+	 	</target>
+	
+  <target name="prepare" depends="init">
+    <mkdir dir="${classes.dir}" />
+    <mkdir dir="${classes.dir}/api" />
+    <mkdir dir="${classes.dir}/impl" />
+    <mkdir dir="${test.classes.dir}" />
+    <mkdir dir="${build.dir}" />
+
+   <echo message="file.protocol.prefix: ${file.protocol.prefix}"/>
+  	
+
+    <condition property="isWindows"><os family="windows"/></condition>
+          <if>
+                  <and>
+                   <equals arg1="${file.protocol.prefix}" arg2="file://" />
+                  <isset property="isWindows"/>
+                  </and>
+              <then>
+              	<var name="file.url.prefix" value="${file.protocol.prefix}/"/>
+              	<echo>Fixing file.url.prefix for windows ${file.url.prefix}</echo>
+              </then>
+              <else>
+                <var name="file.url.prefix" value="${file.protocol.prefix}"/>
+              </else>
+          </if>
+	
+  </target>
+
+  <target name="api.compile" depends="prepare" description="compile the source ">
+    <compile module="api" />
+  </target>
+
+  <target name="api.jar" depends="api.compile" description="Build the jar file">
+    <package module="api" />
+  </target>
+
+  <!-- Publish API jar file to exports directory -->
+  <target name="publish-api" depends="api.jar">
+    <copy todir="${doc-service.dir}">
+      <fileset file="${api.jar.location}" />
+    </copy>
+  </target>
+
+  <target name="impl.compile" depends="prepare, api.jar" description="compile the source ">
+    <compile module="impl" />
+  </target>
+
+  <target name="impl.jar" depends="api.jar, impl.compile" description="Build the jar file">
+    <package module="impl" />
+  </target>
+
+  <target name="javadoc">
+    <delete dir="${build.dir}/javadoc" />
+    <javadoc access="private" destdir="${build.dir}/javadoc" classpathref="impl.compile.classpath" Encoding="UTF-8" Use="yes" Windowtitle="Docservice JavaDoc" link="http://java.sun.com/j2se/1.5.0/docs/api/" docencoding="UTF-8" charset="UTF-8" source="1.5" useexternalfile="yes" breakiterator="true">
+      <packageset dir="${src.dir}/api">
+        <include name="gleam/docservice/**" />
+      </packageset>
+      <packageset dir="${src.dir}/impl">
+        <include name="gleam/docservice/**" />
+      </packageset>
+    </javadoc>
+  </target>
+
+  <!-- copy web application contents into build.dir -->
+  <target name="stage-web" depends="prepare">
+  	
+    <mkdir dir="${build.webapp.location}" />
+    <copy todir="${build.webapp.location}">
+      <fileset dir="${webapp.location}" />
+    </copy>
+    <!-- copy required libs into WEB-INF/lib -->
+    <mkdir dir="${build.webapp.location}/WEB-INF/lib" />
+    <mkdir dir="${build.webapp.location}/WEB-INF/classes" />
+    <mkdir dir="${build.webapp.location}/WEB-INF/plugins" />
+    <!-- flatten="true" puts all JARs in WEB-INF/lib directly, rather than
+    WEB-INF/lib/axis-1.3/.... etc. -->
+    <copy todir="${build.webapp.location}/WEB-INF/lib" flatten="true">
+      <fileset dir="${lib.dir}">
+      	<exclude name="${gate.plugins.inter_annotator_agreement.jar}"/>
+        <patternset refid="pattern.impl.compile.classpath" />
+        <patternset refid="pattern.docservice-proxy" />
+        <!-- docservice-api is normally included by docservice-proxy, but we
+        don't want this as we provide it ourselves -->
+        <exclude name="**/docservice-api.jar" />
+        <exclude name="**/servletapi*.jar" />
+      </fileset>
+    </copy>
+    <copy todir="${build.webapp.location}/WEB-INF/plugins/${gate.plugins.inter_annotator_agreement.name}" flatten="true">
+        <fileset dir="${gate.plugins.inter_annotator_agreement.dir}"/>
+      </copy>
+  </target>
+
+  <target name="stage-https" if="https.truststore">
+    <copy todir="${build.webapp.location}/WEB-INF/spring"
+          file="${https-client.xml}">
+      <filterset>
+        <filter token="TRUSTSTORE_PASSWORD" value="${https.truststore.password}" />
+      </filterset>
+    </copy>
+    <copy tofile="${build.webapp.location}/WEB-INF/classes/trusted-certs.keystore"
+          file="${https.truststore}" />
+  </target>
+
+  <target name="publish-impl" depends="impl.jar">
+    <copy todir="${doc-service.dir}">
+      <fileset file="${impl.jar.location}" />
+    </copy>
+  </target>
+
+  <target name="war" depends="api.jar, impl.jar, stage-web, stage-https">
+    <require lib="safe-common" />
+    <!-- prepare web.xml -->
+    <copy file="${web.xml}" tofile="${web.xml}.tmp" />
+    <copy file="${log4j.properties}" tofile="${build.webapp.location}/WEB-INF/classes/log4j.properties">
+       <filterset refid="variables.to.replace"/>
+    </copy>  
+      <replace file="${web.xml}.tmp" token="@@@ds.location@@@" value="${file.url.prefix}${ds.location}" />
+      <replace file="${web.xml}.tmp" token="@@@ds.index.location@@@" value="${file.url.prefix}${ds.index.location}" />
+      <replace file="${web.xml}.tmp" token="@@@executive.verifier.url@@@" value="${executive.verifier.url}" />
+      <!-- war -->
+      <war destfile="${war.location}" webxml="${web.xml}.tmp">
+        <lib file="${api.jar.location}" />
+        <lib file="${impl.jar.location}" />
+        <metainf file="${context.xml}" />
+        <fileset dir="${build.webapp.location}" />
+        <fileset file="readme.html" />
+      </war>
+      <delete file="${web.xml}.tmp" />
+    </target>
+
+  <target name="all" depends="war, publish-impl" />
+
+  <!-- =================================================================== -->
+  <!-- The "unwar" target                                                  -->
+  <!-- =================================================================== -->
+  <target name="unwar" depends="war"
+      description="unwar into the servlet container's deployment directory">
+
+      <unwar src="${war.location}"
+          dest="${deploy.dir}/${docservice.custom.app.name}"/>
+
+  </target>
+  
+
+  <!-- =================================================================== -->
+  <!-- The "deploy" target deploys the web application by packaging it as  -->
+  <!-- a WAR and then unpackaging it into Tomcat's webapps directory       -->
+  <!-- =================================================================== -->
+  <target name="deploy" depends="unwar" if="catalina.home"
+      description="deploys into servlet container">
+
+	  <!-- create context file -->
+      <ant antfile="../common.xml" target="create-context">
+		 <property name="webapp" value="${docservice.custom.app.name}"/>
+	  </ant>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- The "undeploy" target deletes the web application archive and the   -->
+  <!-- web application directory in the compatible servlet container.      -->
+  <!-- =================================================================== -->
+  <target name="undeploy" if="catalina.home"
+      description="undeploy war file to servlet container's deployment dir">
+      <echo message="Undeploying webapp from Tomcat"/>
+      <delete dir="${deploy.dir}/${docservice.custom.app.name}"/>
+	  <!-- deletes context file -->
+	  <ant antfile="../common.xml" target="delete-context">
+		 <property name="webapp" value="${docservice.custom.app.name}"/>
+	  </ant>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- runs docservice tests                                               -->
+  <!-- =================================================================== -->
+  <target name="test-all" depends="test.docservice" description="Default test target">
+  </target>
+
+  <target name="test.docservice" depends="test.jar,all">
+    <junit fork="true" showoutput="true" printsummary="yes" maxmemory="300m" errorProperty="test.failed"
+       failureProperty="test.failed">
+      <classpath refid="test.run.classpath" />
+      
+  <sysproperty key="gate.config" value="${build.webapp.location}/WEB-INF/gate.xml" />
+      
+  <sysproperty key="gate.home" value="${build.webapp.location}/WEB-INF" />
+  <!--
+  <sysproperty key="gate.config" value="${build.webapp.location}/WEB-INF/gate.xml" />
+    
+  <sysproperty key="gate.home" value="${gate.home}" />
+  -->  
+          <sysproperty key="test.doc.url" value="file:${build.dir}/${test.doc}" />
+      
+      <formatter type="plain" usefile="false" />
+      <formatter type="xml" />
+      <test name="safe.docservice.test.TestDocservice" outfile="${test.result.file.name}" todir="${build.dir}" />
+    </junit>
+  
+      <fail if="test.failed">
+                  Unit tests failed. 
+        </fail>
+  </target>
+
+  <target name="test.compile" depends="prepare, api.jar, impl.jar" description="compile the test source">
+    <!-- Compile the test java code from ${test.src} into ${build} -->
+    <javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" source="1.5" target="1.5" debug="true">
+      <classpath refid="test.compile.classpath" />
+    </javac>
+    <echo file="${test.classes.dir}/test.properties" append="false" message="DSLocation=${test.ds.location}${line.separator}" />
+    <echo file="${test.classes.dir}/test.properties" append="true" message="ds-index-location=${test.ds.index.location}${line.separator}" />
+  <!--  
+  <echo file="${test.classes.dir}/test.properties" append="true" message="gateHome=${gate.home}${line.separator}"/>
+    -->
+    <copy todir="${build.dir}">
+      <fileset dir="${basedir}" includes="${test.doc}" />
+    </copy>
+  </target>
+
+  <target name="test.jar" depends="test.compile, war" description="Build the test jar file">
+    <jar destfile="${test.jar.location}">
+      <fileset dir="${test.classes.dir}" />
+      <!--fileset dir="${basedir}/resources/test">
+        <filename name="GateDocument.xml" />
+      </fileset-->
+    </jar>
+  </target>
+  
+  <target name="delete-datastore" if="ds.base" description="Deletes Datastore">
+    <delete dir="${ds.base}"/>
+    </target>
+</project>

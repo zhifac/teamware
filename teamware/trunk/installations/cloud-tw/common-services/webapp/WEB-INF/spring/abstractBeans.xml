@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd">
+  <!-- Mark the default GaS beans as abstract -->
+  <bean id="markAsAbstract" class="gleam.util.spring.MarkAbstractPostProcessor">
+    <property name="beanNames">
+      <list>
+        <!-- commonBeans.xml -->
+        <value>serviceDefinition</value>
+        <value>queue</value>
+        <!-- workerBeans.xml -->
+        <value>gateApplication</value>
+        <value>workerConfig</value>
+        <!-- endpointBeans.xml -->
+        <value>endpointHandler</value>
+        <value>gateWebService</value>
+        <value>gateWebServiceEndpoint</value>
+        <value>inlineAnnotationService</value>
+        <value>inlineAnnotationServiceEndpoint</value>
+      </list>
+    </property>
+  </bean>
+</beans>
+

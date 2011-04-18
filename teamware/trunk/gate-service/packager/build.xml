@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="gas-packager" default="all">
+  <property file="build.properties" />
+
+  <import file="../../lib/lib.xml" />
+
+  <property name="src.dir" location="src" />
+  <property name="classes.dir" location="classes" />
+  <property name="dist.dir" location="dist" />
+  <property name="jar.location" location="gas-packager.jar" />
+
+  <path id="compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset refid="pattern.apache-ant" />
+      <patternset refid="pattern.jdom" />
+      <patternset refid="pattern.gas-common" />
+    </fileset>
+  </path>
+
+  <target name="init" description="defines custom tasks">
+	  <!-- Taskdefs -->
+	  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		  <classpath>
+			  <fileset dir="${lib.dir}">
+				  <patternset refid="pattern.ant-contrib" />
+			  </fileset>
+		  </classpath>
+        </taskdef>
+  </target>
+  
+  <!-- Prepare for building - make necessary directories -->
+  <target name="prepare" depends="init">
+    <mkdir dir="${classes.dir}" />
+  </target>
+
+  <!-- compile a module (api or impl) -->
+  <target name="compile" depends="prepare">
+    <javac srcdir="${src.dir}" destdir="${classes.dir}"
+           debug="true" debuglevel="lines,source" source="1.5" target="1.5"
+           encoding="UTF-8" classpathref="compile.classpath" />
+  </target>
+
+  <!-- copy non-.java from src to classes -->
+  <target name="copy.resources" depends="prepare">
+    <copy todir="${classes.dir}">
+      <fileset dir="${src.dir}" excludes="**/*.java" />
+    </copy>
+  </target>
+
+  <!-- build JAR file -->
+  <target name="jar" depends="compile, copy.resources">
+    <jar destfile="${jar.location}" basedir="${classes.dir}" />
+  </target>
+
+  <!-- delete generated classes -->
+  <target name="clean.classes" >
+    <delete dir="${classes.dir}" />
+  </target>
+		
+
+  <target name="clean" depends="clean.classes">
+    <delete file="${jar.location}" />
+  	<delete dir="${dist.dir}/skeleton"/>
+  	<delete dir="${dist.dir}/generated"/>
+  	<delete dir="${dist.dir}/lib"/>
+  </target>
+
+
+  <!-- Distribution - copy the required libraries and war file to the dist
+  directory ready for runtime use -->
+
+  <property name="gate-service-server.dir" location="../server" />
+  <property name="skeleton.war"
+            location="${gate-service-server.dir}/gate-service.war" />
+
+  <target name="dist" depends="jar">
+    <!-- check availability of GAS war file -->
+    <available file="${skeleton.war}" property="skeleton.war.found" />
+    
+    <!-- 
+    <fail unless="skeleton.war.found"
+          message="Please run ant war.complete in safe/gate-service/server before running this target or, if you have a skeleton gate-service.war available at a location other than ${skeleton.war}, please set skeleton.war to the correct value in build.properties." />
+    -->
+    <!-- instead of failing invoke war.complete target -->
+    
+    <if>
+	    <isset property="skeleton.war.found"/>
+	    <then>
+		   <echo message="skeleton war found. Do not build gate-server war" />
+	    </then>
+	    <else>
+		    <ant dir="${gate-service-server.dir}" target="war.complete" />
+	    </else>
+        </if>
+	
+    <mkdir dir="${dist.dir}/lib" />
+    <copy todir="${dist.dir}/lib" flatten="true">
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.jdom" />
+        <patternset refid="pattern.gas-common" />
+        <patternset refid="pattern.stax-api" />
+        <patternset refid="pattern.woodstox" />
+        <patternset refid="pattern.jaxen" />
+        <include name="gate-${gate.version}/xstream*.jar" />
+        <include name="gate-${gate.version}/gate.jar" />
+      </fileset>
+      <fileset file="${jar.location}" />
+    </copy>
+
+    <mkdir dir="${dist.dir}/skeleton" />
+    <copy tofile="${dist.dir}/skeleton/skeleton.war" file="${skeleton.war}" />
+  </target>
+
+  <target name="all" depends="dist" />
+
+</project>

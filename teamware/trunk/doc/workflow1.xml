@@ -1,0 +1,12 @@
+&lt;?xml version\=\"1.0\"?&gt;<br>
+&lt;workflow&gt;<br>
+&lt;globalParam name\=\"ontology\" value\=\"http://onto.dcs.shef.ac.uk:8080/OntoService?name\=cameras\"/&gt;<br>
+&lt;service id\=\"S1\" url\=\"http://pebble.dcs.shef.ac.uk:8080/GATEService?name\=preprocess\" /&gt;<br>
+&lt;!-- Connects to an Annotator Pool --&gt;<br>
+&lt;service id\=\"S2\" url\=\"http://pebble.dcs.shef.ac.uk:8080/AnnotatorPool?name\=cameras\"&gt;<br>
+&nbsp; &lt;condition feature\=\"needsManualAnnotation\" value\=\"true\"/&gt;<br>
+&nbsp; &lt;param name\=\"minimumAnnotors\" value\=\"1\"/&gt;<br>
+&nbsp; &lt;param name\=\"inputAS\" value\=\"automatic\"/&gt;<br>
+&nbsp; &lt;param name\=\"outputAS\" value\=\"manual\"/&gt;<br>
+&lt;/service&gt;<br>
+&lt;/workflow&gt;<br>

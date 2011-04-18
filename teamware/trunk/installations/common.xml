@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="safe-installations">
+  <import file="../common.xml" />
+
+  <!-- default values -->
+  <property name="tomcat.home" location="${tomcat.dir}" />
+  <property name="gate.home" location="${gate.dir}" />
+  <!-- build the "complete" war file for the bare (no service definition or
+  application) gate-service server. Per-installation targets can depend on this
+  one -->
+  <target name="gate-service.war.complete">
+    <ant dir="${safe.dir}/gate-service/server" target="war.complete" />
+  </target>
+  
+  <!-- No-op default implementations for targets -->
+  <target name="deploy-all" />
+  <target name="undeploy-all" />
+  <target name="install" />
+  <target name="reinstall" />
+</project>

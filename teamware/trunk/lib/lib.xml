@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="safe-libs">
+  <!-- find the location of this lib directory -->
+  <dirname property="lib.dir" file="${ant.file.safe-libs}" />
+
+  <!-- Standard libraries -->
+
+  <!-- Apache XBean -->
+  <property name="xbean.version" value="3.6" />
+  <property name="xbean.dir" location="${lib.dir}/xbean-${xbean.version}" />
+  <patternset id="pattern.xbean">
+    <include name="xbean-${xbean.version}/*.jar" />
+  </patternset>
+
+  <!-- ActiveMQ 5.0.0 -->
+  <property name="activemq-5.dir"
+            location="${lib.dir}/activemq-5.3.0" />
+  <patternset id="pattern.activemq-5">
+    <include name="activemq-5.3.0/*.jar" />
+    <patternset refid="pattern.xbean" />
+  </patternset>
+  
+     <!-- aopalliance -->
+  <property name="aopalliance.version" value="1.0" />
+  <property name="aopalliance-${aopalliance.version}.dir"
+            location="${lib.dir}/${aopalliance.version}" />
+  <patternset id="pattern.aopalliance">
+    <include name="aopalliance-${aopalliance.version}/*.jar" />
+  </patternset>
+
+  <!-- Ant 1.8.1 (we call this apache-ant to avoid clashing with the
+  built-in properties ant.version, etc.) -->
+  <property name="apache-ant.version" value="1.8.1" />
+  <property name="apache-ant.dir" location="${lib.dir}/ant-${apache-ant.version}" />
+  <patternset id="pattern.apache-ant">
+    <include name="ant-${apache-ant.version}/*.jar" />
+  </patternset>
+
+  <!-- Ant-contrib 1.0b2 -->
+  <property name="ant-contrib.version" value="1.0b2" />
+  <property name="ant-contrib.dir" location="${lib.dir}/ant-contrib-${ant-contrib.version}" />
+  <patternset id="pattern.ant-contrib">
+    <include name="ant-contrib-${ant-contrib.version}/ant-contrib-${ant-contrib.version}.jar" />
+  </patternset>
+
+  <!-- ASM 2.2.3 -->
+  <property name="asm.version" value="2.2.3" />
+  <property name="asm.dir" location="${lib.dir}/asm-${asm.version}" />
+  <patternset id="pattern.asm">
+    <include name="asm-${asm.version}/*.jar" />
+  </patternset>
+
+  <!-- Beanshell 1.3.0 -->
+  <property name="beanshell.version" value="1.3.0" />
+  <property name="beanshell.dir" location="${lib.dir}/beanshell-${beanshell.version}" />
+  <patternset id="pattern.beanshell">
+    <include name="beanshell-${beanshell.version}/*.jar" />
+  </patternset>
+
+  <!-- C3p0 -->
+  <property name="c3p0.version" value="0.9.1-pre9" />
+  <property name="c3p0.dir" location="${lib.dir}/c3p0-${c3p0.version}" />
+  <patternset id="pattern.c3p0">
+    <include name="c3p0-${c3p0.version}/c3p0-${c3p0.version}.jar" />
+  </patternset>
+
+  <!-- Cargo - http://cargo.codehaus.org -->
+  <property name="cargo.version" value="1.0" />
+  <property name="cargo.dir" location="${lib.dir}/cargo-${cargo.version}" />
+  <patternset id="pattern.cargo">
+    <include name="cargo-${cargo.version}/cargo-core-uberjar-${cargo.version}.jar" />
+  </patternset>
+
+  <!-- CGLIB -->
+  <property name="cglib.version" value="2.1" />
+  <property name="cglib.dir" location="${lib.dir}/cglib-${cglib.version}" />
+  <patternset id="pattern.cglib">
+    <include name="cglib-${cglib.version}/*.jar" />
+  </patternset>
+  
+  <!-- CHARTS4J -->
+  <property name="charts4j.version" value="1.0" />
+  <property name="charts4j.dir" location="${lib.dir}/charts4j-${charts4j.version}" />
+  <patternset id="pattern.charts4j">
+    <include name="charts4j-${charts4j.version}/*.jar" />
+  </patternset>
+
+  <!-- Checkstyle - http://checkstyle.sourceforge.net -->
+  <property name="checkstyle.version" value="3.1" />
+  <property name="checkstyle.dir" location="${lib.dir}/checkstyle-${checkstyle.version}" />
+  <patternset id="pattern.checkstyle">
+    <include name="checkstyle-${checkstyle.version}/checkstyle-all-${checkstyle.version}.jar" />
+  </patternset>
+
+  <!-- Clickstream - http://www.opensymphony.com/clickstream -->
+  <property name="clickstream.version" value="1.0.3" />
+  <property name="clickstream.dir" location="${lib.dir}/clickstream-${clickstream.version}" />
+  <patternset id="pattern.clickstream">
+    <include name="clickstream-${clickstream.version}/clickstream-${clickstream.version}.jar" />
+  </patternset>
+
+  <!-- Commons - http://jakarta.apache.org/commons -->
+  <property name="commons.dir" location="${lib.dir}/jakarta-commons" />
+  <patternset id="pattern.commons-beanutils">
+    <include name="jakarta-commons/commons-beanutils.jar" />
+  </patternset>
+  <patternset id="pattern.commons-codec">
+    <include name="jakarta-commons/commons-codec-1.3.jar" />
+  </patternset>
+  <patternset id="pattern.commons-collections">
+    <include name="jakarta-commons/commons-collections.jar" />
+  </patternset>
+  <patternset id="pattern.commons-compress">
+    <include name="jakarta-commons/commons-compress-1.0.jar" />
+  </patternset>
+  <patternset id="pattern.commons-daemon">
+    <include name="jakarta-commons/commons-daemon.jar" />
+  </patternset>
+  <patternset id="pattern.commons-digester">
+    <include name="jakarta-commons/commons-digester.jar" />
+  </patternset>
+  <patternset id="pattern.commons-discovery">
+    <include name="jakarta-commons/commons-discovery-0.4.jar" />
+  </patternset>
+  <patternset id="pattern.commons-fileupload">
+    <include name="jakarta-commons/commons-fileupload.jar" />
+  </patternset>
+  <patternset id="pattern.commons-httpclient">
+    <include name="jakarta-commons/commons-httpclient-3.1.jar" />
+  </patternset>
+  <patternset id="pattern.commons-io">
+    <include name="jakarta-commons/commons-io.jar" />
+  </patternset>
+  <patternset id="pattern.commons-lang">
+    <include name="jakarta-commons/commons-lang.jar" />
+  </patternset>
+  <patternset id="pattern.commons-logging">
+    <include name="jakarta-commons/commons-logging-*.jar" />
+  </patternset>
+  <patternset id="pattern.commons-validator">
+    <include name="jakarta-commons/commons-validator.jar" />
+  </patternset>
+  <patternset id="pattern.jakarta-oro">
+    <include name="jakarta-commons/jakarta-oro.jar" />
+  </patternset>
+  <patternset id="pattern.commons-jexl">
+    <include name="jakarta-commons/commons-jexl-*.jar" />
+  </patternset>
+
+  <patternset id="pattern.commons-all">
+    <include name="jakarta-commons/*.jar" />
+  </patternset>
+
+  <!-- Display Tag Library - http://displaytag.sf.net/ -->
+  <property name="displaytag.version" value="1.1.1" />
+  <property name="displaytag.dir" location="${lib.dir}/displaytag-${displaytag.version}" />
+  <patternset id="pattern.displaytag">
+    <include name="displaytag-${displaytag.version}/displaytag-${displaytag.version}.jar" />
+    <include name="displaytag-${displaytag.version}/itext-1.4.jar" />
+  </patternset>
+
+  <!-- DBUnit - http://www.dbunit.org/ -->
+  <property name="dbunit.version" value="2.1" />
+  <property name="dbunit.dir" location="${lib.dir}/dbunit-${dbunit.version}" />
+  <patternset id="pattern.dbunit">
+    <include name="dbunit-${dbunit.version}/dbunit-${dbunit.version}.jar" />
+  </patternset>
+
+  <!-- Dom4J - http://dom4j.sourceforge.net -->
+  <property name="dom4j.version" value="1.6.1" />
+  <property name="dom4j.dir" location="${lib.dir}/dom4j-${dom4j.version}" />
+  <patternset id="pattern.dom4j">
+    <include name="dom4j-${dom4j.version}/dom4j-${dom4j.version}.jar" />
+  </patternset>
+
+  <!-- Dumbster - http://quintanasoft.com/dumbster (Fake SMTP Server) -->
+  <property name="dumbster.version" value="1.5" />
+  <property name="dumbster.dir" location="${lib.dir}/dumbster-${dumbster.version}" />
+  <patternset id="pattern.dumbster">
+    <include name="dumbster-${dumbster.version}/dumbster-${dumbster.version}.jar" />
+  </patternset>
+  
+  <!-- DWR - http://getahead.ltd.uk/dwr/ -->
+  <property name="dwr.version" value="2.0" />
+  <property name="dwr.dir" location="${lib.dir}/dwr-${dwr.version}" />
+  <patternset id="pattern.dwr">
+    <include name="dwr-${dwr.version}/dwr.jar" />
+  </patternset>
+
+  <!-- Emma http://emma.sourceforge.net -->
+  <property name="emma.version" value="2.0.5312" />
+  <property name="emma.dir" location="${lib.dir}/emma-${emma.version}" />
+  <patternset id="pattern.emma">
+    <include name="emma-${emma.version}/emma.jar" />
+  </patternset>
+  <patternset id="pattern.emma-all">
+    <include name="emma-${emma.version}/*.jar" />
+  </patternset>
+  
+    
+     <!-- FastInfoset -->
+  <property name="fastinfoset.version" value="1.2.7" />
+  <property name="fastinfoset-${fastinfoset.version}.dir"
+            location="${lib.dir}/${fastinfoset.version}" />
+  <patternset id="pattern.fastinfoset">
+    <include name="fastinfoset-${fastinfoset.version}/*.jar" />
+  </patternset>
+
+
+   <property name="geronimo-spec.dir" location="${lib.dir}/geronimo-spec" />
+  <patternset id="pattern.geronimo-spec">
+    <include name="geronimo-spec/*.jar" />
+  </patternset>
+
+  <!-- Hibernate - http://hibernate.org -->
+  <property name="hibernate.version" value="3.2" />
+  <property name="hibernate.dir" location="${lib.dir}/hibernate-${hibernate.version}" />
+  <patternset id="pattern.hibernate">
+    <include name="hibernate-${hibernate.version}/hibernate3.jar" />
+  </patternset>
+  <patternset id="pattern.hibernate-all">
+    <include name="hibernate-${hibernate.version}/**/*.jar" />
+    <patternset refid="pattern.cglib" />
+  </patternset>
+
+  <!-- Java2HTML - http://www.java2html.com -->
+  <property name="j2h.version" value="1.3.1" />
+  <property name="j2h.dir" location="${lib.dir}/java2html-${j2h.version}" />
+  <patternset id="pattern.j2h">
+    <include name="java2html-${j2h.version}/j2h.jar" />
+  </patternset>
+
+  <!-- JavaMail - http://java.sun.com/products/javamail -->
+  <property name="javamail.version" value="1.4.3" />
+  <property name="javamail.dir" location="${lib.dir}/javamail-${javamail.version}" />
+  <patternset id="pattern.javamail">
+    <include name="javamail-${javamail.version}/*.jar" />
+  </patternset>
+
+  <!-- Jaxen - http://jaxen.codehaus.org -->
+  <property name="jaxen.version" value="1.1" />
+  <property name="jaxen.dir" location="${lib.dir}/jaxen-${jaxen.version}" />
+  <patternset id="pattern.jaxen">
+    <include name="jaxen-${jaxen.version}/*.jar" />
+  </patternset>
+
+  <!-- Jencks - http://www.jencks.org -->
+  <property name="jencks.version" value="1.1" />
+  <property name="jencks.dir" location="${lib.dir}/jencks-${jencks.version}" />
+  <patternset id="pattern.jencks">
+    <include name="jencks-${jencks.version}/jencks-all-1.1.jar" />
+  </patternset>
+  
+  <!-- Emma http://emma.sourceforge.net -->
+  <property name="emma.version" value="2.0.5312" />
+  <property name="emma.dir" location="${lib.dir}/emma-${emma.version}" />
+  <patternset id="pattern.emma">
+    <include name="emma-${emma.version}/emma.jar" />
+  </patternset>
+  <patternset id="pattern.emma-all">
+    <include name="emma-${emma.version}/*.jar" />
+  </patternset>
+
+  <!-- JForum - http://www.jforum.net -->
+  <property name="jforum.version" value="2.1.8" />
+  <property name="jforum.dir" location="${lib.dir}/jforum-${jforum.version}" />
+  <patternset id="pattern.jforum">
+    <include name="jforum-${jforum.version}/*.jar" />
+  </patternset>
+
+  <!-- JGoodies Forms (Swing layout manager) - http://www.jgoodies.com -->
+  <property name="jgoodies-forms.version" value="1.1.0" />
+  <property name="jgoodies-forms.dir" location="${lib.dir}/jgoodies-forms-${jgoodies-forms.version}" />
+  <patternset id="pattern.jgoodies-forms">
+    <include name="jgoodies-forms-${jgoodies-forms.version}/*.jar" />
+  </patternset>
+
+  <!-- jMock - http://jmock.org -->
+  <property name="jmock.version" value="1.1.0" />
+  <property name="jmock.dir" location="${lib.dir}/jmock-${jmock.version}" />
+  <patternset id="pattern.jmock">
+    <include name="jmock-${jmock.version}/jmock-${jmock.version}.jar" />
+  </patternset>
+
+  <!-- The JNLP download servlet -->
+  <property name="jnlp-servlet.dir" location="${lib.dir}/jnlp-servlet" />
+  <patternset id="pattern.jnlp-servlet">
+    <include name="jnlp-servlet/*.jar" />
+  </patternset>
+
+    <!-- JUnit - http://www.junit.org -->
+  <property name="junit.version" value="4.1" />
+  <property name="junit.dir" location="${lib.dir}/junit-${junit.version}" />
+  <patternset id="pattern.junit">
+    <include name="junit-${junit.version}/junit-4.1.jar" />
+  </patternset>
+
+  <!-- Lucene - http://lucene.apache.org -->
+  <property name="lucene.version" value="2.2.0" />
+  <property name="lucene.dir" location="${lib.dir}/lucene-${lucene.version}" />
+  <patternset id="pattern.lucene">
+    <include name="lucene-${lucene.version}/*.jar" />
+  </patternset>
+
+  <!-- Log4j - http://logging.apache.org/log4j -->
+  <property name="log4j.version" value="1.2.15" />
+  <property name="log4j.dir" location="${lib.dir}/logging-log4j-${log4j.version}" />
+  <patternset id="pattern.log4j">
+    <include name="logging-log4j-${log4j.version}/dist/lib/log4j-${log4j.version}.jar" />
+  </patternset>
+
+  <!-- JSTL - http://java.sun.com/products/jsp/jstl/ -->
+  <property name="jstl.version" value="1.0.6" />
+  <property name="jstl.dir" location="${lib.dir}/jakarta-taglibs/standard-${jstl.version}" />
+  <patternset id="pattern.jstl">
+    <include name="jakarta-taglibs/standard-${jstl.version}/lib/*.jar" />
+  </patternset>
+  
+  <property name="jsp2.jstl.version" value="1.1.2" />
+  <property name="jsp2.jstl.dir" location="${lib.dir}/jakarta-taglibs/standard-${jsp2.jstl.version}" />
+  <patternset id="pattern.jsp2.jstl">
+    <include name="jakarta-taglibs/standard-${jsp2.jstl.version}/lib/*.jar" />
+  </patternset>
+
+  <!-- PMD - http://pmd.sourceforge.net/ -->
+  <property name="pmd.version" value="3.0" />
+  <property name="pmd.dir" location="${lib.dir}/pmd-${pmd.version}" />
+  <patternset id="pattern.pmd">
+    <include name="pmd-${pmd.version}/lib/pmd-${pmd.version}.jar" />
+  </patternset>
+  <patternset id="pattern.pmd-all">
+    <patternset refid="pattern.pmd" />
+    <include name="pmd-${pmd.version}/lib/*.jar" />
+  </patternset>
+
+  <!-- MySQL - http://www.mysql.com/ -->
+  <property name="mysql.version" value="5.1.7" />
+  <property name="mysql.dir" location="${lib.dir}/mysql-connector-java-${mysql.version}" />
+  <patternset id="pattern.mysql">
+    <include name="mysql-connector-java-${mysql.version}/mysql-connector-java-${mysql.version}-bin.jar" />
+  </patternset>
+
+  <!-- PDFBox - http://pdfbox.apache.org/ -->
+  <property name="pdfbox.version" value="1.1.0" />
+  <property name="pdfbox.dir" location="${lib.dir}/pdfbox-${pdfbox.version}" />
+  <patternset id="pattern.pdfbox">
+    <patternset refid="pattern.pdfbox" />
+    <include name="pdfbox-${pdfbox.version}/*.jar" />
+  </patternset>
+
+  <!-- POI - http://poi.apache.org/ -->
+  <property name="poi.version" value="3.6" />
+  <property name="poi.dir" location="${lib.dir}/poi-${poi.version}" />
+  <patternset id="pattern.poi">
+    <patternset refid="pattern.poi" />
+    <include name="poi-${poi.version}/*.jar" />
+  </patternset>
+  
+  <!-- Rename Packages Ant Task - http://rename-packages.dev.java.net -->
+  <property name="rename-packages.version" value="1.1" />
+  <property name="rename-packages.dir" location="${lib.dir}/rename-packages-${rename-packages.version}" />
+  <patternset id="pattern.rename-packages">
+    <include name="rename-packages-${rename-packages.version}/rename-packages-${rename-packages.version}.jar" />
+  </patternset>
+
+  <!-- Request Tag Library - http://jakarta.apache.org/taglibs -->
+  <property name="requesttag.version" value="1.0.1" />
+  <property name="requesttag.dir" location="${lib.dir}/jakarta-taglibs/request-${requesttag.version}" />
+  <patternset id="pattern.requesttag">
+    <include name="jakarta-taglibs/request-${requesttag.version}/taglibs-request.jar" />
+  </patternset>
+
+  <!-- Servlet API - http://java.sun.com/products/servlet/ -->
+  <property name="servletapi.version" value="2.5" />
+  <property name="servletapi.dir" location="${lib.dir}/servletapi-${servletapi.version}" />
+  <patternset id="pattern.servletapi">
+    <include name="servletapi-${servletapi.version}/*.jar" />
+  </patternset>
+
+  <!-- SiteMesh - http://www.opensymphony.com/sitemesh -->
+  <property name="sitemesh.version" value="2.2.1" />
+  <property name="sitemesh.dir" location="${lib.dir}/sitemesh-${sitemesh.version}" />
+  <patternset id="pattern.sitemesh">
+    <include name="sitemesh-${sitemesh.version}/sitemesh-${sitemesh.version}.jar" />
+  </patternset>
+
+  <!-- Spring Framework - http://www.springframework.org -->
+  <property name="spring.version" value="2.5.6" />
+  <property name="spring.dir" location="${lib.dir}/spring-${spring.version}" />
+  <patternset id="pattern.spring">
+    <include name="spring-${spring.version}/spring.jar" />
+    <include name="spring-${spring.version}/spring-webmvc.jar" />
+    <include name="spring-${spring.version}/aspectjrt.jar" />
+    <include name="spring-${spring.version}/aspectjweaver.jar" />
+  </patternset>
+  <patternset id="pattern.acegi-security">
+    <include name="spring-${spring.version}/acegi*.jar" />
+  </patternset>
+  <patternset id="pattern.spring-all">
+    <include name="spring-${spring.version}/*.jar" />
+  </patternset>
+  <patternset id="pattern.spring-nomock">
+    <include name="spring-${spring.version}/*.jar" />
+    <exclude name="spring-${spring.version}/*-test.jar" />
+  </patternset>
+  
+   <!-- Spring Modules - https://springmodules.dev.java.net/-->
+  <property name="spring-modules.version" value="0.9" />
+  <property name="spring-modules.dir" location="${lib.dir}/spring-modules-${spring-modules.version}" />
+  <patternset id="pattern.spring-modules">
+    <include name="spring-modules-${spring-modules.version}/*.jar" />
+  </patternset>
+
+  <!-- Struts - http://struts.apache.org -->
+  <property name="struts.version" value="1.2.9" />
+  <property name="struts.dir" location="${lib.dir}/struts-${struts.version}" />
+  <patternset id="pattern.struts">
+    <include name="struts-${struts.version}/struts.jar" />
+  </patternset>
+  <patternset id="pattern.struts-all">
+    <include name="struts-${struts.version}/*.jar" />
+  </patternset>
+
+  <!-- StrutsMenu - http://www.sf.net/projects/struts-menu -->
+  <property name="strutsmenu.version" value="2.4.3" />
+  <property name="strutsmenu.dir" location="${lib.dir}/struts-menu-${strutsmenu.version}" />
+  <property name="strutsmenu.jar" value="struts-menu-${strutsmenu.version}.jar" />
+  <patternset id="pattern.strutsmenu">
+    <include name="struts-menu-${strutsmenu.version}/struts-menu-${strutsmenu.version}.jar" />
+  </patternset>
+
+  <!-- StrutsTestCase - http://strutstestcase.sourceforge.net -->
+  <property name="strutstestcase.version" value="2.1.3" />
+  <property name="strutstestcase.dir" location="${lib.dir}/strutstest-${strutstestcase.version}" />
+  <patternset id="pattern.strutstestcase">
+    <include name="strutstest-${strutstestcase.version}/strutstest-${strutstestcase.version}.jar" />
+  </patternset>
+
+  <!-- Canoo WebTest- http://webtest.canoo.com -->
+  <property name="webtest.version" value="build1393" />
+  <property name="webtest.dir" location="${lib.dir}/webtest-${webtest.version}" />
+  <patternset id="pattern.webtest">
+    <include name="webtest-${webtest.version}/lib/*.jar" />
+  </patternset>
+
+  <!-- Xalan-J - http://xml.apache.org/xalan-j -->
+  <property name="xalan.version" value="2.7.0" />
+  <property name="xalan.dir" location="${lib.dir}/xalan-${xalan.version}" />
+  <patternset id="pattern.xalan">
+    <include name="xalan-${xalan.version}/*.jar" />
+  </patternset>
+
+  <!-- XDoclet - http://xdoclet.sourceforge.net -->
+  <property name="xdoclet.version" value="1.3-SNAPSHOT" />
+  <property name="xdoclet.dir" location="${lib.dir}/xdoclet-${xdoclet.version}" />
+  <patternset id="pattern.xdoclet">
+    <include name="xdoclet-${xdoclet.version}/*.jar" />
+  </patternset>
+
+  <!-- XMLBeans - http://xmlbeans.apache.org -->
+  <property name="xmlbeans.version" value="2.3.0" />
+  <property name="xmlbeans.dir" location="${lib.dir}/xmlbeans-${xmlbeans.version}" />
+  <patternset id="pattern.xmlbeans">
+    <include name="xmlbeans-${xmlbeans.version}/*.jar" />
+  </patternset>
+
+   <!-- XSTREAM -->
+  <property name="xstream.version" value="1.3.1" />
+  <property name="xstream.dir" location="${lib.dir}/xstream-${xstream.version}" />
+  <patternset id="pattern.xstream">
+    <include name="xstream-${xstream.version}/*.jar" />
+  </patternset> 
+    
+  <!-- URL Rewrite Filter - http://tuckey.org/urlrewrite/ -->
+  <property name="urlrewrite.version" value="3.0-beta" />
+  <property name="urlrewrite.dir" location="${lib.dir}/urlrewrite-${urlrewrite.version}" />
+  <patternset id="pattern.urlrewrite">
+    <include name="urlrewrite-${urlrewrite.version}/urlrewrite-${urlrewrite.version}.jar" />
+  </patternset>
+
+  <!-- Velocity - http://jakarta.apache.org/velocity -->
+  <property name="velocity.version" value="1.4" />
+  <property name="velocity.dir" location="${lib.dir}/velocity-${velocity.version}" />
+  <property name="velocity.jar" value="velocity-${velocity.version}.jar" />
+  <patternset id="pattern.velocity">
+    <include name="velocity-${velocity.version}/*.jar" />
+  </patternset>
+
+  <!-- JDOM -->
+  <property name="jdom.version" value="1.0" />
+  <property name="jdom.dir" location="${lib.dir}/jdom-${jdom.version}" />
+  <patternset id="pattern.jdom">
+    <include name="jdom-${jdom.version}/*.jar" />
+  </patternset>
+
+  <!-- Woodstox -->
+  <property name="woodstox.version" value="3.2.8" />
+  <property name="woodstox.dir" location="${lib.dir}/woodstox-${woodstox.version}" />
+  <patternset id="pattern.woodstox">
+    <include name="woodstox-${woodstox.version}/*.jar" />
+  </patternset>
+
+  <!-- JAXB 2.1 -->
+  <property name="jaxb.version" value="2.1" />
+  <property name="jaxb.dir" location="${lib.dir}/jaxb-${jaxb.version}" />
+  <patternset id="pattern.jaxb">
+    <include name="jaxb-${jaxb.version}/*.jar" />
+  </patternset>
+
+  <!-- Tika - http://tika.apache.org -->
+  <property name="tika.version" value="0.7" />
+  <property name="tika.dir" location="${lib.dir}/tika-${tika.version}" />
+  <patternset id="pattern.tika">
+    <include name="tika-${tika.version}/*.jar" />
+    <patternset refid="pattern.poi" />
+    <patternset refid="pattern.pdfbox" />
+    <patternset refid="pattern.dom4j" />
+    <patternset refid="pattern.xmlbeans" />
+    <patternset refid="pattern.commons-compress" />
+    <patternset refid="pattern.commons-logging" />
+    <patternset refid="pattern.commons-io" />
+  </patternset>
+
+  <!-- CXF (http://incubator.apache.org/cxf/) -->
+  <property name="cxf.version" value="2.2.4" />
+  <property name="cxf.dir" location="${lib.dir}/cxf-${cxf.version}" />
+  <patternset id="pattern.cxf">
+    <patternset refid="pattern.commons-logging" />
+    <patternset refid="pattern.commons-collections" />
+    <patternset refid="pattern.commons-lang" />
+    <patternset refid="pattern.jakarta-oro" />
+    <patternset refid="pattern.log4j" />
+    <patternset refid="pattern.javamail" />
+    <patternset refid="pattern.jaxen" />
+    <patternset refid="pattern.jaxb" />
+    <patternset refid="pattern.woodstox" />
+    <patternset refid="pattern.spring" />
+    <patternset refid="pattern.asm" />
+    <patternset refid="pattern.fastinfoset" />
+    <patternset refid="pattern.aopalliance" />
+    <include name="cxf-${cxf.version}/*.jar" />  
+  </patternset>
+
+  <!-- GATE - http://www.gate.ac.uk -->
+  <property name="gate.version" value="6.1" />
+  <patternset id="pattern.gate">
+    <include name="gate-${gate.version}/*.jar" />
+    <patternset refid="pattern.woodstox" />
+    <patternset refid="pattern.commons-logging" />
+    <patternset refid="pattern.commons-lang" />
+    <patternset refid="pattern.log4j" />
+    <patternset refid="pattern.jdom" />
+    <patternset refid="pattern.jakarta-oro" />
+    <patternset refid="pattern.tika" />
+    <patternset refid="pattern.xstream" />
+  </patternset>
+  
+   <property name="gate.plugins.annie.dir" location="${lib.dir}/gate-${gate.version}/plugins/ANNIE" />
+  
+   <property name="gate.plugins.tools.dir" location="${lib.dir}/gate-${gate.version}/plugins/Tools" />  
+   
+   <property name="gate.plugins.schema_annotation_editor.dir" location="${lib.dir}/gate-${gate.version}/plugins/Schema_Annotation_Editor" />
+   
+   <property name="gate.plugins.learning.dir" location="${lib.dir}/gate-${gate.version}/plugins/Learning" />
+   <patternset id="pattern.gate.plugins.learning">
+    <include name="gate-${gate.version}/plugins/Learning/*.jar" />
+   </patternset>
+   
+   <property name="gate.plugins.inter_annotator_agreement.name" value="Inter_Annotator_Agreement"/>
+   <property name="gate.plugins.inter_annotator_agreement.jar" value="iaaMain.jar"/>
+    <property name="gate.plugins.inter_annotator_agreement.dir" location="${lib.dir}/gate-${gate.version}/plugins/${gate.plugins.inter_annotator_agreement.name}" />
+    <patternset id="pattern.gate.plugins.inter_annotator_agreement">
+    <include name="gate-${gate.version}/plugins/Inter_Annotator_Agreement/*.*" />
+   </patternset>
+   
+   <property name="gate.plugins.groovy.dir" location="${lib.dir}/gate-${gate.version}/plugins/Groovy" />
+
+  <!-- JBPM -->
+  <property name="jbpm.version" value="3.2.3" />
+  <property name="jbpm.dir" location="${lib.dir}/jbpm-${jbpm.version}" />
+  <patternset id="pattern.jbpm">
+    <include name="jbpm-${jbpm.version}/*.jar" />
+    <patternset refid="pattern.beanshell" />
+  </patternset>
+
+  <!-- Quartz-->
+  <property name="quartz.version" value="1.5.1" />
+  <property name="quartz.dir" location="${lib.dir}/quartz-${quartz.version}" />
+  <patternset id="pattern.quartz">
+    <include name="quartz-${quartz.version}/*.jar" />
+  </patternset>
+
+  <!-- Easy Mock -->
+  <property name="easymock.version" value="2.2" />
+  <property name="easymock.dir" location="${lib.dir}/easymock-${easymock.version}" />
+  <patternset id="pattern.easymock">
+    <include name="easymock-${easymock.version}/*.jar" />
+  </patternset>
+  
+  <!-- Hypersonic -->
+  <property name="hsqldb.version" value="1.8.0.2" />
+  <property name="hsqldb.dir" location="${lib.dir}/hsqldb-${hsqldb.version}" />
+  <patternset id="pattern.hsqldb">
+    <include name="hsqldb-${hsqldb.version}/*.jar" />
+  </patternset>
+
+   <!-- AspectJ -->
+  <patternset id="pattern.aspectj">
+    <include name="spring-${spring.version}/aspect-*.jar" />
+  </patternset>
+  
+  <!-- Exports - libraries created by SAFE components -->
+  
+  <!-- safe-common -->
+  <property name="safe-common.dir" location="${lib.dir}/exports/safe-common" />
+  <patternset id="pattern.safe-common">
+    <include name="exports/safe-common/*.jar" />
+    <patternset refid="pattern.commons-logging" />
+    <patternset refid="pattern.commons-lang" />
+  </patternset>
+
+  <!-- docservice -->
+  <property name="doc-service.dir" location="${lib.dir}/exports/doc-service" />
+  <patternset id="pattern.doc-service">
+    <include name="exports/doc-service/docservice.jar" />
+  </patternset>
+  <patternset id="pattern.docservice-api">
+    <include name="exports/doc-service/docservice-api.jar" />
+  </patternset>
+  
+  
+  <!-- executive -->
+  <property name="executive.dir" location="${lib.dir}/exports/executive" />
+  <patternset id="pattern.executive-callback-service-api">
+    <include name="exports/executive/executive-callback-service-api.jar" />
+  </patternset>
+  
+  <!-- gas -->
+  <property name="gas.dir" location="${lib.dir}/exports/gas" />
+  <patternset id="pattern.gas-common">
+    <include name="exports/gas/gas-common.jar" />
+  </patternset>
+  <patternset id="pattern.gas-endpoint-api">
+    <include name="exports/gas/gas-endpoint-api.jar" />
+  </patternset>
+  <patternset id="pattern.gas-endpoint">
+    <patternset refid="pattern.gas-common" />
+    <include name="exports/gas/gas-endpoint.jar" />
+  </patternset>
+  <patternset id="pattern.gas-worker">
+    <patternset refid="pattern.gas-common" />
+    <include name="exports/gas/gas-worker.jar" />
+  </patternset>
+
+  <!-- docservice-proxy -->
+  <property name="docservice-proxy.dir" location="${lib.dir}/exports/docservice-proxy" />
+  <patternset id="pattern.docservice-proxy-api">
+    <include name="exports/docservice-proxy/docservice-proxy-api.jar" />
+  </patternset>
+  <patternset id="pattern.docservice-proxy-impl">
+    <include name="exports/docservice-proxy/docservice-proxy-impl.jar" />
+    <patternset refid="pattern.docservice-api" />
+  </patternset>
+  <patternset id="pattern.docservice-proxy">
+    <patternset refid="pattern.docservice-proxy-api" />
+    <patternset refid="pattern.docservice-proxy-impl" />
+  </patternset>
+
+  <!-- executive-proxy -->
+  <property name="executive-proxy.dir" location="${lib.dir}/exports/executive-proxy" />
+  <patternset id="pattern.executive-proxy-api">
+    <include name="exports/executive-proxy/executive-proxy-api.jar" />
+  </patternset>
+  <patternset id="pattern.executive-proxy-impl">
+    <include name="exports/executive-proxy/executive-proxy-impl.jar" />
+    <patternset refid="pattern.executive-callback-service-api" />
+    <patternset refid="pattern.safe-common" />
+    <patternset refid="pattern.spring" />
+  </patternset>
+  <patternset id="pattern.executive-proxy">
+    <patternset refid="pattern.executive-proxy-api" />
+    <patternset refid="pattern.executive-proxy-impl" />
+  </patternset>
+
+  <!-- gas-safe-client -->
+  <property name="gas-safe-client.dir" location="${lib.dir}/exports/gas-safe-client" />
+  <patternset id="pattern.gas-safe-client-api">
+    <include name="exports/gas-safe-client/gas-safe-client-api.jar" />
+  </patternset>
+  <patternset id="pattern.gas-safe-client-impl">
+    <include name="exports/gas-safe-client/gas-safe-client-impl.jar" />
+    <patternset refid="pattern.gas-endpoint-api" />
+    <patternset refid="pattern.safe-common" />
+    <patternset refid="pattern.spring" />
+  </patternset>
+  <patternset id="pattern.gas-safe-client">
+    <patternset refid="pattern.gas-safe-client-api" />
+    <patternset refid="pattern.gas-safe-client-impl" />
+  </patternset>
+
+  <!--
+   Macro that causes the build to fail if the given library is not available.
+   Typically used to check that a library that is created by another SAFE
+   component has been built before this project.
+
+   <require lib="safe-common" />
+  -->
+  <macrodef name="require">
+    <attribute name="lib" />
+    <sequential>
+      <pathconvert property="@{lib}.exists" setonempty="false">
+        <path>
+          <fileset dir="${lib.dir}">
+            <patternset refid="pattern.@{lib}" />
+          </fileset>
+        </path>
+      </pathconvert>
+      <fail unless="@{lib}.exists" message="Library @{lib} not available!" />
+    </sequential>
+  </macrodef>
+</project>
+

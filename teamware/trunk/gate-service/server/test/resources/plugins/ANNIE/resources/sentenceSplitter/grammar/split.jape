@@ -1,0 +1,76 @@
+/*
+*  splitter.jape
+*
+* Copyright (c) 1998-2004, The University of Sheffield.
+*
+*  This file is part of GATE (see http://gate.ac.uk/), and is free
+*  software, licenced under the GNU Library General Public License,
+*  Version 2, June 1991 (in the distribution as file licence.html,
+*  and also available at http://gate.ac.uk/gate/licence.html).
+*
+*  Diana Maynard, 11 Oct 2001
+*
+*  $Id: split.jape 8052 2007-01-23 16:10:58Z valyt $
+*/
+
+Phase:split
+Input: Token Split TempNoSplitText
+Options: control = first
+
+
+//sentence that consumes a split
+Rule: internalSplits
+(
+  {Token.kind == "word"}  
+  ({Token})* 
+  {Split.kind == "internal"}
+) :sentence
+-->
+:sentence.Sentence = {}
+
+ 
+//sentence that doesn't consume a split
+Rule: externalSplits
+(
+  {Token.kind == "word"}  
+  ({Token})* 
+):sentence
+{Split.kind == "external"}
+-->
+:sentence.Sentence = {}
+
+//quoted sentence that consumes a split
+Rule: quotedInternalSplits
+(
+  {Token.string == "\""}      
+  {Token.kind == "word"}  
+  ({Token})* 
+  ({Split.kind == "internal"})+
+  {Token.string == "\""}
+) :sentence
+-->
+:sentence.Sentence = {}
+
+ 
+//quoted sentence that doesn't consume a split
+Rule: quotedExternalSplits
+(
+  {Token.string == "\""}      
+  {Token.kind == "word"}  
+  ({Token})*
+  {Token.string == "\""}
+):sentence
+{Split.kind == "external"}
+-->
+:sentence.Sentence = {}
+
+
+//whole document text with no splits
+Rule: noSplits
+({TempNoSplitText}):sentence
+-->
+:sentence.Sentence = {},
+{
+  //delete the temporary annotation
+  inputAS.removeAll((AnnotationSet)bindings.get("sentence"));
+}

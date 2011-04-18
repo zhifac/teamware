@@ -1,0 +1,123 @@
+/*
+ *  ActionCancelTask.java
+ *
+ *  Copyright (c) 2006-2006, The University of Sheffield.
+ *
+ *  Milan Agatonovic, 06/July/2006
+ */
+
+package gleam.annotatorgui.actions;
+
+import gleam.annotatorgui.AnnotatorGUI;
+import gleam.annotatorgui.AnnotatorGUIExeption;
+import gleam.annotatorgui.AnnotatorTask;
+import gleam.annotatorgui.ExecutiveConnection;
+import gleam.annotatorgui.Constants;
+import gleam.annotatorgui.gui.MainFrame;
+import gleam.annotatorgui.gui.MessageDialog;
+
+import javax.swing.*;
+
+import java.awt.event.ActionEvent;
+import java.util.Date;
+
+/**
+ * The purpose of this class is: <br> - formalize operation of the client
+ * application <br> - provide easy access to this operation (it's Singleton)
+ * <br> - symplify control for enabling/disabling of GUI elements based on this
+ * action <br>
+ * 
+ * @author Andrey Shafirin
+ */
+public class ActionCancelTask extends AbstractAction implements Constants {
+
+	/** Internal reference to the instance of this action. */
+	private static ActionCancelTask ourInstance;
+
+	/**
+	 * Returns reference to the instance of this action.
+	 * 
+	 * @return instance of this action
+	 */
+	public synchronized static ActionCancelTask getInstance() {
+		if (ourInstance == null) {
+			ourInstance = new ActionCancelTask();
+		}
+		return ourInstance;
+	}
+
+	/**
+	 * Creates this action and defines action icon.
+	 */
+	private ActionCancelTask() {
+		super("Cancel Task", AnnotatorGUI.createIcon("canceltask-32.gif"));
+    // disabled by default
+		this.setEnabled(false);
+	}
+
+	public synchronized void actionPerformed(ActionEvent e) {
+		// adding a confirmation before a task is canceled
+		int answer = JOptionPane.showConfirmDialog(MainFrame.getInstance(),
+				"Are you sure you want to cancel this task?");
+		if (answer != JOptionPane.YES_OPTION) {
+			return;
+		}
+
+		// JOptionPane.showMessageDialog(MainFrame.getInstance(), "This function
+		// not
+		// implemented yet...", "Message", JOptionPane.PLAIN_MESSAGE);
+		try {
+			if (AnnotatorGUI.getConnection() == null)
+				return;
+			if (AnnotatorGUI.getConnection() instanceof ExecutiveConnection) {
+				((ExecutiveConnection) AnnotatorGUI.getConnection())
+						.cancelTask();
+				((ExecutiveConnection) AnnotatorGUI.getConnection())
+						.setAnnotatorTask(null);
+				System.out.println("["
+						+ new Date(System.currentTimeMillis()).toString()
+						+ "] Task canceled. "
+						+ ((ExecutiveConnection) AnnotatorGUI.getConnection())
+								.getTaskStatus());
+				MessageDialog m = new MessageDialog(MainFrame.getInstance(),
+						"Task canceled", "Task canceled.", 3000);
+				m.setVisible(true);
+				// TaskPuller.getInstance().activate();
+			} else {
+				JOptionPane.showMessageDialog(MainFrame.getInstance(),
+						"Internal error. This action can be only"
+								+ " performed with current connection"
+								+ " of type: "
+								+ ExecutiveConnection.class.getName(),
+						"Error!", JOptionPane.ERROR_MESSAGE);
+			}
+		} catch (AnnotatorGUIExeption ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(MainFrame.getInstance(), ex
+					.getMessage()
+					+ ((ex.getCause() == null) ? "" : "\n\n"
+							+ ex.getCause().getMessage()), "Error!",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+  /**
+   * Set the enabled value for this action.  The action can only be enabled if
+   * there is a current task which allows cancellation.
+   */
+	@Override
+	public void setEnabled(boolean newValue) {
+    boolean allowCancel = false;
+
+    if (AnnotatorGUI.getConnection() instanceof ExecutiveConnection) {
+      AnnotatorTask task =
+        ((ExecutiveConnection)AnnotatorGUI.getConnection()).getCurrentAnnotatorTask();
+      if(task != null && task.getTask() != null &&
+          task.getTask().isCancelAllowed()) {
+        allowCancel = true;
+      }
+    }
+
+		super.setEnabled(newValue && allowCancel);
+	}
+}

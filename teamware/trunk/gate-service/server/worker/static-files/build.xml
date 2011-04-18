@@ -1,0 +1,14 @@
+<project name="run-worker">
+  <fileset id="libs" dir="lib" includes="*.jar,*.zip" />
+
+  <path id="run.classpath">
+    <pathelement location="gate-service/classes" />
+    <fileset refid="libs" />
+  </path>
+
+  <java classname="gleam.gateservice.worker.WorkerRunner"
+        classpathref="run.classpath">
+    <!-- This works as Spring itself expands the *.xml -->
+    <arg value="conf/spring/*.xml" />
+  </java>
+</project>

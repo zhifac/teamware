@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="contextSource" class="org.springframework.ldap.support.LdapContextSource">
+        <property name="url" value="${ldap.url}"/>
+        <property name="base" value="${ldap.base}"/>
+        <property name="userName" value="${ldap.username}"/>
+        <property name="password" value="${ldap.password}"/>
+    </bean>
+
+    <bean id="ldapTemplate" class="org.springframework.ldap.LdapTemplate">
+        <constructor-arg ref="contextSource"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+<!-- 
+    <bean id="userDao" class="gleam.executive.dao.ldap.UserDaoLdap">
+        <property name="ldapTemplate" ref="ldapTemplate"/>
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+        <property name="roleDao" ref="roleDao"/>
+        <property name="userTableName" value="app_user"/>
+        <property name="incrementer" ref="incrementer"/>
+        <property name="userContextMapper">
+            <bean class="gleam.executive.dao.ldap.UserContextMapper">
+                <constructor-arg ref="ldapTemplate"/>
+                <constructor-arg value="ou=users,${ldap.base}"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="roleDao" class="gleam.executive.dao.ldap.RoleDaoLdap">
+        <property name="ldapTemplate" ref="ldapTemplate"/>
+    </bean>
+
+    <bean id="incrementer" class="org.springframework.jdbc.support.incrementer.MySQLMaxValueIncrementer">
+        <constructor-arg ref="dataSource"/>
+        <constructor-arg value="hibernate_sequence"/>
+    </bean>
+     -->
+</beans>

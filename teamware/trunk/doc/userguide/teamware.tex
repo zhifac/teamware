@@ -1,0 +1,58 @@
+\documentclass{report}
+\usepackage{fullpage}
+\usepackage{amssymb}
+\setcounter{tocdepth}{4}
+\usepackage[pdftex]{graphicx}
+\usepackage{thumbpdf}
+
+\usepackage{url}
+
+\urldef{\mailsa}\path|{h.cunningham, k.bontcheva, v.tablan, i.roberts,
+m.agatonovic, d.damljanovic, n.aswani, t.heitz}@dcs.shef.ac.uk|
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip\noindent\keywordname\enspace\ignorespaces#1}
+\newcommand{\thing}{GATE Teamware User Guide}
+\usepackage[
+  pdftex,
+  pdfborder=0,                %comment to get boxes around links
+  pdftitle={GATE Teamware User Guide},
+  pdfauthor={GATE Team},
+  pdfsubject={GATE Teamware User Guide},
+  pdfkeywords={},
+  pdfpagemode=None,
+  bookmarksopen=true
+]{hyperref}
+
+% first the title is needed
+\title{GATE Teamware User Guide}
+
+% a short form should be given in case it is too long for the running head
+
+\author{GATE Team}
+%
+
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next
+
+\begin{document}
+
+\maketitle{}
+
+\tableofcontents
+
+\chapter{Introduction}
+\input{intro}
+
+\chapter{User Management}
+\input{usermodule}
+
+\chapter{Resource Management}
+\input{resources}
+
+\chapter{Project Management}
+\input{annotation-projects}
+
+\chapter{Support}
+\input{support}
+
+\end{document}

@@ -1,0 +1,151 @@
+<!DOCTYPE project [
+  <!ENTITY packageDef SYSTEM 'package.xml'>
+]>
+<project name="GAS-packager" default="help">
+
+<description><![CDATA[
+Usage: ant package
+
+Configuration properties - these should be provided either in a file called
+package.properties or as -D options on the command line (ant -Doption.x=value
+package).
+
+Basic options
+-------------
+
+application (required)
+  The location of the gate application file which is to be packaged in the
+  service.
+
+service.name (optional, default "gate-service")
+  The name of the web application to be generated, i.e. the XXX in the
+  http://server:port/XXX/services/GATEService deployment URL.  This controls
+  the name of the final generated WAR file, which will be $${service.name}.war
+
+Advanced configuration
+----------------------
+
+If you have a "standard" application which takes no input apart from the
+document text and produces all its output annotations in the default (un-named)
+annotation set then you can ignore the rest of these options.
+
+service.definition (optional)
+  Location of an existing service definition file defining the service
+  parameters and annotation set declarations.  If provided, the input and
+  output annotationset properties below will be ignored.
+
+If no existing service definition file is provided, this tool will create a
+default one.  The following properties can be used to customise the default
+definition.
+
+input.default.annotationset (boolean, default false)
+  Does the service require any input from the default (un-named) annotation
+  set?
+
+input.original.markups (boolean, default false)
+  Convenience flag stating that the service requires the Original markups
+  annotation set as input (i.e. the application operates on the XML or HTML
+  tags taken from the original documents).
+
+input.annotationsets (optional)
+  Comma-separated list of other annotation set names that the service requires
+  for input.
+
+output.default.annotationset (boolean, default true)
+  Does the service produce output on the default (un-named) annotation set?  
+
+output.annotationsets (optional)
+  Comma-separated list of other annotation set names that the service populates
+  with output.
+]]></description>
+
+
+  <!-- property file -->
+  <property file="package.properties" />
+
+  <!-- Parameter defaults -->
+  <property name="service.name" value="gate-service" />
+  <property name="input.default.annotationset" value="no" />
+  <property name="input.original.markups" value="no" />
+  <property name="input.annotationsets" value="" />
+  <property name="output.default.annotationset" value="yes" />
+  <property name="output.annotationsets" value="" />
+
+  <!-- other properties -->
+  <property name="skeleton.war" location="skeleton/skeleton.war" />
+
+  <path id="tasks.classpath">
+    <fileset dir="lib" includes="*.jar" />
+  </path>
+
+  <!-- Generate a simple service definition, if no existing definition has been
+  provided. -->
+  <target name="-create.service.definition" unless="service.definition">
+    <property name="service.definition" location="generated/serviceDefinition.xml" />
+    <mkdir dir="generated" />
+
+    <taskdef name="create-service-definition"
+             classname="gleam.gateservice.packager.CreateServiceDefinition"
+             classpathref="tasks.classpath" />
+
+    <!-- prepend the original markups annotation set if necessary -->
+    <condition property="real.input.annotationsets"
+               value="Original markups,${input.annotationsets}"
+               else="${input.annotationsets}">
+      <istrue value="${input.original.markups}" />
+    </condition>
+
+    <!-- Create the definition -->
+    <create-service-definition
+        destFile="${service.definition}"
+        inputFromDefaultSet="${input.default.annotationset}"
+        outputToDefaultSet="${output.default.annotationset}">
+      <inputannotationset names="${real.input.annotationsets}" />
+      <outputannotationset names="${output.annotationsets}" />
+    </create-service-definition>
+  </target>
+
+  <target name="-package.gapp">
+    <!-- load the packagegapp task -->
+    <typedef resource="gate/util/ant/antlib.xml"
+             classpathref="tasks.classpath" />
+
+    <!-- create a macro used for the include file -->
+    <macrodef name="package">
+      <attribute name="copyPlugins" default="yes" />
+      <attribute name="copyResourceDirs" default="no" />
+      <attribute name="onUnresolved" default="recover" />
+      <element name="content" implicit="true" optional="true" />
+      <sequential>
+        <packagegapp destfile="generated/package/application.xgapp"
+                     src="${application}"
+                     copyplugins="@{copyPlugins}"
+                     copyresourcedirs="@{copyResourceDirs}"
+                     onUnresolved="@{onUnresolved}">
+          <hint file="mapping.hints" />
+          <content/>
+        </packagegapp>
+      </sequential>
+    </macrodef>
+
+    <mkdir dir="generated/package" />
+
+    <!-- include package.xml -->
+    &packageDef;
+  </target>
+
+  <!-- Build a new WAR file from the skeleton WAR but with the packaged GAPP
+  and service definition included at the appropriate places -->
+  <target name="package" depends="-create.service.definition, -package.gapp">
+    <zip destfile="${service.name}.war">
+      <zipfileset src="${skeleton.war}"/>
+      <zipfileset file="${service.definition}" fullpath="WEB-INF/serviceDefinition.xml" />
+      <zipfileset dir="generated/package" prefix="WEB-INF" />
+    </zip>
+  </target>
+
+  <target name="clean" description="Delete the generated war and temporary files">
+    <delete dir="generated/package" />
+    <delete file="${service.name}.war" />
+  </target>
+</project>

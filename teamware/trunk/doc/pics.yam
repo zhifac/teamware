@@ -1,0 +1,18 @@
+Pics
+
+%[
+| %image(./images/gates-jolie-example.png, "./images/gates-jolie-example.png", 300) 
+| %image(./images/gleam-modules2.png, "./images/gleam-modules2.png", 300) 
+| %image(./images/gates-jolie-result.png, "./images/gates-jolie-result.png",
+300) |
+---
+| %image(./images/executive-scenario1.png, "./images/executive-scenario1.png", 300) 
+| %image(./images/executive-scenario2.png, "./images/executive-scenario2.png", 300) 
+| %image(./images/gleam-soa.png, "./images/gleam-soa.png", 300) |
+---
+| %image(./images/gleam.png, "./images/gleam.png", 300) 
+| %image(./images/gleam-modules.png, "./images/gleam-modules.png", 300) 
+| %image(./images/safe-process.jpg, "./images/safe-process.jpg", 300) |
+---
+| %image(./old/gleam-soa.png, "./old/gleam-soa.png", 300) |
+%]

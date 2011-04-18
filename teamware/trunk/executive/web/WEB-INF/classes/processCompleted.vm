@@ -1,0 +1,7 @@
+Dear ${userName},
+
+Project '${processName}' has been just completed.
+
+Best regards,
+GATE Teamware Support
+${link}

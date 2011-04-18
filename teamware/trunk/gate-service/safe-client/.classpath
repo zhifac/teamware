@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/api"/>
+	<classpathentry kind="src" path="src/impl"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/teamware-lib/javamail-1.4.1/activation.jar"/>
+	<classpathentry kind="lib" path="/teamware-lib/jakarta-commons/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="/teamware-lib/exports/safe-common/safe-common.jar"/>
+	<classpathentry kind="lib" path="/teamware-lib/logging-log4j-1.2.15/dist/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="/teamware-lib/javamail-1.4.1/mail.jar"/>
+	<classpathentry kind="lib" path="/teamware-lib/cxf-2.2.4/cxf-2.2.4.jar"/>
+	<classpathentry kind="lib" path="/teamware-lib/geronimo-spec/geronimo-annotation_1.0_spec-1.1.1.jar"/>
+	<classpathentry kind="lib" path="/teamware-lib/geronimo-spec/geronimo-ws-metadata_2.0_spec-1.1.2.jar"/>
+	<classpathentry kind="lib" path="/teamware-lib/exports/gas/gas-endpoint-api.jar"/>
+	<classpathentry kind="lib" path="/teamware-lib/spring-2.5.6/spring.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

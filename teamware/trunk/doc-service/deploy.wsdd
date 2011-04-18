@@ -1,0 +1,39 @@
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+   xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+ <service name="docservice" provider="java:RPC">
+  <parameter name="className" value="gleam.docservice.SerialDocService"/>
+  <parameter name="allowedMethods" value="listCorpora listDocs createCorpus deleteCorpus getCorpusInfo getCorpusFeatures setCorpusFeatures getDocumentFeatures setDocumentFeatures addDocumentToCorpus removeDocumentFromCorpus createDoc deleteDoc getDocInfo getDocContent getDocXML search getNextSearchResults listAnnotationSets annotationSetNameExists getAnnotationSet getAnnotationSetLock setAnnotationSet deleteAnnotationSet copyAnnotationSet releaseLock keepaliveLock calculateIAA"/>
+  <namespace>http://gate.ac.uk/gleam/1.0</namespace>
+  <beanMapping qname="docservice:AnnotationSetHandle" xmlns:docservice="http://gate.ac.uk/gleam/1.0"
+    languageSpecificType="java:gleam.docservice.AnnotationSetHandle" />
+  <beanMapping qname="docservice:DocumentInfo" xmlns:docservice="http://gate.ac.uk/gleam/1.0"
+    languageSpecificType="java:gleam.docservice.DocumentInfo" />
+  <beanMapping qname="docservice:CorpusInfo" xmlns:docservice="http://gate.ac.uk/gleam/1.0"
+    languageSpecificType="java:gleam.docservice.CorpusInfo" />
+  <beanMapping qname="docservice:IAAResult" xmlns:docservice="http://gate.ac.uk/gleam/1.0"
+    languageSpecificType="java:gleam.docservice.IAAResult" />
+  <beanMapping qname="docservice:IAADetail" xmlns:docservice="http://gate.ac.uk/gleam/1.0"
+    languageSpecificType="java:gleam.docservice.IAADetail" />
+  <beanMapping qname="iaa:AllWaysFMeasureDetail" xmlns:iaa="http://gate.ac.uk/gleam/docservice/iaa/1.0"
+    languageSpecificType="java:gleam.docservice.iaa.AllWaysFMeasureDetail" />
+  <beanMapping qname="iaa:AllWaysKappaDetail" xmlns:iaa="http://gate.ac.uk/gleam/docservice/iaa/1.0"
+    languageSpecificType="java:gleam.docservice.iaa.AllWaysKappaDetail" />
+  <beanMapping qname="iaa:FMeasure" xmlns:iaa="http://gate.ac.uk/gleam/docservice/iaa/1.0"
+    languageSpecificType="java:gleam.docservice.iaa.FMeasure" />
+  <beanMapping qname="iaa:FMeasureDetailForAnnotator" xmlns:iaa="http://gate.ac.uk/gleam/docservice/iaa/1.0"
+    languageSpecificType="java:gleam.docservice.iaa.FMeasureDetailForAnnotator" />
+  <beanMapping qname="iaa:FMeasureDetailForAnnotatorPairs" xmlns:iaa="http://gate.ac.uk/gleam/docservice/iaa/1.0"
+    languageSpecificType="java:gleam.docservice.iaa.FMeasureDetailForAnnotatorPairs" />
+  <beanMapping qname="iaa:FMeasureDetailForLabel" xmlns:iaa="http://gate.ac.uk/gleam/docservice/iaa/1.0"
+    languageSpecificType="java:gleam.docservice.iaa.FMeasureDetailForLabel" />
+  <beanMapping qname="iaa:KappaDetailForAnnotator" xmlns:iaa="http://gate.ac.uk/gleam/docservice/iaa/1.0"
+    languageSpecificType="java:gleam.docservice.iaa.KappaDetailForAnnotator" />
+  <beanMapping qname="iaa:KappaDetailForAnnotatorPairs" xmlns:iaa="http://gate.ac.uk/gleam/docservice/iaa/1.0"
+    languageSpecificType="java:gleam.docservice.iaa.KappaDetailForAnnotatorPairs" />
+  <beanMapping qname="iaa:PairwiseFMeasureDetail" xmlns:iaa="http://gate.ac.uk/gleam/docservice/iaa/1.0"
+    languageSpecificType="java:gleam.docservice.iaa.PairwiseFMeasureDetail" />
+  <beanMapping qname="iaa:PairwiseKappaDetail" xmlns:iaa="http://gate.ac.uk/gleam/docservice/iaa/1.0"
+    languageSpecificType="java:gleam.docservice.iaa.PairwiseKappaDetail" />
+  <!--<endpointURL>http://don.dcs.shef.ac.uk/termino/services/Termino</endpointURL>-->
+ </service>
+</deployment>

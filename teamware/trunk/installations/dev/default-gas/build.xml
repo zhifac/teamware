@@ -1,0 +1,24 @@
+<project name="default-gas" default="dist">
+
+  <property name="webapp.dir" location="webapp" />
+  <property name="dist.dir" location="../dist" />
+  <property name="plugin.Tools" location="../../../lib/gate-6.1/plugins/Tools" />
+  <property name="plugin.ANNIE" location="../../../lib/gate-6.1/plugins/ANNIE" />
+  <property name="original.war" location="../../../gate-service/server/gate-service.war" />
+  <property name="new.war" location="${dist.dir}/gate-service.war" />
+
+  <!-- build a WAR based on the default gate service WAR file but with the
+  specific config for this application -->
+  <target name="dist">
+    <mkdir dir="${dist.dir}" />
+    <!-- use a jar rather than war task as war *requires* a web.xml and we want
+    to reuse the one that lives in the original gate-service.war -->
+    <jar destfile="${new.war}">
+      <zipfileset src="${original.war}" />
+      <fileset dir="${webapp.dir}" />
+      <zipfileset prefix="WEB-INF/plugins/Tools" dir="${plugin.Tools}"
+                  includes="creole.xml" />
+       <zipfileset prefix="WEB-INF/plugins/ANNIE" dir="${plugin.ANNIE}" />
+    </jar>
+  </target>
+</project>
