@@ -1,0 +1,21 @@
+Phase: DocumentAccepted
+
+Input: Applicant Inventor Agent Section Reference Measurement
+Options: control = once
+
+/*
+ * Add a document feature.
+ */
+Rule:AddDocumentFeature
+(
+  {Inventor}
+  |{Agent}
+  |{Applicant}
+  |{Section}
+  |{Reference}
+  |{Measurement}
+)
+-->
+{
+doc.getFeatures().put("accepted", "true");
+}

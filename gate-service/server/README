@@ -1,0 +1,32 @@
+This directory will contain the server-side implementation of the GaS.
+
+Installation Guide:
+
+1. create gate-service empty dir in tomcat/webapps
+2. Checkout gate-service from SVN
+3. execute ant war.complete inside server folder
+4. extract content gate-service/server/gate-service.war into tomcat/webapps/gate-service folder
+5. edit the following lines in workerBeans.xml in tomcat/webapps/gate-service/WEB-INF/spring folder:
+
+ <!-- Use dummy proxies for doc service and executive -->
+ <bean id="executiveProxyFactory"
+   class="gleam.executive.proxy.dummy.DummyExecutiveProxyFactory" />
+
+ <bean id="docServiceProxyFactory"
+   class="gleam.docservice.proxy.dummy.DummyDocServiceProxyFactory" />
+
+to match real impl, e.g:
+
+<bean id="executiveProxyFactory"
+   class="gleam.executive.proxy.impl.ExecutiveProxyFactoryImpl" />
+
+ <bean id="docServiceProxyFactory"
+   class="gleam.docservice.proxy.impl.DocServiceProxyFactoryImpl" />
+
+6. You are now ready to use default GATE application deployed. For enabling debug in console just edit log4j.properties in WEB-INF/classes by adding this line: log4j.logger.gleam.gateservice=DEBUG
+7. If you want to use some different app you must check and probably modify:
+a) plugins folder (copy necessary plugins here)
+b) resources folder (copy necessary resources, grammars, ontologies, etc)
+c) server-definition.xml (specify the input parameters, this GaS application demands)
+d) application.xgapp (GATE application itself with fixed paths to plugins and resources (use relpath instead of absolute paths)
+

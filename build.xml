@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="SAFE" default="build-all">
+  <!-- sanity check 
+  <fail message="SAFE will not build using the ant in gate/bin.  Use gate-extras/ant/bin/ant instead">
+    <condition>
+      <available file="${ant.home}/plugins/ANNIE/creole.xml" />
+    </condition>
+  </fail>
+ -->
+  <import file="common.xml" /> 
+   
+  <target name="init" description="defines custom tasks">
+        <!-- Taskdefs -->
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+            <classpath>
+                <fileset dir="${safe.dir}/lib">
+                    <patternset refid="pattern.ant-contrib" />
+                </fileset>
+            </classpath>
+        </taskdef>   
+    </target>  
+          
+
+  
+
+  <target name="build-all-depends" depends="init">
+    <!-- safe-common -->
+    <ant dir="common" target="publish" />
+
+    <!-- proxy APIs (but not yet implementations) -->
+    <ant dir="executive-proxy" target="publish-api" />
+    <ant dir="docservice-proxy" target="publish-api" />
+    <ant dir="gate-service/safe-client" target="publish-api" />
+
+    <!-- Doc service - publish client API -->
+    <ant dir="doc-service" target="publish-api" />
+
+    <!-- GaS server - publish client stubs -->
+    <ant dir="gate-service/server" target="endpoint-api.jar" />
+
+    <!-- Executive - publish client stubs -->
+    <ant dir="executive" target="publish-callback-service-api" />
+
+    <!-- At this point we can build the proxy implementations -->
+    <ant dir="executive-proxy" target="publish-impl" />
+    <ant dir="docservice-proxy" target="publish-impl" />
+    <ant dir="gate-service/safe-client" target="publish-impl" />
+  </target>
+
+  <target name="build-all" depends="build-all-depends">
+    <!-- And now we can build the rest of the projects -->
+    <ant dir="doc-service" target="all" />
+    <ant dir="executive" target="package-web" />
+    <ant dir="gate-service/server" target="all" />
+    <ant dir="gate-service/gate-client" target="all" />
+    <ant dir="service-datastore" target="build" />
+  
+  <if>
+    <equals arg1="${build.jws}" arg2="yes" />
+          <then>
+           <ant dir="annic-gui" target="build.deployment" />
+           <ant dir="annotation-diff-gui" target="build.deployment" />
+           <ant dir="annotator-gui" target="build.deployment" />
+          </then>
+
+	</if>
+  </target>
+  
+  <target name="clean" depends="init">
+    <ant dir="doc-service" target="clean" />
+    <ant dir="common" target="clean" />
+    <ant dir="executive-proxy" target="clean" />
+    <ant dir="docservice-proxy" target="clean" />
+    <ant dir="gate-service/safe-client" target="clean" />
+    <ant dir="gate-service/gate-client" target="clean" />
+    <ant dir="gate-service/server" target="clean" />
+    <ant dir="gate-service/packager" target="clean" />
+    <ant dir="executive" target="clean" />
+    
+    <installation-build tgt="clean" />
+    
+    
+    <if>
+    <equals arg1="${build.jws}" arg2="yes" />
+          <then>
+    <ant dir="annic-gui" target="clean" />
+    <ant dir="annotation-diff-gui" target="clean" />
+    <ant dir="annotator-gui" target="clean" />
+    </then>
+
+	</if>
+    <!-- delete exports directory - jars which are generated as part of
+         this build. -->
+    <delete dir="lib/exports" />
+    <delete dir="dist" />
+  </target>
+
+  <!-- ================================================================ -->
+  <!-- run all tests outside of container                               -->
+  <!-- ================================================================ -->
+  <target name="test-all" depends="build-all">
+    <!--
+    <ant dir="doc-service" target="test-all" />
+    -->
+    <ant dir="annotator-gui" target="test-all" />
+    <ant dir="executive" target="test-all" />
+  </target>
+  
+  <!-- ================================================================ -->
+  <!-- run all tests inside of container                                -->
+  <!-- ================================================================ -->
+  <target name="test-all-running" depends="test-all">
+    <ant dir="executive" target="test-jsp" inheritrefs="false" />
+  </target>
+
+
+  <!-- ================================================================ -->
+  <!-- deploys all apps                                                 -->
+  <!-- ================================================================ -->
+  <target name="deploy-all" depends="build-all">
+    <property name="deploy.process" value="false"/>
+    <ant dir="doc-service" target="deploy" />
+    <ant dir="executive" target="deploy" />
+    <!-- installation-specific stuff -->
+    <installation-build tgt="deploy-all" />
+  </target>
+  
+  
+
+  <!-- ================================================================ -->
+  <!-- undeploys all apps                                                 -->
+  <!-- ================================================================ -->
+  <target name="undeploy-all" depends="init">
+    <ant dir="doc-service" target="undeploy" />
+    <ant dir="executive" target="undeploy" />
+    <!-- installation-specific stuff -->
+    <installation-build tgt="undeploy-all" />
+  </target>
+
+  <!-- ================================================================ -->
+  <!-- redeploys all apps                                                 -->
+  <!-- ================================================================ -->
+  <target name="redeploy-all" depends="undeploy-all,deploy-all"/>
+
+  <!-- ================================================================ -->
+  <!-- initial installation                                                -->
+  <!-- ================================================================ -->
+  <target name="install" depends="deploy-all">
+     <ant dir="executive" target="setup-db" />
+     
+     <!-- installation-specific stuff -->
+     <installation-build tgt="install" />
+     <!--<ant dir="executive" target="test-workflow">
+       <property name="testcase" value="MatrixwareProcessDefinitionUpload"/> 
+     </ant>-->
+  </target>
+  
+  <!-- ================================================================ -->
+  <!-- uninstall                                                -->
+  <!-- ================================================================ -->
+  <target name="uninstall" depends="clean, undeploy-all">
+     <ant dir="executive" target="db-drop" />
+     <ant dir="doc-service" target="delete-datastore" />
+  </target>
+
+
+  <!-- ================================================================ -->
+  <!-- reinstallation                                                -->
+  <!-- ================================================================ -->
+  <target name="reinstall" depends="uninstall, install">
+  </target>
+
+ <!-- =================================================================== -->
+ <!--            Start Tomcat                                             -->
+ <!-- =================================================================== -->
+ <target name="start-tomcat" description="starts tomcat in the current console window">
+	<echo>Starting tomcat from ${tomcat.dir}</echo>
+        <java classname="org.apache.catalina.startup.Bootstrap" fork="true">
+	        <sysproperty key="catalina.home" file="${tomcat.dir}"/>
+                <sysproperty key="java.awt.headless" value="true"/>
+	        <arg value="start"/>
+	        <classpath>
+	        <pathelement path="${java.home}/../lib/tools.jar"/>
+	        <fileset dir="${tomcat.dir}">
+	                <include name="bin/bootstrap.jar"/>
+	        </fileset>
+	        </classpath>
+        </java>
+ </target>
+
+ <!-- =================================================================== -->
+ <!--            Shutdown Tomcat                                          -->
+ <!-- =================================================================== -->
+ <target name="stop-tomcat" description="shutdown tomcat in the current console window">
+		<echo>Shuting down tomcat from ${tomcat.dir}</echo>
+        <java classname="org.apache.catalina.startup.Bootstrap" fork="yes">
+            <sysproperty key="catalina.home" file="${tomcat.dir}"/>
+            <arg value="stop"/>
+            <classpath>
+                <pathelement path="${java.home}/../lib/tools.jar"/>
+                <fileset dir="${tomcat.dir}">
+                    <include name="bin/bootstrap.jar"/>
+                </fileset>
+            </classpath>
+        </java>
+    </target>
+    
+    <target name="dump-database">  
+      <mkdir dir="${safe.dir}/dist/sql"/> 
+      <exec executable="mysqldump" output="${safe.dir}/dist/database-dump.sql">          
+      <arg value="--user=${database.username}" />          
+      <arg value="--password=${database.password}" />          
+      <arg value="--host=${database.host}" />          
+      <arg value="--hex-blob" />
+      <arg value="--port=3306" />          
+      <arg value="${database.name}" />      
+      </exec>  
+      <echo message="database dumped"/>
+      <concat destfile="${safe.dir}/dist/${database.name}.sql">
+      <header filtering="no" trimleading="yes">
+        SET AUTOCOMMIT = 0;
+        SET FOREIGN_KEY_CHECKS=0;
+      </header>
+      <path path="${safe.dir}/dist/database-dump.sql"/>
+       <footer filtering="no" trimleading="yes">
+          SET FOREIGN_KEY_CHECKS = 1;
+          COMMIT;
+          SET AUTOCOMMIT = 1;
+      </footer>
+      </concat>
+      <echo message="created ${database.name}.sql"/>
+       <delete file="${safe.dir}/dist/database-dump.sql" />
+    </target>
+    
+    
+     
+    <target name="copy-sql">  
+      <mkdir dir="${safe.dir}/dist/sql"/> 
+      <ant dir="executive" target="prepare-sample-data" />
+      <copy todir="${safe.dir}/dist/sql" overwrite="true">
+        <fileset dir="${safe.dir}/executive/metadata/sql">
+          <include name="mysql*"/>
+          <include name="*.xml"/>
+        </fileset>
+      </copy>
+    </target>
+    
+        <!-- ZIP deploy-->
+    <target name="dist" depends="clean, undeploy-all, deploy-all, copy-sql">   
+    
+     <copy todir="${safe.dir}/dist" overwrite="true">
+            <fileset dir="${safe.dir}/install" excludes="**/.svn"/>
+    </copy>
+    	
+    	<copy todir="${safe.dir}/dist/utils" overwrite="true">
+    		<fileset dir="${safe.dir}/utils" excludes="**/.svn"/>
+    	</copy>
+   
+    <zip destfile="${safe.dir}/dist/teamware-update.zip">
+      <!-- Main tomcat -->
+      <zipfileset dir="${deploy.dir}" prefix="${deploy.dir.name}"/>
+      <zipfileset dir="${tomcat.context.dir}"
+                  prefix="conf/Catalina/${host.name}"/>
+      <zipfileset dir="${safe.dir}/dist/sql" prefix="sql" /> 
+      <zipfileset dir="${safe.dir}/dist/utils" prefix="utils"/>
+    </zip>
+    
+    <zip destfile="dist/install.jar"
+        basedir="dist"
+       excludes="**/.svn,**/.*"
+  />
+ 
+  </target>
+
+ </project>

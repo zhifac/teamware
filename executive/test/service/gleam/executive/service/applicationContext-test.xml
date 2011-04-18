@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <!-- AOP Advisor -->
+    <bean id="userSecurityInterceptor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+        <property name="advice" ref="userSecurityAdvice"/>
+        <property name="patterns">
+            <list>
+                <value>.*saveUser</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Advice Class -->
+    <bean id="userSecurityAdvice" class="gleam.executive.service.UserSecurityAdvice">
+        <property name="userCache" ref="userCache"/>
+    </bean>
+
+    <bean id="userManager" class="gleam.executive.service.impl.UserManagerImpl"/>
+	<bean id="roleManager" class="gleam.executive.service.impl.RoleManagerImpl"/>
+	
+    <bean id="target" class="org.springframework.aop.framework.ProxyFactoryBean">
+      <property name="proxyInterfaces" value="gleam.executive.service.UserManager"/>
+      <property name="interceptorNames">
+         <list>
+            <idref local="userSecurityInterceptor"/>
+            <idref local="userManager"/>
+         </list>
+      </property>
+    </bean>
+    
+    <bean id="targetRole" class="org.springframework.aop.framework.ProxyFactoryBean">
+      <property name="proxyInterfaces" value="gleam.executive.service.RoleManager"/>
+      <property name="interceptorNames">
+         <list>
+            <idref local="userSecurityInterceptor"/>
+            <idref local="roleManager"/>
+         </list>
+      </property>
+    </bean>
+
+    <bean id="userCache" class="org.acegisecurity.providers.dao.cache.EhCacheBasedUserCache">
+        <property name="cache">
+            <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+                <property name="cacheManager">
+                    <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
+                </property>
+                <property name="cacheName" value="userCache"/>
+            </bean>
+        </property>
+    </bean>
+    
+     <bean id="docServiceProxyFactory" class="gleam.docservice.proxy.dummy.DummyDocServiceProxyFactory">
+        <property name="timeout" value="0"/>
+    </bean>
+</beans>    

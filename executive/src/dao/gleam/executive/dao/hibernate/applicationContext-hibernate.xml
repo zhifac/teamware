@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+ <!-- Hibernate SessionFactory -->
+ <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+  <property name="lobHandler">  
+    <bean class="org.springframework.jdbc.support.lob.DefaultLobHandler"/>  
+  </property>
+  <property name="dataSource" ref="dataSource"/>
+  <property name="mappingResources">
+   <list>
+    <value>gleam/executive/model/Role.hbm.xml</value>
+    <value>gleam/executive/model/User.hbm.xml</value>
+    <value>gleam/executive/model/Resource.hbm.xml</value>
+    <value>gleam/executive/model/Service.hbm.xml</value>
+    <value>gleam/executive/model/Project.hbm.xml</value>
+    <value>gleam/executive/model/AnnotationService.hbm.xml</value>
+    <value>gleam/executive/model/AnnotationServiceType.hbm.xml</value>
+    
+    <!-- following mapping files have a dependendy on  -->
+    <!-- 'jbpm-identity-{version}.jar', mapping files  -->
+    <!-- of the pluggable jbpm identity component.     -->
+    <!-- comment out the following 3 lines if you don't-->
+    <!-- want to use the default jBPM identity mgmgt   -->
+    <!-- component
+    <value>org/jbpm/identity/User.hbm.xml</value>
+    <value>org/jbpm/identity/Group.hbm.xml</value>
+    <value>org/jbpm/identity/Membership.hbm.xml</value>
+    -->
+    <!-- ###################### -->
+    <!-- # jbpm mapping files # -->
+    <!-- ###################### -->
+
+    <!-- hql queries and type defs -->
+    <value>gleam/executive/dao/hibernate/jbpm.queries.hbm.xml</value>
+    <!-- graph.action mapping files -->
+    <value>org/jbpm/graph/action/MailAction.hbm.xml</value>
+
+    <!-- graph.def mapping files -->
+    <value>org/jbpm/graph/def/ProcessDefinition.hbm.xml</value>
+    <value>org/jbpm/graph/def/Node.hbm.xml</value>
+    <value>org/jbpm/graph/def/Transition.hbm.xml</value>
+    <value>org/jbpm/graph/def/Event.hbm.xml</value>
+    <value>org/jbpm/graph/def/Action.hbm.xml</value>
+    <value>org/jbpm/graph/def/SuperState.hbm.xml</value>
+    <value>org/jbpm/graph/def/ExceptionHandler.hbm.xml</value>
+    <value>org/jbpm/instantiation/Delegation.hbm.xml</value>
+
+    <!-- ############################################ -->
+    <!-- # another mapping file with external dependencies # -->
+    <!-- ############################################ -->
+    <!-- following mapping file has a dependendy on   -->
+    <!-- 'bsh-{version}.jar'.                         -->
+    <!-- uncomment this if you don't have bsh on your -->
+    <!-- classpath.  you won't be able to use the     -->
+    <!-- script element in process definition files   -->
+    <!-- has to be defined below org/jbpm/graph/def/Action.hbm.xml -->
+    <!-- due to the inline collection-cache elements below -->
+    <value>org/jbpm/graph/action/Script.hbm.xml</value>
+
+    <!-- graph.node mapping files -->
+    <value>org/jbpm/graph/node/StartState.hbm.xml</value>
+    <value>org/jbpm/graph/node/EndState.hbm.xml</value>
+    <value>org/jbpm/graph/node/ProcessState.hbm.xml</value>
+    <value>org/jbpm/graph/node/Decision.hbm.xml</value>
+    <value>org/jbpm/graph/node/Fork.hbm.xml</value>
+    <value>org/jbpm/graph/node/Join.hbm.xml</value>
+    <value>org/jbpm/graph/node/MailNode.hbm.xml</value>
+    <value>org/jbpm/graph/node/State.hbm.xml</value>
+    <value>org/jbpm/graph/node/TaskNode.hbm.xml</value>
+
+    <!-- context.def mapping files -->
+    <value>org/jbpm/context/def/ContextDefinition.hbm.xml</value>
+    <value>org/jbpm/context/def/VariableAccess.hbm.xml</value>
+
+    <!-- bytes mapping files -->
+    <value>org/jbpm/bytes/ByteArray.hbm.xml</value>
+
+    <!-- module.def mapping files -->
+    <value>org/jbpm/module/def/ModuleDefinition.hbm.xml</value>
+
+    <!-- file.def mapping files -->
+    <value>org/jbpm/file/def/FileDefinition.hbm.xml</value>
+
+    <!-- taskmgmt.def mapping files -->
+    <value>org/jbpm/taskmgmt/def/TaskMgmtDefinition.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/def/Swimlane.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/def/Task.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/def/TaskController.hbm.xml</value>
+
+    <!-- scheduler.def mapping files -->
+    <value>org/jbpm/scheduler/def/CreateTimerAction.hbm.xml</value>
+    <value>org/jbpm/scheduler/def/CancelTimerAction.hbm.xml</value>
+
+    <!-- graph.exe mapping files -->
+    <value>org/jbpm/graph/exe/Comment.hbm.xml</value>
+    <value>org/jbpm/graph/exe/ProcessInstance.hbm.xml</value>
+    <value>org/jbpm/graph/exe/Token.hbm.xml</value>
+    <value>org/jbpm/graph/exe/RuntimeAction.hbm.xml</value>
+
+    <!-- module.exe mapping files -->
+    <value>org/jbpm/module/exe/ModuleInstance.hbm.xml</value>
+
+    <!-- context.exe mapping files -->
+    <value>org/jbpm/context/exe/ContextInstance.hbm.xml</value>
+    <value>org/jbpm/context/exe/TokenVariableMap.hbm.xml</value>
+    <value>org/jbpm/context/exe/VariableInstance.hbm.xml</value>
+    <value>org/jbpm/context/exe/variableinstance/ByteArrayInstance.hbm.xml</value>
+    <value>org/jbpm/context/exe/variableinstance/DateInstance.hbm.xml</value>
+    <value>org/jbpm/context/exe/variableinstance/DoubleInstance.hbm.xml</value>
+    <value>org/jbpm/context/exe/variableinstance/HibernateLongInstance.hbm.xml</value>
+    <value>org/jbpm/context/exe/variableinstance/HibernateStringInstance.hbm.xml</value>
+    <value>org/jbpm/context/exe/variableinstance/LongInstance.hbm.xml</value>
+    <value>org/jbpm/context/exe/variableinstance/NullInstance.hbm.xml</value>
+    <value>org/jbpm/context/exe/variableinstance/StringInstance.hbm.xml</value>
+
+    <!-- job mapping files -->
+    <value>org/jbpm/job/Job.hbm.xml</value>
+    <value>org/jbpm/job/Timer.hbm.xml</value>
+    <value>org/jbpm/job/ExecuteNodeJob.hbm.xml</value>
+    <value>org/jbpm/job/ExecuteActionJob.hbm.xml</value>
+
+    <!-- taskmgmt.exe mapping files -->
+    <value>org/jbpm/taskmgmt/exe/TaskMgmtInstance.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/exe/TaskInstance.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/exe/PooledActor.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/exe/SwimlaneInstance.hbm.xml</value>
+
+    <!-- logging mapping files -->
+    <value>org/jbpm/logging/log/ProcessLog.hbm.xml</value>
+    <value>org/jbpm/logging/log/MessageLog.hbm.xml</value>
+    <value>org/jbpm/logging/log/CompositeLog.hbm.xml</value>
+    <value>org/jbpm/graph/log/ActionLog.hbm.xml</value>
+    <value>org/jbpm/graph/log/NodeLog.hbm.xml</value>
+    <value>org/jbpm/graph/log/ProcessInstanceCreateLog.hbm.xml</value>
+    <value>org/jbpm/graph/log/ProcessInstanceEndLog.hbm.xml</value>
+    <value>org/jbpm/graph/log/ProcessStateLog.hbm.xml</value>
+    <value>org/jbpm/graph/log/SignalLog.hbm.xml</value>
+    <value>org/jbpm/graph/log/TokenCreateLog.hbm.xml</value>
+    <value>org/jbpm/graph/log/TokenEndLog.hbm.xml</value>
+    <value>org/jbpm/graph/log/TransitionLog.hbm.xml</value>
+    <value>org/jbpm/context/log/VariableLog.hbm.xml</value>
+    <value>org/jbpm/context/log/VariableCreateLog.hbm.xml</value>
+    <value>org/jbpm/context/log/VariableDeleteLog.hbm.xml</value>
+    <value>org/jbpm/context/log/VariableUpdateLog.hbm.xml</value>
+    <value>org/jbpm/context/log/variableinstance/ByteArrayUpdateLog.hbm.xml</value>
+    <value>org/jbpm/context/log/variableinstance/DateUpdateLog.hbm.xml</value>
+    <value>org/jbpm/context/log/variableinstance/DoubleUpdateLog.hbm.xml</value>
+    <value>org/jbpm/context/log/variableinstance/HibernateLongUpdateLog.hbm.xml</value>
+    <value>org/jbpm/context/log/variableinstance/HibernateStringUpdateLog.hbm.xml</value>
+    <value>org/jbpm/context/log/variableinstance/LongUpdateLog.hbm.xml</value>
+    <value>org/jbpm/context/log/variableinstance/StringUpdateLog.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/log/TaskLog.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/log/TaskCreateLog.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/log/TaskAssignLog.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/log/TaskEndLog.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/log/SwimlaneLog.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/log/SwimlaneCreateLog.hbm.xml</value>
+    <value>org/jbpm/taskmgmt/log/SwimlaneAssignLog.hbm.xml</value>
+    <value>gleam/executive/workflow/core/JbpmTaskInstance.hbm.xml</value>
+
+   </list>
+  </property>
+
+  <!-- DB properties -->
+  <property name="hibernateProperties">
+   <props>
+    <prop key="hibernate.dialect">@HIBERNATE-DIALECT@</prop>
+    <prop key="hibernate.query.substitutions">true 'Y', false 'N'</prop>
+    <prop key="hibernate.max.fetch_depth">2</prop>
+    <!-- Create/update the database tables automatically when the JVM starts up
+    <prop key="hibernate.hbm2ddl.auto">update</prop> -->
+    <!-- Turn batching off for better error messages under PostgreSQL
+    <prop key="hibernate.jdbc.batch_size">0</prop> -->
+    <prop key="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</prop>
+    <prop key="hibernate.connection.isolation">2</prop>
+    <!--<prop key="hibernate.show_sql">true</prop>-->
+   </props>
+  </property>
+
+  <!-- entity Cache Strategies -->
+  <property name="entityCacheStrategies">
+   <props>
+     <prop key="org.jbpm.context.def.VariableAccess">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.Action">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.Event">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.ExceptionHandler">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.Node">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.ProcessDefinition">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.Transition">nonstrict-read-write</prop>
+     <prop key="org.jbpm.instantiation.Delegation">nonstrict-read-write</prop>
+     <prop key="org.jbpm.module.def.ModuleDefinition">nonstrict-read-write</prop>
+     <prop key="org.jbpm.taskmgmt.def.TaskController">nonstrict-read-write</prop>
+     <prop key="org.jbpm.taskmgmt.def.Task">nonstrict-read-write</prop>
+    </props>
+  </property>
+
+  <!-- collection Cache Strategies -->
+  <property name="collectionCacheStrategies">
+   <props>
+     <prop key="org.jbpm.file.def.FileDefinition.processFiles">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.action.Script.variableAccesses">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.Event.actions">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.ExceptionHandler.actions">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.Node.events">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.Node.exceptionHandlers">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.Node.leavingTransitions">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.Node.arrivingTransitions">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.ProcessDefinition.events">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.ProcessDefinition.exceptionHandlers">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.ProcessDefinition.nodes">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.ProcessDefinition.actions">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.ProcessDefinition.definitions">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.SuperState.nodes">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.Transition.events">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.def.Transition.exceptionHandlers">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.node.Decision.decisionConditions">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.node.ProcessState.variableAccesses">nonstrict-read-write</prop>
+     <prop key="org.jbpm.graph.node.TaskNode.tasks">nonstrict-read-write</prop>
+     <prop key="org.jbpm.taskmgmt.def.Swimlane.tasks">nonstrict-read-write</prop>
+     <prop key="org.jbpm.taskmgmt.def.TaskController.variableAccesses">nonstrict-read-write</prop>
+     <prop key="org.jbpm.taskmgmt.def.Task.events">nonstrict-read-write</prop>
+     <prop key="org.jbpm.taskmgmt.def.Task.exceptionHandlers">nonstrict-read-write</prop>
+     <prop key="org.jbpm.taskmgmt.def.TaskMgmtDefinition.swimlanes">nonstrict-read-write</prop>
+     <prop key="org.jbpm.taskmgmt.def.TaskMgmtDefinition.tasks">nonstrict-read-write</prop>
+   </props>
+  </property>
+ </bean>
+
+ <!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+ <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+  <property name="sessionFactory" ref="sessionFactory"/>
+ </bean>
+
+ <!-- Generic Dao - can be used when doing standard CRUD -->
+ <bean id="dao" class="gleam.executive.dao.hibernate.BaseDaoHibernate">
+  <property name="sessionFactory" ref="sessionFactory"/>
+ </bean>  <!-- LookupDao: Hibernate implementation -->
+ <bean id="lookupDao" class="gleam.executive.dao.hibernate.LookupDaoHibernate">
+  <property name="sessionFactory" ref="sessionFactory"/>
+ </bean>
+
+ <!-- UserDao: Hibernate implementation -->
+ <bean id="userDao" class="gleam.executive.dao.hibernate.UserDaoHibernate">
+  <property name="sessionFactory" ref="sessionFactory"/>
+ </bean>
+
+ <!-- RoleDao: Hibernate implementation -->
+ <bean id="roleDao" class="gleam.executive.dao.hibernate.RoleDaoHibernate">
+  <property name="sessionFactory" ref="sessionFactory"/>
+ </bean>
+
+ <!-- ResourceDao: Hibernate implementation -->
+ <bean id="resourceDao" class="gleam.executive.dao.hibernate.ResourceDaoHibernate">
+  <property name="sessionFactory" ref="sessionFactory"/>
+ </bean>
+
+ <!-- ServiceDao: Hibernate implementation -->
+ <bean id="serviceDao" class="gleam.executive.dao.hibernate.ServiceDaoHibernate">
+  <property name="sessionFactory" ref="sessionFactory"/>
+ </bean>
+
+ <!-- ProjectDao: Hibernate implementation -->
+ <bean id="projectDao" class="gleam.executive.dao.hibernate.ProjectDaoHibernate">
+  <property name="sessionFactory" ref="sessionFactory"/>
+ </bean>
+ 
+  <!-- AnnotationServiceDao: Hibernate implementation -->
+ <bean id="annotationServiceDao" class="gleam.executive.dao.hibernate.AnnotationServiceDaoHibernate">
+  <property name="sessionFactory" ref="sessionFactory"/>
+ </bean>
+
+ <!-- Webapp bean, used in all modules for access to configurable constants -->
+ <bean id="webAppBean" class="gleam.executive.model.WebAppBean">
+  <constructor-arg index="0" value="${url.base}" />
+  <constructor-arg index="1" value="${private.url.base}" />
+  <constructor-arg index="2" value="${webapp.instance.name}" />
+  <constructor-arg index="3" value="${annodiffer.url}"/>
+  <constructor-arg index="4" value="${instance.name}"/>
+  <constructor-arg index="5" value="${plugin.csv.list}"/>
+  <constructor-arg index="6" value="${webapp.title}" />
+  <constructor-arg index="7" value="${instance.dir}" />
+ </bean>
+</beans>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="docservice-proxy" default="all">
+  <import file="../lib/lib.xml" />
+
+  <property name="src.dir" location="src" />
+  <property name="classes.dir" location="classes" />
+  <property name="api.jar.location" location="docservice-proxy-api.jar" />
+  <property name="impl.jar.location" location="docservice-proxy-impl.jar" />
+
+  <!-- Only GATE libs are required to compile the API -->
+  <path id="api.compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset refid="pattern.gate" />
+    </fileset>
+  </path>
+
+  <path id="impl.compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset refid="pattern.gate" />
+      <patternset refid="pattern.cxf" />
+      <patternset refid="pattern.docservice-api" />
+      <patternset refid="pattern.safe-common" />
+    </fileset>
+    <pathelement location="${classes.dir}/api" />
+  </path>
+
+
+  <!-- Prepare for building - make necessary directories -->
+  <target name="prepare">
+    <mkdir dir="${classes.dir}" />
+  </target>
+
+  <!-- compile a module (api or impl) -->
+  <macrodef name="compile">
+    <attribute name="module" />
+    <sequential>
+      <mkdir dir="${classes.dir}/@{module}" />
+      <javac srcdir="${src.dir}/@{module}" destdir="${classes.dir}/@{module}"
+             debug="true" debuglevel="lines,source" source="1.5" target="1.5"
+             encoding="UTF-8" classpathref="@{module}.compile.classpath" />
+      <copy todir="${classes.dir}/@{module}">
+        <fileset dir="${src.dir}/@{module}" excludes="**/*.java" />
+      </copy>
+    </sequential>
+  </macrodef>
+
+  <!-- package a module (api or impl) -->
+  <macrodef name="package">
+    <attribute name="module" />
+    <sequential>
+      <jar destfile="${@{module}.jar.location}"
+           basedir="${classes.dir}/@{module}" />
+    </sequential>
+  </macrodef>
+
+  <!-- publish a module (api or impl) -->
+  <macrodef name="publish">
+    <attribute name="module" />
+    <sequential>
+      <mkdir dir="${docservice-proxy.dir}" />
+      <copy todir="${docservice-proxy.dir}" file="${@{module}.jar.location}" />
+    </sequential>
+  </macrodef>
+
+  <!-- API targets -->
+  <target name="compile-api" depends="prepare">
+    <compile module="api" />
+  </target>
+
+  <target name="package-api" depends="compile-api">
+    <package module="api" />
+  </target>
+
+  <target name="publish-api" depends="package-api">
+    <publish module="api" />
+  </target>
+
+  <!-- Impl targets -->
+  <target name="compile-impl" depends="prepare,compile-api">
+    <require lib="docservice-api" />
+    <compile module="impl" />
+  </target>
+
+  <target name="package-impl" depends="compile-impl">
+    <package module="impl" />
+  </target>
+
+  <target name="publish-impl" depends="package-impl">
+    <publish module="impl" />
+  </target>
+  
+  <!-- delete generated classes -->
+  <target name="clean.classes" >
+    <delete dir="${classes.dir}" />
+  </target>
+
+  <target name="clean" depends="clean.classes">
+    <delete file="${api.jar.location}" />
+    <delete file="${impl.jar.location}" />
+  </target>
+
+  <target name="all" depends="package-api, package-impl" />
+</project>

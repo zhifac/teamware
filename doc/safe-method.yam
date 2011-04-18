@@ -1,0 +1,259 @@
+SAFE: The Semantic Annotation Factory Environment
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%contents
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Summary
+
+Semantic annotation (SA) is about attaching meaningful structures to resources
+like documents or video streams in such a way that they can be used by
+computers to enhance the usefulness of those resources.
+
+SA is not new: when a BBC archivist, for example, attaches thesaurus
+categories to programme segments for indexing they have performed semantic
+annotation. SA technology *has* changed, however, in two main ways:
+- the invention of Information Extraction in the 1990s has made automatic SA
+  more possible
+- recent research around the Semantic Web has shown how SA can be used for
+  scaleable conceptual search and navigation products
+
+These developments are now leading to a new breed of consumer services are
+appearing that rely SA extracted from the web by automatic means.  When
+combined with structured data sources SA can meet a variety of emerging needs
+for enhanced control, security and access. Examples include
+
+- %(http://garlik.com, Garlik), which mines data about consumers present in
+  various sources including the web
+- %(http://innovantage.co.uk, Innovantage), which mines job advertisement data
+- %(http://www.fizzback.com/, FizzBack), providing real-time customer feedback
+  from SMS and email feeds
+
+The requisite annotation can be done manually, and this works well in cases
+like ^flikr^ and ^delicio.us^ where the annotators benefit directly from their
+own work (creating their own "folksonomies"). In other cases, where the task
+is simple and the domain of application specific, automatic annotation can
+work to an acceptable accuracy level (and a number of state-of-the-art systems
+of this type are available in %(http://gate.ac.uk/, GATE)). Where neither of
+these things is true what is needed is an *Annotation Factory*, which combines
+multiple technologies, staff roles and processes in order to reduce the cost
+of annotation to acceptable levels.
+
+Current annotation systems address one or more of the issues for annotation
+factories, but none until now have had wide coverage, and few have addressed
+the workflow and methodological questions, or defined how to go about deciding
+exactly what kind of annotation process is appropriate for a given business
+case. SAFE is a software suite and methodology for implementing annotation
+factories that covers these issues.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Background
+
+Information Extraction (IE) is the technology that makes annotation of
+large document collections feasible (see
+%(http://gate.ac.uk/sale/ell2/ie,http://gate.ac.uk/sale/ell2/ie) for details
+of what IE systems can do and the accuracy levels of the current state of the
+art).  IE has improved in recent years to the degree that commercial
+deployment is now becoming common, but it remains an imperfect and potentially
+costly process. In order to exploit it effectively application developers need
+to implement a process that we may call an *Annotation Factory*.
+
+A modern factory engaged in the production of high-tech goods combines a large
+degree of automation with skilled labour of various types and quantities.
+Robots often play a significant role, although they are never altogether
+unaccompanied: at the very least service engineers must attend their
+operation, and in most cases there will also be staff who take care of
+reconfiguring robotic equipment for new product lines or refinements to the
+existing processes and products. The same is true of annotation factories: a
+number of different types of human involvement are required, from the initial
+specification process through maintenance and evolution. Current IE tools have
+not addressed the methodological, multi-role and process elements of
+annotation factories.
+
+SAFE is a software suite and a methodology for the implementation and support
+of annotation factories. It is intended to provide a framework for commercial
+annotation services, supplied either as in-house units or as outsourced
+specialist activities.
+
+There are a number of different types of staff required for an effective
+annotation factory including
+
+- Language Engineers, who are skilled staff with knowledge of computational
+  linguistics and computer science
+- Information Curators, who may be corporate librarians, systems
+  administrators or data curators, and who might be expected to spend several
+  weeks in training
+- Annotators, who are largely unskilled, may be geographically distributed,
+  and whose work is quality controlled via automated voting and
+  metrics-related mechanisms (Amazon's Mechanical Turk web service is one way
+  to marshall Annotator labour).
+
+SAFE defines the support tools for these different roles, and the workflow
+by which they may combine with automatic IE systems to provide
+cost-effective annotation services.
+
+The rest of this document discusses the novelty of the work, and looks in more
+detail at staff roles in annotation factories. See also this
+%(http://gate.ac.uk/sale/talks/salzburg06.html, talk at the Salzburg eCulture
+symposium).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Novelty
+
+SAFE is a novel development in several respects:
+
+- it structures intervention by different actors (human and machine) into
+  clearly-defined roles and provides the means to manage them in a unified
+  fashion
+- it complements GATE's developer-oriented facilties with a UI oriented on
+  other necessary staff roles
+- it is methodological instead of purely technological 
+
+The rest of this section addresses these points in turn.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 Unifying Adaptation Interventions for Custom Extraction Services (CUES)
+
+Information Extraction (IE) is the process of automatically analysing text
+(and, less often, speech) to populate fixed-format, unambiguous data
+structures such as spreadsheets, link-analysis engines or databases. An IE
+system is a dynamic object which represents a compromise between information
+need and development cost. Almost never do the information need and the data
+remain static. Therefore applications software using IE has to provide a
+mechanism to tailor the extraction components to new information needs and to
+new types of data. Up to now, no single mechanism has been discovered that
+covers all cases, meaning that IE software has to support a wide spectrum of
+adaptation interventions, from skilled computational linguists, through
+content administrators and technical authors, to unskilled end-users
+providing behavioural exemplars. In each area significant research streams
+exist and have made good progress over the past decade or so. What has not
+been done is to construct a unified environment in which all the different
+adaptation interventions work together in a complementary manner.
+
+The three principal mechanisms for IE adaptation in leading HLT research
+streams are:
+- assisted authoring of finite state transduction rules, including: generation
+  of rules from annotation pattern searches across corpora (annotations in
+  context); graphical debugging of transduction rule execution
+- supervised mixed-initiative learning of extraction models
+- unsupervised clustering of terms for purposes such as populating
+  domain-specfic gazetteers
+
+In addition, underlying the adaptation process are automated measurement and
+visualisation tools, and frequency-based document search (or information
+retrieval) tools. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 Beyond Language Engineering
+
+GATE has both a class library for programmers embedding LE in applications
+and a development environment for skilled language engineers. SAFE, however,
+has to support a wider constituency of users. There are two main cases.
+
+First, annotation of training data for learning algorithms should be a task
+requiring little skill beyond that of a computer-literate person (because
+training data volumes are typically large and therefore the labour involved
+has to be cheap to make the process economic). For the same reason the
+annotation environment should be as productive as possible, for example by
+bootstrapping the annotation process with mixed-initiative learning and by
+providing a voting mechanism for multiple simultaneous annotators (this is
+necessary to guarantee quality with low-skilled staff).
+
+Second, data curation or systems administration staff may become involved in
+customising extraction systems. These types of people take a training course
+of a week or two, and are expected to use a richer toolset, including things
+like ANNIC-based JAPE rule authoring.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 IE: the Missing Manual
+
+Extraction is not an application in itself, but a component of information
+seeking and management tasks. Despite the breadth and depth of literature
+describing algorithms, evaluation protocols and performance statistics for
+IE the technology lacks a clear statement of how to go about specifying and
+implementing IE functionality for a new task or domain. In the same way that
+GATE is not just an implementation but also an abstract architecture, so
+SAFE can increase its impact by defining a methodology.
+
+The methodology covers:
+
+- how to decide if IE is applicable to your problem
+- how to define the problem with reference to a corpus of examples
+- how to identify similarities with other problems and thence to estimate
+  likely performance levels
+- how to design a balance of adaptation interventions for system setup and
+  maintenance
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 User profiles
+
+The applications context of SAFE suggest different types of user profiles:
+
+- Annotators
+- Language Engineers
+- Information Curators 
+
+Depending on the context, a user could have more than one profile, being for
+instance both Language Engineer and Information Curator.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 Annotators
+
+Annotators are in charge of annotating entities, relations or events on a
+set of documents with regard to an ontology or to a flat list of named
+entities.  They must be able to access the documents remotely on the web.
+The annotated documents can be stored directly or used to bootstrap a
+Machine Learning system. The Annotator interface includes some information
+about the number of remaining documents to be annotated and some basic
+message system for interacting with an Information Curator.
+
+Different Annotators may work on a single corpus in order to speed up the
+process of annotation. They may annotate the same documents, in order to
+make sure that the quality of the annotation is optimal, and to evaluate
+Annotator performance.
+
+A Mixed Initiative system can be set up by an Information Curator or a
+Language Engineer and used by an Annotator. This means that once a document
+has been annotated manually, it will be used to generate a Machine Learning
+(ML) model. This model will then be applied on any new document, so that this
+document will be partially or totally annotated. The Annotator validates or
+corrects the annotations provided by the ML system. This makes the annotation
+task much faster.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 Language Engineers
+
+Language Engineers have some knowledge of linguistic engineering, thus they
+are able to create or modify a set of linguistic resources. Unlike the
+annotators, these staff work on resources producing automatic annotations.
+These resources are combined to produce a service.  like the Annotators,
+Language Engineers can be located in very different parts of the world, and
+thus they access the system remotely. Many of the tools used here are
+directly derived from GATE.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%3 Information Curators
+
+Information Curators are in charge of the configuration of the system. Being
+based on a Service Oriented Architecture, new services can be added to the
+network. Such services can be for instance storage of corpora or processing
+resources, or an annotation service taking as input one/more documents and
+applying one/more processing resources. The Information Curator can get
+information about the performances of a service, by keeping a part of the data
+for evaluation, or about performance of the manual annotation. The latter
+means that the Information Curator will be informed if one of the Annotators
+provides annotations which systematically differ from the other Annotators. In
+this way a better explanation of its task could be sent to the Annotator,
+which should improve the overall quality of the annotation.
+

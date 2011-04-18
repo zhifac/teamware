@@ -1,0 +1,238 @@
+Annotation Factories and GLEAM
+
+%contents
+
+
+%notes(
+One of the slides I gave yesterday morning refered to the difficult choices
+that need to be made when you deploy language processing technology in
+applications contexts. This talk is about work that we're doing using GATE
+but reaching beyond GATE to make it easier to build useful software systems
+that deal with annotating human language.
+)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 What GATE doesn't do
+
+GATE helps...
+- ...scientists with:
+  - repeatability
+  - quantitative evaluation
+  - collaboration
+  - apparatus longevity
+- ...students and teachers with:
+  - working examples
+  - bootstrapping projects
+  - evaluation baselines
+- ...application developers with:
+  - comprehensive standalone class library
+  - visual debugging tools
+
+*But:*
+- applications fall into patterns
+- domain-specific software architectures promote application-level reuse
+- language tech deployment requires a *process* as well as tools
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 GLEAM: from Annotation Tools to _Annotation Factories_
+
+We *have* lots and lots of tools and algorithms for annotation; what we
+*need* is
+
+o methodological instead of purely technological 
+o multi-role instead of single role
+o inclusive of previously disjoint adaptation interventions
+o assistive instead of autonomous
+o diachronic, life-cycle orientated, not waterfall or "big bang" orientated
+o service-orientated, not monolithic
+
+GLEAM, the GATE Layer for Extraction, Annotation and Mining, is a software
+suite and a methodology for the implementation and support of annotation
+Factory services.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Annotation: the Missing Manual
+
+%notes(
+Despite the breadth and depth of literature describing algorithms,
+evaluation protocols and performance statistics for annotation the
+technology lacks a clear statement of how to go about specifying and
+implementing annotation functionality for a new task or domain.
+)
+
+Processes vs. tools:
+- much literature describing algorithms, evaluation protocols and
+  performance statistics for annotation
+- no clear statement of how to go about specifying and implementing
+  annotation for new tasks
+
+The GLEAM methodology covers:
+- how to decide if annotation is applicable to your problem
+- how to define the problem with reference to a corpus of examples
+- how to identify similarities with other problems and thence to estimate
+  likely performance levels
+- how to design a balance of adaptation interventions for system setup and
+  maintenance
+- how to measure success
+
+In other words:
+- not "get this great new bit of software and it will transform your life" 
+- but "this is how to implement robust and maintainable services"
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 A Division of Labour (Multi-role Methodology)
+
+GATE has class libraries for *programmers* and an IDE for *skilled language
+engineers*, but there are other cases:
+o human annotators:
+  - training data volumes are typically large: the labour involved has to be
+    cheap to be economic
+  - annotation of training data for learning algorithms must require little
+    skill
+  - example techniques:
+    - bootstrapping the annotation process with mixed-initiative learning 
+    - voting mechanism for multiple simultaneous annotators (QA)
+o information curators:
+  - larger skill set than annotators but training requirements small enough
+    to be in-house in small/medium sized organisations
+  - librarians, data curation or sys admin staff after training course of a
+    week or two
+  - use a richer toolset including things like ANNIC-based JAPE rule
+    authoring
+  - managing and convening human annotators, liaising with engineers
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Unifying Adaptation Interventions
+
+- problem: annotation systems are dynamic objects because the information
+  need and the data don't remain static
+- therefore we need mechanisms for adaptation
+- three current research streams:
+  - assisted authoring of finite state transduction rules, including:
+    generation of rules from annotation pattern searches across corpora
+    graphical debugging of transduction rule execution
+  - supervised mixed-initiative learning of extraction models
+  - unsupervised clustering of terms for purposes such as populating
+    domain-specfic gazetteers
+- GLEAM: a coordinated combination of these techniques 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Assistive vs. Autonomous
+
+- A modern factory engaged in the production of high-tech goods combines a
+  large degree of automation with skilled labour of various types and
+  quantities.
+- Robots often play a significant role, although they are never altogether
+  unaccompanied:
+  - at the very least service engineers must attend their operation
+  - in most cases there will also be staff who take care of reconfiguring
+    robotic equipment for new product lines or refinements to the existing
+    processes and products
+- GLEAM mixes automatic and assitive modes
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Iterative Processes vs. Waterfall or "Big Bang"
+
+How to construct a failing software project:
+- work for the government (optional)
+- define your plan as:
+  - first we (highly-paid developers) decide what to build (requirements)
+  - then we (middle-level developers) decide how to build it (design)
+  - then we (lower-level developers) implement it (coding)
+  - then we (support staff) deploy it (disaster)
+
+A better model:
+o get a rough idea of what the client needs
+o decide on an element of 1. that we can do quickly
+o implement a set of tests that will succeed if we build 2.
+o build 2. until the tests work (adding more tests in the process and using
+  a continuous integration tool)
+o give it to the user; go back to 1.
+
+The same with annotation: we need iterative methods that account for
+changing needs and gradual refinement of requirements.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Service-Orientated, not Monolithic
+
+- software has evolved: modules, objects, components, now services
+- increases decoupling and flexibility 
+  - GATE's component architecture led to long life
+  - now we have ubiquitous networks and geographically distributed
+    workforces
+  - GLEAM's service-oriented architecture exploits distribution
+- Gartner reports that
+  - _"By 2008, SOA will be a prevailing software engineering practice,
+    ending the 40-year domination of monolithic software architecture"_ 
+  - _"Through 2008, SOA and web services will be implemented together in
+    more than 75 percent of new SOA or web services projects."_
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Application Scenarios
+%2 Apps (1) Augmenting BBC Archives
+
+%image(../../sale/images/richnews-demo3.png)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Apps (2) Service-Oriented Architectures
+
+- SWSs and SOAs are poised to make a significant contribute to
+  competitiveness of European ICT
+- This will happen in two ways:
+  o EAI less costly / more reliable via explicit modelling of meaning of
+    data and processes
+  o B2B and B2C eCommerce systems will become:
+    - more reusable: interfaces meaningful for machines, not just people;
+    - more dynamic and adaptive, virtual apps composed from discovered
+      components;
+    - more scaleable, distributed across multiple machines;
+    - saleable as discreet elements in application service providers market
+- TAO project: how existing legacy applications can migrate to open,
+  semantics-based SOA via a Transitioning Methodology and Infrastructure
+  on semantic analysis of existing application documentation and legacy content
+
+%image(../../sale/images/tao-transitioning.png)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2 Apps (3) The Return of the Librarian?
+
+Some decades ago, if the chief engineer of a Sheffield steelworks needed to
+know the value of some constant in the equations describing the mixture of
+ingredients for a specialist job, he'd phone the city library. Even now, if
+you work for a large corporation you may well be able to call on the
+services of a skilled information scientist whose job is to know more about
+navigating the published universe than any normal mortal could ever learn.
+
+These skills are less and less available. The winding down of the welfare
+state public service in favour of private profit has closed a thousand
+libraries, and the information firehose has cheapened information to the
+degree that the little query box on Google's search page has become the only
+investigative tool for many.
+
+Team annotation tools can be a means to make librarian services affordable
+for small teams and organisations.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Afterword
+
+Ways to participate:
+
+- the users list
+- code:
+  - contributing patches
+  - the developers list
+  - becoming a committer
+- visiting researchers
+- work in sheffield

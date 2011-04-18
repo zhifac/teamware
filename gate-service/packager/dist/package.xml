@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!--
+This file controls the details of how your GATE application will be packaged.  The <package> element can accept the following attributes:
+
+onUnresolved="recover|fail|absolute"
+  How to handle unresolved resources in your GAPP file.  The default value is
+  recover.
+
+copyPlugins="yes|no"
+  Whether to copy the full content of referenced plugins into the packaged
+  application.  The default is yes, which is right for most cases.
+
+For full details, see the gapp-packager documentation.
+-->
+<package>
+
+  <!--
+  if you need to include any extra resources in your package, besides the ones
+  that are referenced directly from the GAPP file and those in plugins, then
+  uncomment the following and add them
+
+  <extraresourcespath>
+    <pathelement location="/path/to/a/single/file" />
+    <fileset dir="/some/directory" includes="**/*.jape" />
+    <gazetteerlists definition="/my/gazetteer/lists.def" />
+  </extraresourcespath>
+  -->
+
+</package>

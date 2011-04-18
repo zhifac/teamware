@@ -1,0 +1,5 @@
+<!-- 
+Example web application context definition 
+Can't specify a Parameter element here?
+-->
+<Context path="/docservice" reloadable="false"/>

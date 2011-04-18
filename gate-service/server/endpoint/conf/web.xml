@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <!-- The Spring application context -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/spring/*.xml</param-value>
+  </context-param>
+
+  <!-- GZIP compression filter 
+  <filter>
+    <filter-name>CompressingFilter</filter-name>
+    <filter-class>com.planetj.servlet.filter.compression.CompressingFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>CompressingFilter</filter-name>
+    <url-pattern>/services/*</url-pattern>
+  </filter-mapping>
+  -->
+  <!-- Set up log4j - must happen before Spring ContextLoaderListener -->
+  <listener>
+    <listener-class>
+      gleam.util.logging.Log4jInitListener
+    </listener-class>
+  </listener>
+
+  <!-- Set up the Spring ApplicationContext -->
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>
+
+  <!-- CXF -->
+  <servlet>
+    <servlet-name>CXFServlet</servlet-name>
+    <servlet-class>
+      org.apache.cxf.transport.servlet.CXFServlet
+    </servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <!--
+  The RESTful inline annotation service.  Uncomment this if your application
+  supports the inline annotation mode of operation, and you want a simple
+  HTTP POST interface to this service as well as the SOAP one.  You should
+  also uncomment the relevant <servlet-mapping> below.
+  <servlet>
+    <servlet-name>InlineAnnotationServlet</servlet-name>
+    <servlet-class>gleam.gateservice.endpoint.InlineAnnotationServlet</servlet-class>
+    <init-param>
+      <param-name>endpointHandlerBeanName</param-name>
+      <param-value>endpointHandler</param-value>
+      <description>
+        The name of the Spring bean used to handle requests.  Optional,
+        defaults to "endpointHandler".
+      </description>
+    </init-param>
+  </servlet>
+  -->
+
+  <!-- CXF -->
+  <servlet-mapping>
+    <servlet-name>CXFServlet</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Servlet mapping for the RESTful annotation service.
+  <servlet-mapping>
+    <servlet-name>InlineAnnotationServlet</servlet-name>
+    <url-pattern>/annotate</url-pattern>
+  </servlet-mapping>
+   -->
+
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+
+  <mime-mapping>
+    <extension>wsdl</extension>
+    <mime-type>text/xml</mime-type>
+  </mime-mapping>
+
+  <mime-mapping>
+    <extension>xsd</extension>
+    <mime-type>text/xml</mime-type>
+  </mime-mapping>
+
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+  </welcome-file-list>
+</web-app>

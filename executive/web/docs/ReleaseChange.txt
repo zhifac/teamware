@@ -1,0 +1,37 @@
+Release Change: 0.11
+
+1. Recreated DB:
+    - Changed initial script so instead of users and managers, now there are annotators and curators.
+    - The process definition is changed accordingly and uploaded.
+    - Harvard users (leon and carlos) now have admin & curator roles.
+    - Sheffield users: (hamish, kali, valy, ian and milan) have admin roles
+
+2. Implemented  POOL mode of Annotator GUI, besides existing DIRECT mode.
+    - Added "cancel" and "finish task" button in Annotator GUI
+    - Restricted access to WF service to users with Annotator profile. They will launch Annotator GUI after login and take part in WF process from Annotator GUI itself.
+    - However, by using direct mode, curators will be able to execute annotator task
+  
+3. Specific IE improvements
+    - The mentions of the genes are now highlighted  only when there is only one mention of the particular gene in snippet.
+
+4. Workflow Improvements
+   -  Implemented real Task cancellation, so cancelled task is displayed in the list as "cancelled" instead of "completed" (useful for curators)
+   -  Added Refresh button in task list
+   - Displayed Document Name for Annotate and Review tasks inside dynamic form
+
+5. Customized Main Menu (welcome page)
+    - Annotators will see "Launch Annotator GUI" link which will  open Annotator GUI in pool mode.
+    - Other profiles will see link Pending Tasks  linked to their task list page
+
+6. Bug Fixes:
+    - Solved problem with Apache timeout in case that a very big zip is uploaded on server.
+      The AJAX progress indicators are introduced, so connection between Apache and browser is live all the time.
+    - Fixed memory leak, so zip file with big number of documents can be uploaded. Tested with 1500.
+
+7. Documentation
+   - Updated Help section in Annotator GUI
+   - Recorded new demo accompanied with Workflow demonstration scenario & explanations for easier following.
+   - Updated Future Plans document
+
+
+

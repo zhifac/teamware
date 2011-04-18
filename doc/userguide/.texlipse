@@ -1,0 +1,13 @@
+#TeXlipse project settings
+#Tue Feb 17 00:50:56 GMT 2009
+builderNum=2
+outputDir=
+makeIndSty=
+bibrefDir=
+outputFormat=pdf
+tempDir=tmp
+mainTexFile=teamware.tex
+outputFile=teamware.pdf
+langSpell=en
+markDer=true
+srcDir=

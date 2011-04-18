@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<!DOCTYPE installer PUBLIC "-//tp23 //DTD Ant Installer Config//EN" "http://antinstaller.sf.net/dtd/antinstall-config-0.8.dtd">
+
+<installer
+      ui="swing,text,text-auto,swing-auto"
+      verbose="true"
+      debug="true"
+      lookAndFeel="org.tp23.jgoodies.plaf.plastic.PlasticXPLookAndFeel"
+      name="GATE Teamware 1.4 Installer"
+      windowIcon="/resources/gkmain_inv.png"
+      defaultImageResource="/resources/greens.png"
+      minJavaVersion="1.6"
+      loadDefaults="prompt"
+      version="1.5">
+  <!--  each page element represents a page of the installer -->
+  <page
+      type="input"
+      name="intro"
+      displayText="Welcome to GATE Teamware"
+      imageResource="/resources/greens.png">
+      <!-- The version of teamware this installer is for -->
+      <hidden property="teamware.version" value="1.4" />
+       <comment
+        displayText="Please make sure you have:"
+        bold="true"/>
+      <comment
+        displayText="- Java 1.6 or newer"/>
+        <comment
+        displayText="- Apache Tomcat 5.5 or 6.x"/>
+        <comment
+        displayText="- At least 1024m heap size assigned to tomcat"/>
+        <comment
+        displayText="- MySql database 5.x"/>
+
+         <comment
+        displayText="Choose the type of installation"
+        bold="true"/>
+      <target-select
+        property="tselect"
+        defaultValue="update"
+        displayText=""
+        explanatoryText="Update or fresh install?">
+      <option text="Update from version 1.2" value="update-12"/>
+      <option text="Update from version 1.3" value="update-13"/>
+      <option text="Update from version 1.3.1" value="update-131"/>
+      <option text="Fresh Install" value="install"/>
+    </target-select>
+
+  </page>
+
+  <page
+      type="input"
+      name="Required directories"
+      displayText="Required directories">
+
+    <app-root
+            property="tomcatDir"
+            defaultValue="/usr/share/tomcat6"
+            defaultValueWin="C:/Users/agaton/servers/apache-tomcat-6.0.20"
+            displayText="Locate the Tomcat directory"
+            checkFile1="conf/server.xml"
+            checkFile2="conf/tomcat-users.xml">
+    </app-root>
+     <text
+            property="instanceName"
+            defaultValue="teamware"
+            displayText="By default it is 'teamware'"
+            explanatoryText="Enter the instance name"/>
+      <text
+            property="instanceDir"
+            defaultValue="/home/teamware/safe"
+            defaultValueWin="C:/Users/agaton/safe/teamware"
+            displayText="Use '/' as path separator"
+            explanatoryText="Enter the Teamware datastore path"/>
+              <comment
+        displayText="- Make sure that datastore path is in writable folder."/>
+  </page>
+  <page
+      type="input"
+      name="Server Configuration"
+      displayText="Server Configuration">
+      <validated
+            property="urlBase"
+            defaultValue="http://localhost:8080"
+            explanatoryText="Enter protocol, host and port by which users reference your server"
+            displayText="Public http or https Server name and port"
+            regex="^https?:\/\/[0-9a-zA-Z-.]+:*[0-9]*.*$"/>
+      <validated
+            property="privateUrlBase"
+            defaultValue="http://localhost:8080"
+            explanatoryText="Enter protocol, host and port by which services on your server can call each other (e.g. if the public URL of your server is https, the services may be able to call one another over http).  If in doubt, use the same value as for the public URL."
+            displayText="Private http or https Server name and port (if in doubt, same as public)"
+            regex="^https?:\/\/[0-9a-zA-Z-.]+:*[0-9]*.*$"/>
+  </page>
+  <page
+      type="input"
+      name="SMTP Mail Server Configuration"
+      displayText="SMTP Mail Server Configuration">
+    <text
+        property="mailServerAddress"
+        defaultValue="mailhost.dcs.shef.ac.uk"
+        displayText="SMTP Mail Server Address"/>
+    <text
+        property="mailServerUsername"
+        defaultValue=""
+        displayText="SMTP Mail Server Username"/>
+    <text
+        property="mailServerPassword"
+        defaultValue=""
+        displayText="SMTP Mail Server Password"/>
+    <text
+        property="mailFrom"
+        defaultValue="gate@dcs.shef.ac.uk"
+        displayText="From address"/>
+  </page>
+  <page
+    type="input"
+    name="Database Configuration"
+    displayText="Database Configuration">
+    <text
+        property="databaseHost"
+        defaultValue="localhost"
+        displayText="Database Host"/>
+    <text
+        property="databaseName"
+        defaultValue="teamware_db"
+        displayText="Database Name"/>
+    <text
+        property="databaseUsername"
+        defaultValue="root"
+        displayText="Database Username"/>
+      <text
+        property="databasePassword"
+        defaultValue=""
+        displayText="Database Password"/>
+
+  </page>
+  <page
+    type="input"
+    name="Branding Customization"
+    displayText="Branding Customization">
+    <file
+            property="instanceLogo"
+            defaultValue="${tomcatDir}/${instanceName}-webapps/executive/images/logo.gif"
+            defaultValueWin="${tomcatDir}/${instanceName}-webapps/executive/images/logo.gif"
+            displayText="Instance logo to use"
+            checkExists="false"/>
+      <text
+        property="instanceTitle"
+        defaultValue="GATE Teamware ${teamware.version}"
+        displayText="Instance Title"/>
+  </page>
+
+  <filter token="INSTANCENAME" value="${instanceName}"/>
+  <filter token="INSTANCETITLE" value="${instanceTitle}"/>
+  <filter token="INSTANCELOGO" value="${instanceLogo}"/>
+  <filter token="URLBASE" value="${urlBase}"/>
+  <filter token="PRIVATEURLBASE" value="${privateUrlBase}"/>
+  <filter token="INSTANCEDIR" value="${instanceDir}"/>
+  <filter token="DATABASEHOST" value="${databaseHost}"/>
+  <filter token="DB-NAME" value="${databaseHost}"/>
+  <filter token="DATABASENAME" value="${databaseName}"/>
+  <filter token="DATABASEUSERNAME" value="${databaseUsername}"/>
+  <filter token="DATABASEPASSWORD" value="${databasePassword}"/>
+  <filter token="MAILDEFAULTFROM" value="${mailFrom}"/>
+  <filter token="MAILHOST" value="${mailServerAddress}"/>
+  <filter token="MAILUSERNAME" value="${mailServerUsername}"/>
+  <filter token="MAILPASSWORD" value="${mailServerPassword}"/>
+
+  <page
+      type="input"
+      name="overview"
+      displayText="Installation Overview"
+      imageResource="/resources/greens.png">
+       <comment
+        displayText="Database URL: http://${databaseHost}/${databaseName}"/>
+       <comment
+        displayText="Instance Directory: ${instanceDir}"/>
+         <comment
+        displayText="Teamware URL: ${urlBase}/${instanceName}/executive"/>
+        <comment displayText="Instance title: ${instanceTitle}"/>
+        <comment displayText="Instance logo: ${instanceLogo}"/>
+  </page>
+  <!--  page type="progress" shows a progress page with the install button
+        Its target is set to cleanuptarget since it is the last page this
+        target will be run last-->
+  <page
+      type="progress"
+      name="progress"
+      showTargets="true"
+      displayText="Installation progress">
+  </page>
+</installer>
+
+

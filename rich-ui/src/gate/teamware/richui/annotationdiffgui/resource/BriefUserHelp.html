@@ -1,0 +1,120 @@
+<html>
+<head>
+<title></title>
+</head>
+<body bgcolor="#f0f0ff">
+<font face="Verdana">
+
+<H1 align="CENTER"><A name="top"></A>Brief user help</H1>
+
+<p>
+This document briefly describes Graphic User Interface of the Annotation Diff(erence) GUI.
+</p>
+
+<H2 align="CENTER">Purpose and functions</H2>
+
+<p>
+This tool aimed at comparing two annotations sets in the same document that contains
+at least one identical annotation name in each set.
+One annotation set could contain the key type and another could contain the response one.
+</p>
+
+<p>
+Annotation Diff GUI is designed to be used with one document at time.
+All the annotations of the document will be loaded.</p>
+
+<p>
+In the case you have to much annotations to load you should create a new document with
+only the annotations you want to compare.
+In the case you want to compare annotation sets in two documents you should import the
+annotation set of one in the other document.
+</p>
+
+<p>
+After the type has been selected, the user is required to decide how the features will
+be compared. It is important to know that the tool compares them by analyzing if
+features from the key set are contained in the response set.
+It checks for both the feature name and feature value to be the same.
+</p>
+
+<p>
+There are three basic options to select:
+</p>
+
+<ul>
+<li>To take all the features from the key set into consideration</li>
+<li>To take only the user selected ones</li>
+<li>To ignore all the features from the key set</li>
+</li>
+</ul>
+
+<p>
+If false positives are to be measured, select the annotation type
+(and relevant annotation set) to be used as the denominator (normally, Token or Sentence).
+The weight for the F-Measure can also be changed - by default it is set to 0.5
+(i.e. to give precision and recall equal weight).
+Finally, click on “Evaluate” to display the results.
+Note that the window may need to be resized manually, by dragging the window edges
+or internal bars as appropriate).
+</p>
+
+<p>
+In the main window, the key and response annotations will be displayed.
+They can be sorted by any category by clicking on the relevant column header.
+The key and response annotations will be aligned if their indices are identical,
+and are color coded according to the legend displayed.
+</p>
+
+<p>
+Precision, recall, F-measure and false positives are also displayed below the annotation
+tables, each according to 3 criteria - strict, lenient and average.
+See sections 13.1 and 13.4 in the Gate user manual (http://gate.ac.uk/sale/tao/)
+for more details about the evaluation metrics.
+</p>
+
+<p>
+The results can be saves to an HTML ﬁle by pressing the ”Export to HTML” button.
+This creates an HTML snapshot of what the AnnotationDiff interface shows at that moment.
+The columns and rows in the table will be shown in the same order, and the hidden columns will not appear in the HTML ﬁle. The colours will also be the same.
+</p>
+
+<p>
+The main window contains two parts: the toolbar and the annotation diff window.
+</p>
+
+<H2 align="CENTER">Toolbar buttons</H2>
+
+<p>
+Click button <IMG src="log-32.gif" align="center" border=0> to view application messages.
+</p>
+
+<p>
+Click button <IMG src="help-32.gif" align="center" border=0> to display this help window.
+</p>
+
+<p>
+Click button <IMG src="settings.png" align="center" border=0> to edit the settings of the annotator GUI, for example the look and feel and fonts used.
+</p>
+
+<H2 align="CENTER">Other Application functions</H2>
+
+<p>
+Closing dialog windows should be performed either by pressing Cancel button or <b>ESC</b>.
+</p>
+
+<p>
+If you want to exit application simply close main window.
+</p>
+
+<p>
+At the window title you can see status of application:<br>
+<code><b>[Connected to: http://executiveCallbackURL]</b></code><br>
+</p>
+
+<p>
+If you are not connected to the service, you will see status:<br>
+<code><b>[Not connected]</b></code>
+</p>
+
+</body>
+</html>

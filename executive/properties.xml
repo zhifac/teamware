@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <property environment="env"/>
+	<property file="${ant.project.name}-build.properties"/>
+	<property file="build.properties"/>
+    <!-- Project name and artifacts -->
+    <property name="webapp.version" value="1.9.4"/>
+    <property name="webapp.war" value="${webapp.name}.war"/>    
+    
+	<!-- The specific installation help doc -->
+	<property name="instance.helpdoc" value="${instance.project.dir}/documents/${instance.name}.pdf"/>
+
+    <!-- WIKI pages
+    <property name="wiki.pages" value="AppFuseQuickStart&AppFuse&DevelopmentEnvironment&AppFuseEclipse&CreateDAO&CreateManager&CreateActions&SpringControllers&WebWorkActions&JSFBeans&TapestryPages&ValidationAndList&ValidationAndListSpring&ValidationAndListWebWork&ValidationAndListJSF&ValidationAndListTapestry&AppFuseSupport&Articles&AppFuseAntTasks&AppFuseCruiseControl&AppFuseOnPostgreSQL&RunningOnOracle&HibernateRelationships&AppGen"/>
+    -->
+    <!-- Directory structure of the project -->
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="dist.dir" value="${basedir}/dist"/>
+    <property name="test.dir" value="${build.dir}/test"/>
+    <property name="test.datastore.dir" value="${basedir}/test/service/gleam/executive/service/testDS"/>
+    <!-- Directories for code coverage sampling -->
+    <property name="coverage.dir" value="${test.dir}/coverage"/>
+    <property name="out.instr.dir" value="${test.dir}/outinstr"/>
+
+    <!-- Default options for code-generation, compiling and junit-testing -->
+    <property name="javac.debug" value="true"/>
+    <property name="compile.deprecation" value="true"/>
+    <!-- build.compiler - seems to be issues using jikes and JDK 1.4 is just as fast-->
+    <property name="build.compiler" value="modern"/>
+    <property name="junit.fork" value="true"/>
+    <property name="junit.showoutput" value="false"/>
+    <property name="xdoclet.force" value="false"/>
+
+    <!-- Library versions and JARs -->
+    <!--<property name="lib.dir" location="lib"/>
+    <property file="${lib.dir}/lib.properties"/>-->
+    <import file="../lib/lib.xml" />
+
+
+    <property file="web/WEB-INF/classes/mail.properties"/>
+
+    <!-- Application options that will likely vary between applications -->
+    <property name="http.port" value="8080"/>
+    <property name="dao.type" value="hibernate"/>
+    <property name="jsp.2" value="false"/>
+    <property name="jsp.precompile" value="false"/>
+
+    <!-- Properties for running unit tests with tomcat -->
+    <property name="tomcat.server" value="${host.name}"/>
+    <property name="tomcat.manager.url" value="http://${tomcat.server}:${http.port}/manager"/>
+    <property name="tomcat.username" value="manager"/>
+    <property name="tomcat.password" value="tomcat"/>
+
+    <!-- Defaults for database.properties -->
+	<patternset id="pattern.database">
+	    <patternset refid="pattern.hsqldb" />
+		<patternset refid="pattern.mysql"/>
+	</patternset>
+ 	<!-- Defaults for database.properties -->
+	    <property name="database.home" value="${user.home}/${webapp.name}"/>
+	    <property name="database.type" value="${database.type}"/>
+	    <property name="database.name" value="${database.name}"/>
+	    <property name="database.host" value="${database.host}"/>
+	    <property name="database.username" value="${database.username}"/>
+	    <property name="database.password" value="${database.password}"/>
+
+	<!-- database URL for creating other dbs - used in db-create target -->
+	    <property name="hibernate.dialect" value="${hibernate.dialect}"/>
+	    <property name="database.driver_class" value="${database.driver_class}"/>
+	    <property name="database.url" value="${database.url}"/>
+	    <property name="database.show_sql" value="true"/>
+	    <property name="database.schema" value=""/>
+
+    <!-- Build and deploy properties -->
+    <property name="env.COMPUTERNAME" value="${env.HOSTNAME}"/>
+
+    <property name="tomcat.home" value="${env.CATALINA_HOME}"/>
+    <!-- The target directory for building the packed web application -->
+    <property name="webapp.dist" value="${dist.dir}/webapps"/>
+    <!-- The target directory for building the unpacked web application -->
+    <property name="webapp.target" value="${build.dir}/${webapp.name}"/>
+    <!-- The target directory for gate -->
+    <property name="gate.target" value="${webapp.target}/WEB-INF/gate"/>
+      <!-- The target directory for gate plugins-->
+    <property name="plugins.target" value="${gate.target}/plugins"/>
+    <!-- Should Java compilations set the debug compiler option? -->
+    <property name="compile.debug" value="true"/>
+    <!-- Should Java compilations set the deprecation compiler option? -->
+    <property name="compile.deprecation" value="false"/>
+    <!-- Should Java compilations set the optimize compiler option? -->
+    <property name="compile.optimize" value="false"/>
+    <!-- The source directory for the whole project -->
+    <property name="src" value="${basedir}/src"/>
+    <property name="tar.user" value="ant"/>
+    <property name="tar.group" value="ant"/>
+    <property name="tar.mode" value="644"/>
+
+    <!-- =================================================================== -->
+    <!-- Classpaths                                                          -->
+    <!-- =================================================================== -->
+
+    <path id="xdoclet.classpath">
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.log4j" />
+        <patternset refid="pattern.commons-logging" />
+        <patternset refid="pattern.commons-collections" />
+        <patternset refid="pattern.acegi-security" />
+        <patternset refid="pattern.xdoclet" />
+        <patternset refid="pattern.velocity" />
+        <patternset refid="pattern.spring-all" />
+      </fileset>
+    </path>
+
+    <!-- Hibernate -->
+    <path id="hibernate.classpath">
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.hibernate" />
+        <patternset refid="pattern.hibernate-all" />
+        <patternset refid="pattern.database" />
+        <patternset refid="pattern.commons-beanutils" />
+        <patternset refid="pattern.commons-lang" />
+      </fileset>
+      <path location="${build.dir}/dao/classes"/>
+    </path>
+
+
+    <!-- DAO COMPILE -->
+    <path id="dao.compile.classpath">
+     <path refid="hibernate.classpath"/>
+     <fileset dir="${lib.dir}">
+        <patternset refid="pattern.commons-logging" />
+        <patternset refid="pattern.commons-collections" />
+        <patternset refid="pattern.spring-all" />
+     	<patternset refid="pattern.gate" />
+      </fileset>
+    </path>
+
+    <!-- DAO TEST -->
+    <path id="dao.test.classpath">
+      <path refid="dao.compile.classpath"/>
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.dbunit" />
+        <patternset refid="pattern.junit" />
+        <patternset refid="pattern.log4j" />
+      	<patternset refid="pattern.commons-all" />
+      </fileset>
+     </path>
+
+    <!-- Callback service API -->
+    <path id="callback-service-api.compile.classpath">
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.commons-lang" />
+        <patternset refid="pattern.geronimo-spec" />
+      </fileset>
+    </path>
+
+    <!-- Service compile -->
+    <path id="service.compile.classpath">
+      <path refid="dao.compile.classpath"/>
+      <path refid="callback-service-api.compile.classpath" />
+      <pathelement location="${dist.dir}/${webapp.name}-dao.jar"/>
+      <pathelement location="${dist.dir}/${webapp.name}-callback-service-api.jar" />
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.javamail" />
+      	<patternset refid="pattern.velocity" />
+        <patternset refid="pattern.gate" />
+        <patternset refid="pattern.commons-all" />
+        <patternset refid="pattern.docservice-proxy-api" />
+        <patternset refid="pattern.docservice-api" />
+        <patternset refid="pattern.gas-safe-client-api" />
+        <patternset refid="pattern.doc-service" />
+        <patternset refid="pattern.jforum" />
+      </fileset>
+    </path>
+
+    <!-- Service test -->
+    <path id="service.test.classpath">
+      <path refid="service.compile.classpath"/>
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.junit" />
+        <patternset refid="pattern.log4j" />
+        <patternset refid="pattern.jakarta-oro" />
+        <patternset refid="pattern.dumbster" />
+        <patternset refid="pattern.jmock" />
+        <patternset refid="pattern.docservice-proxy" />
+        <patternset refid="pattern.gas-safe-client" />
+        <patternset refid="pattern.doc-service" />
+      	<patternset refid="pattern.gate.plugins.inter_annotator_agreement" />
+        <patternset refid="pattern.servletapi" />
+        <patternset refid="pattern.cxf" />
+      </fileset>
+      <path location="test/dao"/>
+    </path>
+
+   <!-- Workflow -->
+    <path id="workflow.compile.classpath">
+    <pathelement location="${dist.dir}/${webapp.name}-service.jar"/>
+      <path refid="service.compile.classpath"/>
+
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.spring-modules" />
+        <patternset refid="pattern.jbpm" />
+        <patternset refid="pattern.activemq-5" />
+        <patternset refid="pattern.jencks" />
+      </fileset>
+    </path>
+
+<!-- Workflow -->
+ <path id="workflow.test.classpath">
+      <path refid="workflow.compile.classpath"/>
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.junit" />
+        <patternset refid="pattern.log4j" />
+        <patternset refid="pattern.jakarta-oro" />
+        <patternset refid="pattern.dumbster" />
+        <patternset refid="pattern.jmock" />
+        <patternset refid="pattern.docservice-proxy" />
+        <patternset refid="pattern.gas-safe-client" />
+        <patternset refid="pattern.doc-service" />
+        <patternset refid="pattern.servletapi" />
+        <patternset refid="pattern.cxf" />
+        <patternset refid="pattern.spring-modules" />
+      </fileset>
+      <pathelement location="${dist.dir}/${webapp.name}-service.jar"/>
+      <pathelement location="${dist.dir}/${webapp.name}-workflow.jar"/>
+      <pathelement location="${dist.dir}/${webapp.name}-dao.jar"/>
+      <pathelement location="${dist.dir}/${webapp.name}-callback-service-api.jar"/>
+      <path location="test/dao"/>
+    </path>
+
+
+    <!-- Web -->
+    <path id="web.compile.classpath">
+      <path refid="workflow.compile.classpath"/>
+      <pathelement location="${dist.dir}/${webapp.name}-workflow.jar"/>
+      <pathelement location="${dist.dir}/${webapp.name}-dao.jar"/>
+      <pathelement location="${dist.dir}/${webapp.name}-service.jar"/>
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.struts" />
+        <patternset refid="pattern.strutsmenu" />
+        <patternset refid="pattern.displaytag" />
+        <patternset refid="pattern.jakarta-oro" />
+        <patternset refid="pattern.commons-digester" />
+        <patternset refid="pattern.commons-fileupload" />
+        <patternset refid="pattern.commons-validator" />
+        <patternset refid="pattern.servletapi" />
+        <patternset refid="pattern.dwr" />
+        <patternset refid="pattern.javamail" />
+        <patternset refid="pattern.spring-all" />
+        <patternset refid="pattern.jstl" />
+      	 <patternset refid="pattern.charts4j" />
+      </fileset>
+    </path>
+
+    <path id="web.test.classpath">
+      <path refid="web.compile.classpath"/>
+      <path refid="workflow.test.classpath"/>
+      <pathelement location="${build.dir}/test/service/classes"/>
+      <pathelement location="${build.dir}/test/web/classes"/>
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.strutstestcase" />
+        <patternset refid="pattern.webtest" />
+      	<patternset refid="pattern.commons-io" />
+      	<patternset refid="pattern.jaxen" />
+      </fileset>
+    </path>
+
+    <!-- Web Service client stubs -->
+    <path id="client-stubs.compile.classpath">
+      <path refid="web.compile.classpath"/>
+      <pathelement location="${build.dir}/web/classes"/>
+    </path>
+
+    <path id="jspc.classpath">
+      <path refid="dao.compile.classpath"/>
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.commons-logging" />
+        <patternset refid="pattern.commons-validator" />
+        <patternset refid="pattern.clickstream" />
+        <patternset refid="pattern.displaytag" />
+        <patternset refid="pattern.sitemesh" />
+        <patternset refid="pattern.strutsmenu" />
+        <patternset refid="pattern.jstl" />
+        <patternset refid="pattern.jsp2.jstl" />
+        <patternset refid="pattern.struts" />
+        <patternset refid="pattern.spring-all" />
+      </fileset>
+      <fileset dir="${tomcat.home}/common/lib" includes="*.jar"/>
+      <path location="${build.dir}/web/classes"/>
+    </path>
+
+    <path id="emma.libs">
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.emma-all" />
+      </fileset>
+    </path>
+
+    <path id="all.sources">
+      <pathelement path="src/dao"/>
+      <pathelement path="src/service"/>
+      <pathelement path="src/callback-service-api"/>
+      <pathelement path="src/workflow"/>
+      <pathelement path="src/web"/>
+    </path>
+
+    <taskdef resource="emma_ant.properties" classpathref="emma.libs"/>
+
+    <property name="inheritAll" value="true"/>
+
+    <!-- this macro is called by tasks that depend on a database.properties -->
+    <macrodef name="generate-database-properties">
+        <sequential>
+            <echo>generating database.properties from build.properties</echo>
+            <propertyfile comment="Hibernate Configuration for JUnit tests"
+                file="${basedir}/database.properties">
+                <entry key="hibernate.dialect" value="${hibernate.dialect}"/>
+                <entry key="hibernate.connection.driver_class" value="${database.driver_class}"/>
+                <entry key="hibernate.connection.url" value="${database.url}"/>
+                <entry key="hibernate.connection.username" value="${database.username}"/>
+                <entry key="hibernate.connection.password" value="${database.password}"/>
+                <entry key="hibernate.connection.show_sql" value="${database.show_sql}"/>
+                <!--
+                <entry key="hibernate.cache.provider_class" value="org.hibernate.cache.EhCacheProvider"/>
+                <entry key="hibernate.cache.use_second_level_cache" value="true"/>
+                <entry key="hibernate.cache.use_query_cache" value="true"/>
+                -->
+                <entry key="dao.type" value="${dao.type}"/>
+            </propertyfile>
+            <replace file="database.properties" token="amp;" value=""/>
+            <property file="database.properties"/>
+        </sequential>
+    </macrodef>
+    
+    
+    <macrodef name="generate-jforum-custom-conf">
+        <sequential>
+            <echo>generating jforum-custom.conf from build.properties</echo>
+            <copy file="${basedir}/jforum/WEB-INF/config/jforum-${database.type}.tmp"
+	            tofile="${basedir}/jforum/WEB-INF/config/jforum-custom.conf" overwrite="yes"/>
+            <propertyfile
+                file="${basedir}/jforum/WEB-INF/config/jforum-custom.conf">
+                <entry key="database.connection.dbname" value="${database.name}"/>
+                <entry key="database.connection.host" value="${database.host}"/>            
+                <entry key="database.connection.username" value="${database.username}"/>
+                <entry key="database.connection.password" value="${database.password}"/>
+                <entry key="mail.sender" value="${mail.default.from}"/>
+                <entry key="mail.smtp.host" value="${mail.host}"/>
+                <entry key="forum.link" value="${url.base}/${webapp.instance.name}"/>
+                <entry key="homepage.link" value="${url.base}/${webapp.instance.name}"/>
+            	<entry key="attachments.store.dir" value="${instance.dir}/forum/upload"/>
+            	<entry key="lucene.index.write.path" value="${instance.dir}/forum/index"/>
+            </propertyfile>
+            <!-- Deal with SMTP auth properties -->
+            <if>
+              <and>
+                <isset property="mail.username" />
+                <length string="${mail.username}" when="gt" length="0" />
+              </and>
+              <then>
+                <propertyfile
+                    file="${basedir}/jforum/WEB-INF/config/jforum-custom.conf">
+                  <entry key="mail.smtp.auth" value="true" />
+                  <entry key="mail.smtp.username" value="${mail.username}" />
+                  <entry key="mail.smtp.password" value="${mail.password}" />
+                </propertyfile>
+              </then>
+              <else>
+                <propertyfile
+                    file="${basedir}/jforum/WEB-INF/config/jforum-custom.conf">
+                  <entry key="mail.smtp.auth" value="false" />
+                </propertyfile>
+              </else>
+            </if>
+            <!-- Deal with SMTP SSL (or otherwise) properties -->
+            <if>
+              <equals arg1="${mail.transport.protocol}" arg2="smtps" />
+              <then>
+                <propertyfile
+                    file="${basedir}/jforum/WEB-INF/config/jforum-custom.conf">
+                  <entry key="mail.smtp.ssl" value="true" />
+                  <entry key="mail.smtp.port" value="465" />
+                </propertyfile>
+              </then>
+              <else>
+                <propertyfile
+                    file="${basedir}/jforum/WEB-INF/config/jforum-custom.conf">
+                  <entry key="mail.smtp.port" value="25" />
+                </propertyfile>
+              </else>
+            </if>
+        </sequential>
+    </macrodef>
+    
+
+    <!-- this macro is called by tasks that depend on a database.properties -->
+    <macrodef name="generate-local-properties">
+        <sequential>
+            <echo>generating local.properties from build.properties</echo>
+            <propertyfile comment="Local properties collected from build.properties"
+                file="${basedir}/local.properties">
+                <entry key="http.port" value="${http.port}"/>
+                <entry key="url.base" value="${url.base}"/>
+                <entry key="private.url.base" value="${private.url.base}"/>
+                <entry key="mail.host" value="${mail.host}"/>
+                <entry key="mail.default.from" value="${mail.default.from}"/>
+                <entry key="mail.debug" value="${mail.debug}"/>
+                <entry key="mail.transport.protocol" value="${mail.transport.protocol}"/>
+                <entry key="mail.username" value="${mail.username}"/>
+                <entry key="mail.password" value="${mail.password}"/>
+                <entry key="error.mailTo" value="${error.mailTo}"/>
+                <entry key="error.server" value="${error.server}"/>
+                <entry key="docservice.url" value="${docservice.url}"/>
+                <entry key="gos.url" value="${gos.url}"/>
+                <entry key="private.docservice.url" value="${private.docservice.url}"/>
+                <entry key="private.gos.url" value="${private.gos.url}"/>
+	            <entry key="annotatorgui.url" value="${annotatorgui.url}"/>
+	            <entry key="annotatorgui.url.pool" value="${annotatorgui.url.pool}"/>
+                <entry key="anndiffgui.url" value="${anndiffgui.url}"/>
+                <entry key="callback.url" value="${callback.url}"/>
+                <entry key="private.callback.url" value="${private.callback.url}"/>
+                <entry key="webapp.instance.name" value="${webapp.instance.name}"/>
+            	<entry key="webapp.title" value="${webapp.title}"/>
+				<entry key="annodiffer.url" value="${annodiffer.url}"/>
+            	<entry key="instance.name" value="${instance.name}"/>
+            	<entry key="schema.dir" value="${schema.dir}"/>
+            	<entry key="plugin.csv.list" value="${plugin.csv.list}"/>
+            	<entry key="threshold" value="${threshold}"/>
+            	<entry key="instance.dir" value="${instance.dir}"/>
+            </propertyfile>
+            <replace file="local.properties" token="amp;" value=""/>
+            <property file="local.properties"/>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="generate-DocServiceManagerTest-properties">
+      <sequential>
+        <echo>generating DocServiceManagerTest.properties from build.properties</echo>
+        <propertyfile comment="DocServiceManagerTest properties collected from build.properties"
+          file="${basedir}/test/service/gleam/executive/service/DocServiceManagerTest.properties">
+          <entry key="docservice.url" value="${docservice.url}"/>
+          <entry key="gate.home" value="${gate.home}"/>
+        </propertyfile>
+        <replace file="test/service/gleam/executive/service/DocServiceManagerTest.properties" token="amp;" value=""/>
+            <property file="test/service/gleam/executive/service/DocServiceManagerTest.properties"/>
+      </sequential>
+    </macrodef>
+
+
+    <macrodef name="generate-DocServiceActionTest-properties">
+      <sequential>
+        <echo>generating DocServiceActionTest.properties from build.properties</echo>
+        <propertyfile comment="DocServiceActionTest properties collected from build.properties"
+          file="${basedir}/test/web/gleam/executive/webapp/action/DocServiceActionTest.properties">
+          <entry key="docservice.url" value="${docservice.url}"/>
+          <entry key="gate.home" value="${gate.home}"/>
+        </propertyfile>
+        <replace file="test/web/gleam/executive/webapp/action/DocServiceActionTest.properties" token="amp;" value=""/>
+            <property file="test/web/gleam/executive/webapp/action/DocServiceActionTest.properties"/>
+      </sequential>
+    </macrodef>
+
+    <macrodef name="generate-GosManagerTest-properties">
+      <sequential>
+        <echo>generating GosManagerTest.properties from build.properties</echo>
+        <propertyfile comment="GosManagerTest properties collected from build.properties"
+          file="${basedir}/test/service/gleam/executive/service/GosManagerTest.properties">
+          <entry key="gos.url" value="${gos.url}"/>
+          <entry key="gate.home" value="${gate.home}"/>
+        </propertyfile>
+        <replace file="test/service/gleam/executive/service/GosManagerTest.properties" token="amp;" value=""/>
+            <property file="test/service/gleam/executive/service/GosManagerTest.properties"/>
+      </sequential>
+    </macrodef>
+
+    <macrodef name="generate-WorkflowManagerTest-properties">
+      <sequential>
+        <echo>generating WorkflowManagerTest.properties from build.properties</echo>
+      	<property name="processesdir" location="processes"/>
+        <propertyfile comment="WorkflowManagerTest properties collected from build.properties"
+          file="${basedir}/test/workflow/gleam/executive/workflow/WorkflowManagerTest.properties">
+          <entry key="processes.dir" value="${processesdir}"/>
+
+        </propertyfile>
+   
+        <replace file="test/workflow/gleam/executive/workflow/WorkflowManagerTest.properties" token="amp;" value=""/>
+            <property file="test/workflow/gleam/executive/workflow/WorkflowManagerTest.properties"/>
+      </sequential>
+    </macrodef>
+
+
+    <macrodef name="generate-GosActionTest-properties">
+      <sequential>
+        <echo>generating GosActionTest.properties from build.properties</echo>
+        <propertyfile comment="GosActionTest properties collected from build.properties"
+          file="${basedir}/test/web/gleam/executive/webapp/action/GosActionTest.properties">
+      
+          <entry key="gate.home" value="${gate.home}"/>
+        </propertyfile>
+        <replace file="test/web/gleam/executive/webapp/action/GosActionTest.properties" token="amp;" value=""/>
+            <property file="test/web/gleam/executive/webapp/action/GosActionTest.properties"/>
+      </sequential>
+    </macrodef>
+
+
+
+</project>

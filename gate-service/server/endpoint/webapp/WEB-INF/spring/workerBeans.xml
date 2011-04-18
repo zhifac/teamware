@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spring bean definitions required to run GasWorkers in this web application -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:gate="http://gate.ac.uk/ns/spring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://gate.ac.uk/ns/spring
+         http://gate.ac.uk/ns/spring.xsd">
+  <!-- switch benchmarking on -->
+  <bean id="enableBenchmarking" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+    <property name="staticMethod" value="gate.util.Benchmark.setBenchmarkingEnabled" />
+    <property name="arguments">
+      <list>
+        <value>true</value>
+      </list>
+    </property>
+  </bean>
+
+  <!-- Initialise GATE with the right config files -->
+  <gate:init gate-home="${gleam.gateservice.top.dir}"
+             plugins-home="${gleam.gateservice.top.dir}/plugins"
+             site-config-file="${gleam.gateservice.top.dir}/gate.xml"
+             user-config-file="${gleam.gateservice.top.dir}/user-gate.xml" />
+
+  <!-- Proxies for doc service and executive callbacks -->
+  <bean id="executiveProxyFactory"
+    class="gleam.executive.proxy.impl.ExecutiveProxyFactoryImpl">
+    <property name="timeout" value="0" />
+    <property name="autoRetryCount" value="10" />
+  </bean>
+
+  <bean id="docServiceProxyFactory"
+    class="gleam.docservice.proxy.impl.DocServiceProxyFactoryImpl">
+    <property name="timeout" value="0" />
+    <property name="keepaliveInterval" value="150" />
+  </bean>
+
+  <!-- The GATE application - NOTE it is vital that scope="prototype"!!! -->
+  <gate:saved-application id="gateApplication" scope="prototype"
+                          location="${gleam.gateservice.top.dir}/application.xgapp" />
+
+  <!-- The WorkerConfig defining the workers to run -->
+  <bean id="workerConfig"
+    class="gleam.gateservice.worker.WorkerConfig">
+    <property name="connectionFactory" ref="connectionFactory" />
+    <property name="executiveProxyFactory" ref="executiveProxyFactory" />
+    <property name="docServiceProxyFactory"
+      ref="docServiceProxyFactory" />
+    <property name="serviceDefinition" ref="serviceDefinition" />
+    <property name="gateApplicationBeanName">
+      <idref bean="gateApplication" />
+    </property>
+    <property name="queue" ref="queue" />
+    <property name="numWorkers" value="${gleam.gateservice.numWorkers}" />
+  </bean>
+</beans>

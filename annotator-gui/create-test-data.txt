@@ -1,0 +1,104 @@
+﻿delete from subtasks;
+delete from params;
+delete from tasks;
+delete from annotators;
+
+
+insert into annotators(userid, password) values('dron', 'dron');
+insert into annotators(userid, password) values('john', 'john');
+insert into annotators(userid, password) values('mark', 'mark');
+insert into annotators(userid, password) values('luk', 'luk');
+insert into annotators(userid, password) values('onto', 'onto');
+
+insert into tasks(taskID, timeStarted, docID, priority, docService, completed)
+values('testTaskID', '111111111111','GATE document_00016___1149265165958___5248',
+  1,'http://grindleford:8080/docservice/services/docservice', 0);
+insert into tasks(taskID, timeStarted, docID, priority, docService, completed)
+values('testTaskID2', '111111111111','GATE document_00016___1149265165958___5248',
+  1,'http://grindleford:8080/docservice/services/docservice', 0);
+
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('johnSubTaskID1', 'testTaskID', 'john', 0, 3, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('johnSubTaskID2', 'testTaskID', 'john', 0, 2, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('johnSubTaskID3', 'testTaskID', 'john', 0, 1, '111111111111');
+
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('markSubTaskID1', 'testTaskID', 'mark', 0, 3, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('markSubTaskID2', 'testTaskID', 'mark', 0, 2, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('markSubTaskID3', 'testTaskID', 'mark', 0, 1, '111111111111');
+
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('lukSubTaskID1', 'testTaskID', 'luk', 0, 3, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('lukSubTaskID2', 'testTaskID', 'luk', 0, 2, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('lukSubTaskID3', 'testTaskID', 'luk', 0, 1, '111111111111');
+
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('ontoSubTaskID1', 'testTaskID2', 'onto', 0, 3, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('ontoSubTaskID2', 'testTaskID2', 'onto', 0, 2, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('ontoSubTaskID3', 'testTaskID2', 'onto', 0, 1, '111111111111');
+
+insert into params(TaskID, name, value)
+values('testTaskID2', 'ontology-url', 'http://proton.semanticweb.org/2005/04/protonu');
+
+
+========================
+GATESERVICE1
+========================
+delete from subtasks;
+delete from params;
+delete from tasks;
+delete from annotators;
+
+insert into annotators(userid, password) values('dron', 'dron');
+insert into annotators(userid, password) values('john', 'john');
+insert into annotators(userid, password) values('mark', 'mark');
+insert into annotators(userid, password) values('luk', 'luk');
+insert into annotators(userid, password) values('onto', 'onto');
+
+insert into tasks(taskID, timeStarted, docID, priority, docService, completed)
+values('testTaskID', '111111111111','GATE document_00016___1154619650518___431',
+  1,'http://gateservice1:8080/docservice/services/docservice', 0);
+insert into tasks(taskID, timeStarted, docID, priority, docService, completed)
+values('testTaskID2', '111111111111','GATE document_00016___1154619650518___431',
+  1,'http://gateservice1:8080/docservice/services/docservice', 0);
+
+
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('johnSubTaskID1', 'testTaskID', 'john', 0, 3, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('johnSubTaskID2', 'testTaskID', 'john', 0, 2, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('johnSubTaskID3', 'testTaskID', 'john', 0, 1, '111111111111');
+
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('markSubTaskID1', 'testTaskID', 'mark', 0, 3, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('markSubTaskID2', 'testTaskID', 'mark', 0, 2, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('markSubTaskID3', 'testTaskID', 'mark', 0, 1, '111111111111');
+
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('lukSubTaskID1', 'testTaskID', 'luk', 0, 3, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('lukSubTaskID2', 'testTaskID', 'luk', 0, 2, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('lukSubTaskID3', 'testTaskID', 'luk', 0, 1, '111111111111');
+
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('ontoSubTaskID1', 'testTaskID2', 'onto', 0, 3, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('ontoSubTaskID2', 'testTaskID2', 'onto', 0, 2, '111111111111');
+insert into subtasks(subTaskID, taskID, userID, finished, priority, timeCreated)
+values('ontoSubTaskID3', 'testTaskID2', 'onto', 0, 1, '111111111111');
+
+insert into params(TaskID, name, value)
+values('testTaskID2', 'ontology-url', 'http://proton.semanticweb.org/2005/04/protonu');
+

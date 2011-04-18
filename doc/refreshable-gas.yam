@@ -1,0 +1,113 @@
+Refreshable GATE Services
+
+%contents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Background
+
+This document decribes a possible approach to the problem of providing GATE web
+services whose logic can be modified on the fly, without having to restart the
+worker JVM.  This restarting process is particularly disruptive for all-in-one
+service deployments, where the whole SAFE deployment runs in a single tomcat -
+modifying the GaS currently requires a restart of the whole Tomcat server
+process.
+
+The basic act of getting a GaS to re-initialize itself is very simple:
+
+- Get all the WorkerConfig beans out of the spring context.
+- For each WorkerConfig, call ^stop()^ on its JMS connection.
+  - when all the ^stop^ calls have returned, the workers have all been paused,
+    and are not using their CorpusController instances.
+- Replace the CorpusController for each worker with a fresh copy from the
+  spring context.
+- Re-^init()^ the workers.
+- ^start()^ the JMS connections again.
+- Dispose of the old controllers with ^Factory.deleteResource^ (for each PR,
+  then the controller itself).
+
+Between the second and third steps it is possible to modify the gapp file or
+the resource files it loads, in order to change the behaviour of the GaS.
+For most services this will be fine, though there may be problems with the ML
+services as currently implemented.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Requirements (to discuss)
+
+Which of the following are required/desirable/not required?
+
+- Distributing a new gapp file to workers (or just distributing changed
+  resource files)?
+- Support for updating workers that are distributed (e.g. LDC), or just those
+  where the workers and endpoint run in the same place (SK1)?
+- Support for services with "cleverer" configuration than just a simple gapp
+  file?  For example, the ML service loads most of its application from a saved
+  gapp but adds a couple of extra PRs that are created by the Spring context.
+  More ideas on this below
+
+Note that the following cannot be supported:
+
+- Modifications to the Java classes of custom PRs or LRs used by the
+  application (i.e. replacing the JAR).  This is due to the class loading model
+  used by GATE, such changes require a server restart or at least a restart of
+  the web application in which the worker is running.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Design ideas (a.k.a. Ian's note pad)
+
+Provide a new AdminService endpoint alongside the GATEService one, to avoid
+polluting the standard GateWebService interface, and so we could potentially
+add authentication/access control to the admin layer.
+
+AdminService has an operation that takes a zip file (byte[], MTOM attachment)
+containing replacement files for the GaS.
+
+Either:
+- AdminService unzips new resources directly (if we only support refreshability
+  for all-in-one services), or
+- Passes the zip to a JMS topic.  All worker VMs have an extra MDPOJO
+  subscribed to this topic that receives and unzips the file.  Possibly reuse
+  code from ML service model transfer.
+
+Stop/re-init/restart as above.
+
+If we want to support editing of individual grammars/gaz lists, then we could
+have a set of actions in the executive to allow online editing/upload of files
+one at a time, then have exec package up the updates as a zip and pass them to
+the GaS AdminService.
+
+Note: the ML service presents different issues.  The way it works currently
+is that when we start up tomcat (or the LDC processes) we first start up the
+application-side workers which start listening on a JMS topic.  Then we start
+up the training worker, which sends a copy of its latest model to this topic.
+To get this to work across refreshes would mean we had to (a) stop the training
+worker from accepting new tasks, (b) stop the application workers, (c) update
+the data from the update zip file, (d) start the application workers and hope
+they don't pick up any new tasks until after we've (e) started up the training
+worker, to pass a valid model on to the application side.
+
+Maybe we should just say ML services don't support refreshing (or at least
+warn that YMMV).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Support for non-prototype data in GaS
+
+Most GATE services we use create their applications in a prototype scoped
+fashion, i.e. load a fresh copy of a gapp file for each worker.  The ML
+services fit this pattern - though they create some of their PRs directly in
+the Spring config and then add them to the end of the loaded gapp, these extra
+PRs are still created with prototype scope.
+
+However, what happens when we have services that share data between several
+workers?  E.g. the NeOn SARDINE service has a singleton copy of an ontology
+shared between several applications.  Do we want to support refresh in this
+kind of case? 
+
+Options:
+- create a special "refresh" Spring scope and use this for shared objects.
+  This scope would behave as "singleton" between refreshes, but we could then
+  force all "refresh"-scoped beans to be re-created when the refresh action is
+  called.
+- Go for a different approach - put worker beans and their dependencies in a
+  child ApplicationContext, and replace that context entirely at refresh time.
+  This will replace all the singleton beans in the sub-context as well as the
+  prototype ones.

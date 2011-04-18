@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:gate="http://gate.ac.uk/ns/spring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+         http://cxf.apache.org/jaxws
+         http://cxf.apache.org/schemas/jaxws.xsd
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://gate.ac.uk/ns/spring
+         http://gate.ac.uk/ns/spring.xsd">
+
+  <!-- Substitute ${} things with servlet <context-param> values -->
+  <bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer" />
+
+  <!-- Import the CXF beans -->
+  <import resource="classpath:META-INF/cxf/cxf.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-extension-jaxrs-binding.xml" />
+  <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+  <!-- Initialise GATE with WEB-INF as gate.home -->
+   <gate:init id="init-gate" gate-home="/WEB-INF"
+             site-config-file="/WEB-INF/gate.xml"
+             user-config-file="/WEB-INF/user-gate.xml" />
+  
+
+  <!-- The lock manager -->
+  <bean id="lockManager" class="gleam.docservice.MapLockManager"
+        init-method="init" destroy-method="shutDown">
+    <property name="deadLockCleanupTimeout" value="${dead-locks-cleanup-timeout}" />
+  </bean>
+
+  <!-- The object that implements the doc service -->
+  <bean id="serialDocService" class="gleam.docservice.SerialDocService" init-method="init"
+        destroy-method="shutDown" depends-on="init-gate">
+    <property name="lockManager" ref="lockManager" />
+    <!-- default property values are taken from context-params -->
+    <property name="properties">
+      <value>
+        DSLocation=${DSLocation}
+        ds-index-location=${ds-index-location}
+        indexed-as-names-to-include=${indexed-as-names-to-include}
+        indexed-as-names-to-exclude=${indexed-as-names-to-exclude}
+        features-to-include=${features-to-include}
+        features-to-exclude=${features-to-exclude}
+        base-token-annotation-type=${base-token-annotation-type}
+        index-unit-annotation-type=${index-unit-annotation-type}
+        create-tokens-automatically=${create-tokens-automatically}
+        searcher-cleanup-timeout=${searcher-cleanup-timeout}
+        cache-cleanup-threshold=${cache-cleanup-threshold}
+        index-delay=${index-delay}
+        debug=${debug}
+        debug-details=${debug-details}
+      </value>
+    </property>
+  </bean>
+
+  <jaxws:server id="serialDocServiceEndpoint"
+                  serviceBean="#serialDocService"
+                  serviceClass="gleam.docservice.SerialDocService"
+                  address="/docservice">
+    <jaxws:properties>
+      <entry key="mtom-enabled" value="true" />
+    </jaxws:properties>
+    <jaxws:features>
+     <bean class="org.apache.cxf.transport.http.gzip.GZIPFeature"/>
+    </jaxws:features>
+    <!-- Add the algorithm-specific IAADetail classes into the data binding, so
+    they appear in the WSDL even though they are not explicitly referenced from
+    the code. -->
+    <jaxws:dataBinding>
+      <bean class="org.apache.cxf.jaxb.JAXBDataBinding">
+        <property name="extraClass">
+          <list>
+            <value>gleam.docservice.iaa.AllWaysFMeasureDetail</value>
+            <value>gleam.docservice.iaa.AllWaysKappaDetail</value>
+            <value>gleam.docservice.iaa.PairwiseFMeasureDetail</value>
+            <value>gleam.docservice.iaa.PairwiseKappaDetail</value>
+          </list>
+        </property>
+      </bean>
+    </jaxws:dataBinding>
+  </jaxws:server>
+  
+  <!-- DocServiceProxy used by the JSP pages -->
+  <bean id="docServiceProxy" class="gleam.docservice.proxy.impl.DocServiceProxyImpl">
+    <constructor-arg ref="serialDocService" />
+  </bean>
+  
+  <!-- Web client used by the token verifier -->
+  <bean id="webClientFactory" class="org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean">
+    <property name="bus" ref="cxf" />
+    <property name="address" value="${executive-verifier-url}" />
+  </bean>
+  
+  <bean id="verifierClient"
+        factory-bean="webClientFactory"
+        factory-method="createWebClient" />
+  
+  <!-- Security token verification filter -->
+  <bean id="securityTokenFilter" class="gleam.docservice.SecurityTokenFilter">
+  	<property name="verifierClient" ref="verifierClient" />
+  </bean>
+</beans>

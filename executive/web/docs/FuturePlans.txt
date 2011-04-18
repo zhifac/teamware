@@ -1,0 +1,127 @@
+Release schedule:
+
+Version 1.0 GA (17.03.2009)
+
+- problem with role based cssHorizantalMenu velocity macro (FIXED)
+- when AD user is created in db, properties: country and website should also be specified (FIXED)
+- in superadmin resources page, allow assigning resource to superadmin role (FIXED)
+- problem with password encoding in admin/manage users (FIXED)
+
+Teamware is built and tested as part of the Hudson continuous integration system.
+
+http://www.gate.ac.uk/hudson-internal
+
+Version 1.0.1 (01.04.2009)
+- fix problem with connection pool which tries to use dropped connections
+- fix encoding problem java.sql.SQLException: Unknown initial character set index '192' received from server.
+- fix problem with jforum admin url decorators
+- fix problem with jforum post form tabs
+- disable editing superadmin details on manage users screen.
+- allow managers to create topics in forum (now only admin can do that)
+- disallow cancel button in popup windows invoked from wf forms.
+ 
+Version 1.0.2 (20.04.2009)
+- fixed problem with user.home under M$ (since it contains backslashes, those are swollen by ant while creating paths)
+- fixed NPE in docservice createAnnotationSet method in case the list of existing AS is null.
+- tooltip for unpack document markup
+- bugfix for delete/add docs in sequence -> pass corpusID in request
+- bugfix for upload indicator in add docs inside corpus
+- added note on upload page about supported file formats
+- fixed problems with smilies (image paths from JForum)
+- fixed export of user table as e.g. pdf, it did not show the username at the first column but the url 
+- added Hold Ctrl Key tooltip - improved changing the users on the project which has already been created, it is very easy to lose the saved users, as the manager has to remember to hold Ctrl key
+- fixed bug in changing users when the newly chosen user is curator and annotator in the same time.
+  - safekeeper1 tested (DD): see email for details
+- update libraries: jaxb-2.1, spring-2.5.6, latest snapshot of gate-5.0 beta1
+- bugs to be fixed (DD):
+  - Click on Admin on the top menu: no css and no menu, no custom layout like for other pages (ldc)
+
+Version 1.1: Beta (15.05.2009)
+
+- deploy several instances of teamware
+- make safe.pl start script as demon executed when LDC is started.
+- fix redirection for templates (All-My views)
+- in process monitoring implement annotator view (pie chart to show the work split by annotators)
+- support Mihai's scenario for multilevel manual annotation 
+- revise number of workers on LDC
+- publish processes and results onto a community platform (probably Leonardo)
+  - pretty unclear (expecting requirements)
+- conclude from annotation exercises if workflow templates are valuable at all.
+
+  
+Matt: Not directly to MA:
+- When viewing pre-processed annotations from GAS, annotation group called  
+  "safe.preprocess". Needs to be "teamware.preprocess" or something similar
+- Just a thought, but eventually, can Teamware be a two-part installation, with 
+  a one-time downloadable desktop component (doc viewer/editor) that connects 
+  directly with the server?  This would allow for a more robust viewer and 
+  elimination of repeated download and install of the editor interface.
+- Integration issue:  Can GATE Developer be modified to use zip file as new 
+  corpus, like Teamware?  (Eliminates unpacking steps in going from Teamware to Developer)
+
+
+Version 1.1 GA (31.05.2009)
+- Testing, bugfixing, annotation exercises
+
+
+Version 1.2: Beta (15.08.2009)
+- list process instances for versions of process def
+- delete template from all templates view redirects to my template view
+- multiple delete of templates
+- strange char problem in service definition (annotation service text areas)
+
+- support ontology based annotation
+  - check status of Annotation Editor
+  - Modify WF to allow choosing between schema & ontology based annotation
+  - deploy TAO CA service as automatic annotation service 
+- annotation tasks in "push" mode. (tasks are assigned to particular annotator, not to the pool)
+  - on WF level, it has to be allowed to choose between push and pool mode
+  - Annotation Editor support (automatic load of the next available task)
+- personalised corpora.
+
+
+Version 1.2 GA (31.08.2009)
+- Testing, bugfixing, annotation exercises
+
+
+Version 1.5 Beta (15.11.2009)
+- introduce review subprocess as part of manual annotation (should include IAA)
+- implement specialised annotation editor for curators:
+  Curator should have ability to 
+  - delete annotations
+  - correct annotations
+  - delete entire sets
+  - merge sets into one (maybe automatic function performed upon “approve”)
+  - add comments
+  - add pre-defined meta tags
+  - approve
+  - mark for redo
+  - mark for rejection (in case of a very bad original that cannot be annotated)
+- Bulk upload of users through manage users screen.
+
+Version 1.5 GA (31.11.2009)
+- Testing, bugfixing, annotation exercises  
+
+Version 2.0 Beta (15.01.2010)
+- German translation
+- breadcrumbs (Webflow Navigation Manager Framework)
+- workflow form improvement, it must be supported reset field, especially useful 
+   if you are in loop.
+- Better chat implementation (with chat rooms)
+
+
+Version 2.0 GA (31.01.2010)
+- Testing, bugfixing, annotation exercises  
+
+Unscheduled windows installation related:
+- perl invocation for fixing gapp
+- reference to gate.home and searching for plugins there
+- condition that only gate-extras/ant should be used
+
+
+
+
+
+
+
+

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="GaS-server" default="all">
+  <import file="../../lib/lib.xml" />
+
+  <property name="src.dir" location="src" />
+  <property name="classes.dir" location="classes" />
+  <property name="jar.location" location="gas-pr.jar" />
+
+  <path id="compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset refid="pattern.gate" />
+      <patternset refid="pattern.safe-common" />
+      <patternset refid="pattern.cxf" />
+      <patternset refid="pattern.gas-endpoint-api" />
+    </fileset>
+  </path>
+
+  <!-- prepare for building -->
+  <target name="prepare">
+    <mkdir dir="${classes.dir}" />
+  </target>
+
+  <!-- compile the classes -->
+  <target name="compile" depends="prepare">
+    <require lib="gas-endpoint-api" />
+    <javac srcdir="${src.dir}"
+           destdir="${classes.dir}"
+           debug="true"
+           debuglevel="lines,source"
+           source="1.5"
+           target="1.5"
+           encoding="UTF-8"
+           classpathref="compile.classpath" />
+  </target>
+
+  <!-- copy resoruces (non-.java files) from src to classes -->
+  <target name="copy.resources" depends="prepare">
+    <copy todir="${classes.dir}">
+      <fileset dir="${src.dir}" excludes="**/*.java" />
+    </copy>
+  </target>
+
+  <!-- build common JAR file -->
+  <target name="jar" depends="compile, copy.resources">
+    <jar destfile="${jar.location}">
+      <fileset dir="${classes.dir}" />
+    </jar>
+  </target>
+
+  <!-- delete generated classes -->
+  <target name="clean.classes">
+    <delete dir="${classes.dir}" />
+  </target>
+
+  <target name="clean" depends="clean.classes">
+    <delete file="${jar.location}" />
+  </target>
+
+  <target name="all" depends="jar" />
+
+
+  <!-- create a new plugin that is a GateServicePR tailored to a specific
+       service -->
+  <target name="createpr" depends="jar">
+    <require lib="gas-client-stubs" />
+    <property file="pr.properties" prefix="createpr." />
+    <mkdir dir="${createpr.outputDir}" />
+
+    <!-- copy dependency JAR files to output dir -->
+    <copy todir="${createpr.outputDir}" flatten="true">
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.cxf" />
+        <patternset refid="pattern.javamail" />
+        <patternset refid="pattern.commons-logging" />
+        <patternset refid="pattern.commons-discovery" />
+        <patternset refid="pattern.safe-common" />
+        <patternset refid="pattern.gas-endpoint-api" />
+      </fileset>
+      <fileset file="${jar.location}" />
+    </copy>
+
+    <!-- create the creole and .java files -->
+    <java classname="gleam.gateservice.pr.ServicePRCreator">
+      <classpath>
+        <path refid="compile.classpath" />
+        <pathelement location="${jar.location}" />
+      </classpath>
+      <arg value="${createpr.serviceURL}" />
+      <arg value="${createpr.prName}" />
+      <arg value="${createpr.className}" />
+      <arg value="${createpr.outputDir}" />
+      <arg value="${createpr.prName}.jar" />
+    </java>
+
+    <!-- compile the generated Java code -->
+    <mkdir dir="${createpr.outputDir}/classes" />
+    <javac srcdir="${createpr.outputDir}"
+           destdir="${createpr.outputDir}/classes"
+           source="1.5"
+           encoding="UTF-8">
+      <classpath>
+        <path refid="compile.classpath" />
+        <pathelement location="${jar.location}" />
+      </classpath>
+    </javac>
+
+    <!-- make the PR JAR file -->
+    <jar destfile="${createpr.outputDir}/${createpr.prName}.jar"
+         basedir="${createpr.outputDir}/classes" />
+  </target>
+</project>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <!-- GZIP compression filter 
+  <filter>
+    <filter-name>CompressingFilter</filter-name>
+    <filter-class>com.planetj.servlet.filter.compression.CompressingFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>CompressingFilter</filter-name>
+    <url-pattern>/services/*</url-pattern>
+  </filter-mapping>
+  -->
+  
+  <!-- Security token filter -->
+  <filter>
+    <filter-name>securityTokenFilter</filter-name>
+    <filter-class>
+      org.springframework.web.filter.DelegatingFilterProxy
+    </filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>securityTokenFilter</filter-name>
+    <url-pattern>/services/*</url-pattern>
+  </filter-mapping>
+    
+  <!-- Set up the Spring ApplicationContext -->
+  <listener>
+    <listener-class>
+      org.springframework.web.context.ContextLoaderListener
+    </listener-class>
+  </listener>
+  
+  <!-- This is the CXF servlet that serves web service requests -->
+  <servlet>
+    <servlet-name>CXFServlet</servlet-name>
+    <display-name>Apache-CXF Servlet</display-name>
+    <servlet-class>
+        org.apache.cxf.transport.servlet.CXFServlet
+    </servlet-class>
+  </servlet>
+
+  <!-- CXF servlet mappings - do not change -->
+  <servlet-mapping>
+    <servlet-name>CXFServlet</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
+  
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>/WEB-INF/spring/*.xml</param-value>
+  </context-param>
+
+  <!--
+  ============================================
+  Docservice parameters begin
+  ============================================
+  -->
+  <context-param>
+    <param-name>DSLocation</param-name>
+    <param-value>@@@ds.location@@@</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>ds-index-location</param-name>
+    <param-value>@@@ds.index.location@@@</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>indexed-as-names-to-include</param-name>
+    <param-value></param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>indexed-as-names-to-exclude</param-name>
+    <param-value></param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>features-to-exclude</param-name>
+    <param-value>SpaceToken;Split</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>features-to-include</param-name>
+    <param-value></param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>base-token-annotation-type</param-name>
+    <param-value>Token</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>index-unit-annotation-type</param-name>
+    <param-value></param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>create-tokens-automatically</param-name>
+    <param-value>true</param-value>
+  </context-param>
+
+
+  <context-param>
+    <param-name>lock-manager</param-name>
+    <param-value>gleam.docservice.MapLockManager</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>dead-locks-cleanup-timeout</param-name>
+    <param-value>300000</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>searcher-cleanup-timeout</param-name>
+    <param-value>300000</param-value>
+  </context-param>
+
+  <context-param>
+    <!--
+      JVM used memory threshold after which chache will be partially reduced
+      by unloading documents with oldest last-access-time
+      Values for threshold between 0 and 1
+      Reccomended values 0.5 - 0.9, default 0.9
+    -->
+    <param-name>cache-cleanup-threshold</param-name>
+    <param-value>0.9</param-value>
+  </context-param>
+
+  <!-- Default index delay of 7 seconds -->
+  <context-param>
+    <param-name>index-delay</param-name>
+    <param-value>7000</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>debug</param-name>
+    <param-value>true</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>debug-details</param-name>
+    <param-value>false</param-value>
+  </context-param>
+  
+  <context-param>
+    <param-name>executive-verifier-url</param-name>
+    <param-value>@@@executive.verifier.url@@@</param-value>
+  </context-param>
+  
+
+  <!-- This resource will be required DataBase-based Lock manager -->
+  <resource-ref>
+    <description>DB Connection</description>
+    <res-ref-name>jdbc/docservicedb</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
+
+  <!--
+  ============================================
+  Docservice parameters end
+  ============================================
+  -->
+
+  <session-config>
+    <session-timeout>
+        30
+    </session-timeout>
+  </session-config>
+
+  <mime-mapping>
+    <extension>wsdl</extension>
+     <mime-type>text/xml</mime-type>
+  </mime-mapping>
+
+  <mime-mapping>
+    <extension>xsd</extension>
+    <mime-type>text/xml</mime-type>
+  </mime-mapping>
+
+  <welcome-file-list>
+    <welcome-file>
+        index.jsp
+    </welcome-file>
+    <welcome-file>
+        index.html
+    </welcome-file>
+    <welcome-file>
+        index.htm
+    </welcome-file>
+  </welcome-file-list>
+</web-app>

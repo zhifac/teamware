@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<workflow>
+<globalParam name="ontology" value="http://onto.dcs.shef.ac.uk:8080/OntoService?name=cameras"/>
+
+<service id="S1" url="http://pebble.dcs.shef.ac.uk:8080/GATEService?name=preprocess">
+</service>
+
+<service id="S2" url="http://ml.dcs.shef.ac.uk:8080/GATEService?name=ml">
+ <param name="learn" value="false"/>
+ <param name="confidence_threshold" value="0.7"/>
+ <param name="outputAS" value="automatic"/>
+</service>
+
+<!-- Connects to an Annotator Pool -->
+<service id="S3" url="http://pebble.dcs.shef.ac.uk:8080/AnnotatorPool?name=cameras">
+ <param name="minimumAnnotors" value="2"/>
+ <param name="fusion" value="1"/>
+ <param name="inputAS" value="automatic"/>
+ <param name="outputAS" value="manual"/>
+</service>
+
+<service id="S4" overrides="S2">
+ <param name="learn" value="true"/>
+</service>
+
+</workflow>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+
+
+   
+
+    <bean id="lookupManager" class="gleam.executive.service.impl.LookupManagerImpl">
+        <property name="lookupDao" ref="lookupDao"/>
+    </bean>
+
+    <bean id="manager" class="gleam.executive.service.impl.BaseManager">
+        <property name="dao" ref="dao"/>
+    </bean>
+
+    <bean id="userManager" class="gleam.executive.service.impl.UserManagerImpl">
+        <property name="userDao" ref="userDao"/>
+        <property name="passwordEncoder" ref="passwordEncoder"/>
+    </bean>
+
+    <bean id="userSecurityAdvice" class="gleam.executive.service.UserSecurityAdvice">
+        <property name="userCache" ref="userCache"/>
+    </bean>
+
+    <bean id="userCache" class="org.acegisecurity.providers.dao.cache.EhCacheBasedUserCache">
+        <property name="cache">
+            <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+                <property name="cacheManager">
+                    <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
+                </property>
+                <property name="cacheName" value="userCache"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="roleManager" class="gleam.executive.service.impl.RoleManagerImpl">
+        <property name="roleDao" ref="roleDao"/>
+    </bean>
+
+    <bean id="projectManager" class="gleam.executive.service.impl.ProjectManagerImpl">
+	    <property name="projectDao" ref="projectDao"/>
+    </bean>
+    
+    <bean id="resourceManager" class="gleam.executive.service.impl.ResourceManagerImpl">
+        <property name="resourceDao" ref="resourceDao"/>
+        <property name="roleDao" ref="roleDao"/>
+    </bean>
+
+    <bean id="serviceManager" class="gleam.executive.service.impl.ServiceManagerImpl">
+        <property name="serviceDao" ref="serviceDao"/>
+    </bean>
+
+    <bean id="mailEngine" class="gleam.executive.service.MailEngine">
+        <property name="mailSender" ref="mailSender"/>
+        <property name="velocityEngine" ref="velocityEngine"/>
+    </bean>
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.host}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+    </bean>
+
+    <!-- Configure Velocity for sending e-mail -->
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <props>
+                <prop key="resource.loader">class</prop>
+                <prop key="class.resource.loader.class">
+                    org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+                </prop>
+                <prop key="velocimacro.library"></prop>
+                <prop key="velocimacro.library.autoreload">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage" scope="prototype">
+        <property name="from" value="${mail.default.from}"/>
+    </bean>
+
+    <bean id="docServiceProxyFactory" class="gleam.docservice.proxy.impl.DocServiceProxyFactoryImpl">
+        <property name="timeout" value="0"/>
+    </bean>
+
+    <bean id="docServiceManager" class="gleam.executive.service.impl.DocServiceManagerImpl">
+        <constructor-arg index="0" value="${docservice.url}" />
+        <constructor-arg index="1" value="${private.docservice.url}" />
+        <constructor-arg index="2" value="${annotatorgui.url}" />
+        <constructor-arg index="3" value="${annotatorgui.url.pool}" />
+        <constructor-arg index="4" value="${anndiffgui.url}" />
+        <constructor-arg index="5" ref="docServiceProxyFactory" />
+        <constructor-arg index="6" ref="securityTokenManager" />
+    </bean>
+
+	<bean id="docServiceDetailManager" class="gleam.executive.service.dwr.impl.DocServiceDetailManagerImpl">
+		<property name="docServiceManager" ref="docServiceManager" />
+	</bean>
+<!-- 
+     <bean id="gosProxyFactory" class="gleam.gos.proxy.impl.GOSProxyFactoryImpl" />
+
+
+    <bean id="gosManager" class="gleam.executive.service.impl.GosManagerImpl">
+		<constructor-arg index="0" value="${gos.url}" />
+		<constructor-arg index="1" ref="gosProxyFactory" />
+	</bean>
+
+ -->
+   <!--Annotation Service -->
+   <bean id="annotationServiceManager" class="gleam.executive.service.impl.AnnotationServiceManagerImpl">
+	    <constructor-arg index="0" value="${schema.dir}" />
+	    <property name="annotationServiceDao" ref="annotationServiceDao"/>
+    </bean>
+
+	<!--GAS Service -->
+	<bean id="gateServiceClientFactory" class="gleam.gateservice.client.impl.GateServiceClientFactoryImpl">
+	    <property name="executiveLocation" value="${callback.url}"/>
+	</bean>
+
+	<bean id="privateGateServiceClientFactory" class="gleam.gateservice.client.impl.GateServiceClientFactoryImpl">
+	    <property name="executiveLocation" value="${private.callback.url}"/>
+	</bean>
+
+	<bean id="gateServiceManager" class="gleam.executive.service.impl.GateServiceManagerImpl">
+		<constructor-arg index="0" ref="docServiceManager" />
+		<constructor-arg index="1" ref="gateServiceClientFactory" />
+		<constructor-arg index="2" ref="privateGateServiceClientFactory" />
+    </bean>
+
+    <bean id="jforumSSO" class="gleam.executive.service.jforum.JForumSSO"/>
+
+  <!-- Security token manager -->
+  <bean id="securityTokenManager" class="gleam.executive.service.impl.SecurityTokenManagerImpl">
+    <!-- TODO do we need to make the session expire time configurable through properties? -->
+  </bean>
+
+</beans>

@@ -1,0 +1,29 @@
+
+This document contains the list of features, functions, technologies,
+enhancements and bug fixes that would ideally be made part of SAFE. It
+represents a snapshot of the ever-changing requirements and plan for the
+system. Items at the top of the list should be detailed enough and
+fine-grained enough to be implemented. Lower down the list are lower priority
+features that may or may not be implemented. There are no bad ideas for new
+features, only low priority features.
+
+This document links to
+- user documentation: %(safe-method.html, the SAFE method) which will describe
+  the SAFE process and the tools that support it
+- developer notes: %(safe-develop.html, our developer/desing notes) which are
+  not intended to be a complete design document but to contain important
+  information for developers, current design discussions and so on
+
+Format:
+- [Task type] Task content. (Time estimate.) <People>
+
+The time estimates and people assignment are optional (they're most
+appropriate for tasks that are near the top of the stack, i.e. will probably
+be implemented in the coming period).
+
+For example:
+- [Core] Remove warnings due to Java 5 Type safety. (2 days) <JS>
+
+When a task is complete move it to the Done section, and link it to relevant
+user and design documentation.
+

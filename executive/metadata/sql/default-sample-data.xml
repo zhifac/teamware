@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE dataset [
+  <!ENTITY superOnly '<tw:role name="superadmin"/>'>
+  <!ENTITY saAndAdmin '&superOnly;<tw:role name="admin"/>'>
+  <!ENTITY adminAndMgr '&saAndAdmin;<tw:role name="manager"/>'>
+  <!ENTITY allRoles '&adminAndMgr;<tw:role name="annotator"/>'>
+]>
+<!-- Sample data for the teamware database.  This is the default data set,
+     there will also be installation-specific data in the installations/*
+     directory -->
+<dataset xmlns:tw="http://gate.ac.uk/ns/teamware/sample-data">
+  <role name="superadmin"
+        description="Super user, in charge of the entire system"/>
+  <role name="admin"
+        description="Administrator, in charge of the users, resources and projects"/>
+  <role name="manager" description="Manage workflows and projects"/>
+  <role name="annotator" description="Can only annotate"/>
+
+  <!-- Application users - by default there's just the "super-admin" and admin
+  -->
+  <app_user version="1" username="superadmin"
+            password="teamware"
+            iterations="0"
+            password_hint="teamware" first_name="SuperAdmin"
+            last_name="SuperAdmin" email="teamware@example.com"
+            phone_number="0044-1142221800" website="http://gate.ac.uk"
+            address="Regent Court, 211 Portobello" city="Sheffield"
+            province="SY" country="GB" postal_code="S14DP" account_enabled="Y"
+            account_expired="N" account_locked="N" credentials_expired="N">
+    <tw:role name="superadmin" />
+  </app_user>
+
+  <app_user version="1" username="admin"
+            password="teamware"
+            iterations="0"
+            password_hint="teamware" first_name="Admin"
+            last_name="Admin" email="teamware@example.com"
+            phone_number="0044-1142221800" website="http://gate.ac.uk"
+            address="Regent Court, 211 Portobello" city="Sheffield"
+            province="SY" country="GB" postal_code="S14DP" account_enabled="Y"
+            account_expired="N" account_locked="N" credentials_expired="N">
+    <tw:role name="admin" />
+    <tw:role name="manager" />
+    <tw:role name="annotator" />
+  </app_user>
+
+  <!-- Services (used to group actions together) -->
+  <service name="Admin Service" service_enabled="Y"/>
+  <service name="User Service" service_enabled="Y"/>
+  <service name="Common Service" service_enabled="Y"/>
+  <service name="Help" service_enabled="Y"/>
+  <service name="Documents Service" service_enabled="Y"/>
+  <service name="Workflow Service" service_enabled="Y"/>
+  <service name="Annotation Service" service_enabled="Y"/>
+  <service name="Ontologies Service" service_enabled="Y"/>
+
+  <!-- By default we only support one type of annotation service -->
+  <annotation_service_type name="gas"
+      data="asKey,asValue,asExtraMappings,parameterKey,parameterValue"/>
+
+  <!-- No annotation services available by default - add extras in
+       installation-specific data file -->
+
+  <!-- Resources and their role mappings (see entities at the top of this file
+       for shorthands) -->
+
+  <!-- Admin service -->
+  <resource url="/aMenu.html*" description="Admin Menu"
+            tw:service="Admin Service">&saAndAdmin;</resource>
+  <resource url="/activeUsers.html*" description="list all active users"
+            tw:service="Admin Service">&adminAndMgr;</resource>
+  <resource url="/roles.html*" description="Roles List Page"
+            tw:service="Admin Service">&superOnly;</resource>
+  <resource url="/editRole.html*" description="Edit Role"
+            tw:service="Admin Service">&superOnly;</resource>
+  <resource url="/reload.html*" description="Reload Page"
+            tw:service="Admin Service">&saAndAdmin;</resource>
+  <resource url="/flush.html*" description="Flush Cache Page"
+            tw:service="Admin Service">&saAndAdmin;</resource>
+  <resource url="/clickstreams.jsp*" description="Click Streams Page"
+            tw:service="Admin Service">&saAndAdmin;</resource>
+  <!-- Only super-admin can modify resource definitions (these role->URL
+       mappings) and create new services -->
+  <resource url="/resources.html*" description="Resources List Page"
+            tw:service="Admin Service">&superOnly;</resource>
+  <resource url="/services.html*" description="Services List"
+            tw:service="Admin Service">&superOnly;</resource>
+
+  <!-- Annotation service -->
+  <resource url="/resourceMenu.html*" description="Resource Menu"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+  <resource url="/annotationServices.html*"
+            description="Annotation Services"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+  <resource url="/annotationServiceInfo.html*"
+            description="Annotation Service Info"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+  <resource url="/popupAnnotationServiceInfo.html*"
+            description="Annotation Service Info"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+  <resource url="/editAnnotationService.html*"
+            description="Edit Annotation Service"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+  <resource url="/saveAnnotationService.html*"
+            description="Save Annotation Service"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+  <resource url="/popupAddAnnotationService.html*"
+            description="Add Annotation Service"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+  <resource url="/schemas.html*" description="Annotation Schemas"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+  <resource url="/addSchema.html*" description="Add annotation schema"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+  <resource url="/popupAddSchema.html*" description="Add annotation schema"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+  <resource url="/schemaUploadInfo.html*"
+            description="Schema upload info page"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+  <resource url="/popupSchemaUploadInfo.html*"
+            description="Schema upload info page"
+            tw:service="Annotation Service">&adminAndMgr;</resource>
+
+  <!-- "pseudo-resource" used to determine which roles should be shown the
+       pool-mode annotator GUI link on the front page -->
+  <resource url="/annotator-gui/*" description="Annotator GUI URL"
+            tw:service="Annotation Service">
+    <tw:role name="annotator"/>
+  </resource>
+
+  <!-- Common service and help-related stuff -->
+  <resource url="/mainMenu.html*" description="Main Menu Page"
+            tw:service="Common Service">&allRoles;</resource>
+  <resource url="/helpInfo.html*" description="Help Page"
+            tw:service="Help">&allRoles;</resource>
+  <resource url="/forum.html*" description="Forum"
+            tw:service="Help">&allRoles;</resource>
+  <resource url="/supportMenu.html*" description="Support Menu"
+            tw:service="Common Service">&allRoles;</resource>
+  <resource url="/chat.html*" description="Chat"
+            tw:service="Help">&allRoles;</resource>
+  <resource url="/scripts/util.jsp*" description="DWR Util Page"
+            tw:service="Common Service">&allRoles;</resource>
+  <resource url="/scripts/engine.jsp*" description="Engine Page"
+            tw:service="Common Service">&allRoles;</resource>
+  <resource url="/download.html*" description="Download"
+            tw:service="Help">&allRoles;</resource>
+  <!-- Only admin can access forum administration -->
+  <resource url="/adm*" description="Forum Administration"
+            tw:service="Help">&saAndAdmin;</resource>
+
+  <!-- Documents service -->
+  <resource url="/corpora.html*" description="DocService Home Page"
+            tw:service="Documents Service">&adminAndMgr;</resource>
+  <resource url="/editUploadCorpus.html*" description="Upload Corpus"
+            tw:service="Documents Service">&adminAndMgr;</resource>
+  <resource url="/saveUploadCorpus.html*" description="Upload Corpus"
+            tw:service="Documents Service">&adminAndMgr;</resource>
+  <resource url="/corpusUploadInfo.html*" description="Corpus upload info"
+            tw:service="Documents Service">&adminAndMgr;</resource>
+  <resource url="/popupCorpusUploadInfo.html*" description="Corpus upload info"
+            tw:service="Documents Service">&adminAndMgr;</resource>
+  <resource url="/saveCorpus.html*" description="Save Corpus"
+            tw:service="Documents Service">&adminAndMgr;</resource>
+  <resource url="/documentsInCorpus.html*" description="Documents in corpus"
+            tw:service="Documents Service">&adminAndMgr;</resource>
+  <resource url="/datastore.html*"
+            description="Download Datastore"
+            tw:service="Documents Service">&adminAndMgr;</resource>
+  <resource url="/corpus.html*"
+            description="Download Corpus"
+            tw:service="Documents Service">&adminAndMgr;</resource>
+  <resource url="/annicgui.html*" description="ANNIC GUI"
+            tw:service="Documents Service">&adminAndMgr;</resource>
+  <resource url="/viewDocument.html*"
+            description="View document in annotator GUI"
+            tw:service="Documents Service">&adminAndMgr;</resource>
+  <resource url="/annotatorGui.html*"
+            description="Launch pool-mode Annotator GUI"
+            tw:service="Documents Service">&allRoles;</resource>
+
+  <!-- Ontologies service -->
+  <resource url="/ontologyRepositoryList.html*"
+            description="Ontology Repository List"
+            tw:service="Ontologies Service">&saAndAdmin;</resource>
+  <resource url="/addOntologyRepository.html*"
+            description="Add Ontology Repository"
+            tw:service="Ontologies Service">&saAndAdmin;</resource>
+
+  <!-- User service -->
+  <resource url="/editProfile.html*"
+            description="User Profile Edit Page"
+            tw:service="User Service">&allRoles;</resource>
+  <resource url="/passwordHint.html*" description="Password Hint Page"
+            tw:service="User Service">&allRoles;</resource>
+  <resource url="/signup.html*" description="SignUp Page"
+            tw:service="User Service">&allRoles;</resource>
+  <resource url="/users.html*" description="Users List Page"
+            tw:service="User Service">&saAndAdmin;</resource>
+  <resource url="/editUser.html*" description="Users Edit Page"
+            tw:service="User Service">&saAndAdmin;</resource>
+  <resource url="/bulkUpload.html*" description="Bulk upload form"
+            tw:service="User Service">&saAndAdmin;</resource>
+  <resource url="/bulkSave.html*" description="Bulk upload target"
+            tw:service="User Service">&saAndAdmin;</resource>
+
+  <!-- Workflow service -->
+  <!-- Note that by default only superadmin can modify process definitions -->
+  <resource url="/processDefinitionList.html?method=list*"
+            description="Process Definitions List Page"
+            tw:service="Workflow Service">&superOnly;</resource>
+  <resource url="/processDefinitionUpload.html*"
+            description="Upload Process Definition"
+            tw:service="Workflow Service">&superOnly;</resource>
+  <resource url="/processInstanceList.html*"
+            description="Process Instance List Page"
+            tw:service="Workflow Service">&adminAndMgr;</resource>
+  <!-- Following specific mapping is required to make menus work -->
+  <resource url="/processInstanceList.html?method=listAll*"
+            description="Running Projects"
+            tw:service="Workflow Service">&adminAndMgr;</resource>
+  <resource url="/editActors.html*"
+            description="Edit actors for process instance"
+            tw:service="Workflow Service">&adminAndMgr;</resource>
+  <resource url="/saveActors.html*"
+            description="Save actors for process instance"
+            tw:service="Workflow Service">&adminAndMgr;</resource>
+  <resource url="/taskInstanceList.html?method=list*"
+            description="Task Instance List Page"
+            tw:service="Workflow Service">&adminAndMgr;</resource>
+  <resource url="/taskInstanceList.html?method=listByActor*"
+            description="Pending Task Instance Page"
+            tw:service="Workflow Service">&adminAndMgr;</resource>
+  <resource url="/workflowMenu.html*" description="Work Flow Home Page"
+            tw:service="Workflow Service">&adminAndMgr;</resource>
+  <resource url="/editProject.html*" description="Edit Project"
+            tw:service="Workflow Service">&adminAndMgr;</resource>
+  <resource url="/loadProject.html?method=load*"
+            description="New Process Instance"
+            tw:service="Workflow Service">&adminAndMgr;</resource>
+  <resource url="/projects.html*"
+            description="Workflow Templates"
+            tw:service="Workflow Service">&adminAndMgr;</resource>
+  <!-- Following specific mapping is required to make menus work -->
+  <resource url="/projects.html?method=listAll*"
+            description="All Workflow Templates"
+            tw:service="Workflow Service">&adminAndMgr;</resource>
+
+  <!-- Catch-all for anything not further restricted above -->
+  <resource url="/**/*.html*" description="All the Pages"
+            tw:service="Common Service">&allRoles;</resource>
+
+  <!-- JForum stuff, you're unlikely to need to change this -->
+  <jforum_categories categories_id="1" title="Help &amp; Support" display_order="1" moderated="false"/>
+  <jforum_config config_name="most.users.ever.online" config_value="1" config_id="1"/>
+  <jforum_config config_name="most.users.ever.online.date" config_value="1222346121220" config_id="2"/>
+  <jforum_forums forum_id="1" categories_id="1" forum_name="General Discussion" forum_desc="This is a General Discussion forum" forum_order="1" forum_topics="2" forum_last_post_id="1" moderated="false"/>
+  <jforum_groups group_id="1" group_name="General" group_description="General Users" parent_id="0"/>
+  <jforum_groups group_id="2" group_name="Administration" group_description="Administrators" parent_id="0"/>
+  <jforum_groups group_id="3" group_name="Manager" group_description="Managers" parent_id="0"/>
+  <jforum_posts post_id="1" topic_id="1" forum_id="1" user_id="2" post_time="2005-01-04 16:59:54.0" poster_ip="127.0.0.1" enable_bbcode="true" enable_html="false" enable_smilies="true" enable_sig="true" post_edit_count="0" status="true" attach="false" need_moderate="false"/>
+  <jforum_posts_text post_id="1" post_text="[b][color=blue][size=18]Welcome to GATE Teamware Forum :!: [/size][/color][/b]&#10;Here you can ask all questions related to GATE Teamware." post_subject="Welcome to JForum"/>
+  <jforum_role_values role_id="24" role_value="1"/>
+  <jforum_role_values role_id="25" role_value="1"/>
+  <jforum_role_values role_id="26" role_value="1"/>
+  <jforum_role_values role_id="27" role_value="1"/>
+  <jforum_role_values role_id="28" role_value="1"/>
+  <jforum_role_values role_id="29" role_value="1"/>
+  <jforum_role_values role_id="30" role_value="1"/>
+  <jforum_role_values role_id="31" role_value="1"/>
+  <jforum_role_values role_id="32" role_value="1"/>
+  <jforum_role_values role_id="33" role_value="1"/>
+  <jforum_role_values role_id="34" role_value="1"/>
+  <jforum_role_values role_id="35" role_value="1"/>
+  <jforum_role_values role_id="36" role_value="1"/>
+  <jforum_role_values role_id="37" role_value="1"/>
+  <jforum_role_values role_id="38" role_value="1"/>
+  <jforum_role_values role_id="39" role_value="1"/>
+  <jforum_role_values role_id="40" role_value="1"/>
+  <jforum_roles role_id="1" group_id="1" name="perm_vote"/>
+  <jforum_roles role_id="2" group_id="1" name="perm_karma_enabled"/>
+  <jforum_roles role_id="3" group_id="1" name="perm_anonymous_post"/>
+  <jforum_roles role_id="4" group_id="1" name="perm_create_poll"/>
+  <jforum_roles role_id="5" group_id="1" name="perm_bookmarks_enabled"/>
+  <jforum_roles role_id="6" group_id="1" name="perm_attachments_download"/>
+  <jforum_roles role_id="7" group_id="1" name="perm_create_sticky_announcement_topics"/>
+  <jforum_roles role_id="8" group_id="1" name="perm_moderation_log"/>
+  <jforum_roles role_id="9" group_id="2" name="perm_administration"/>
+  <jforum_roles role_id="10" group_id="2" name="perm_moderation"/>
+  <jforum_roles role_id="11" group_id="2" name="perm_moderation_post_remove"/>
+  <jforum_roles role_id="12" group_id="2" name="perm_moderation_post_edit"/>
+  <jforum_roles role_id="13" group_id="2" name="perm_moderation_topic_move"/>
+  <jforum_roles role_id="14" group_id="2" name="perm_moderation_topic_lockUnlock"/>
+  <jforum_roles role_id="15" group_id="2" name="perm_moderation_approve_messages"/>
+  <jforum_roles role_id="16" group_id="2" name="perm_create_sticky_announcement_topics"/>
+  <jforum_roles role_id="17" group_id="2" name="perm_vote"/>
+  <jforum_roles role_id="18" group_id="2" name="perm_create_poll"/>
+  <jforum_roles role_id="19" group_id="2" name="perm_karma_enabled"/>
+  <jforum_roles role_id="20" group_id="2" name="perm_bookmarks_enabled"/>
+  <jforum_roles role_id="21" group_id="2" name="perm_attachments_download"/>
+  <jforum_roles role_id="22" group_id="2" name="perm_moderation_log"/>
+  <jforum_roles role_id="23" group_id="2" name="perm_full_moderation_log"/>
+  <jforum_roles role_id="24" group_id="1" name="perm_forum"/>
+  <jforum_roles role_id="25" group_id="2" name="perm_forum"/>
+  <jforum_roles role_id="26" group_id="1" name="perm_anonymous_post"/>
+  <jforum_roles role_id="27" group_id="2" name="perm_anonymous_post"/>
+  <jforum_roles role_id="28" group_id="1" name="perm_category"/>
+  <jforum_roles role_id="29" group_id="2" name="perm_category"/>
+  <jforum_roles role_id="30" group_id="1" name="perm_read_only_forums"/>
+  <jforum_roles role_id="31" group_id="2" name="perm_read_only_forums"/>
+  <jforum_roles role_id="32" group_id="1" name="perm_html_disabled"/>
+  <jforum_roles role_id="33" group_id="2" name="perm_html_disabled"/>
+  <jforum_roles role_id="34" group_id="1" name="perm_attachments_enabled"/>
+  <jforum_roles role_id="35" group_id="2" name="perm_attachments_enabled"/>
+  <jforum_roles role_id="36" group_id="1" name="perm_reply_only"/>
+  <jforum_roles role_id="37" group_id="2" name="perm_reply_only"/>
+  <jforum_roles role_id="38" group_id="1" name="perm_reply_without_moderation"/>
+  <jforum_roles role_id="39" group_id="2" name="perm_reply_without_moderation"/>
+  <jforum_roles role_id="40" group_id="2" name="perm_moderation_forums"/>
+  <jforum_sessions session_id="DCC4FC63F3A1ED28EEC83A10A07BA558" session_user_id="2" session_start="2008-09-25 16:35:24.0" session_time="0" session_ip="" session_page="0"/>
+  <jforum_sessions session_id="EBD8B51A205146CBDDEFC4C2DE0DA1F4" session_user_id="3" session_start="2008-09-25 17:38:13.0" session_time="0" session_ip="" session_page="0"/>
+  <jforum_smilies smilie_id="1" code=":)" url="&lt;img src=&quot;../../images/smilies/3b63d1616c5dfcf29f8a7a031aaa7cad.gif&quot; /&gt;" disk_name="3b63d1616c5dfcf29f8a7a031aaa7cad.gif"/>
+  <jforum_smilies smilie_id="2" code=":-)" url="&lt;img src=&quot;../../images/smilies/3b63d1616c5dfcf29f8a7a031aaa7cad.gif&quot;/&gt;" disk_name="3b63d1616c5dfcf29f8a7a031aaa7cad.gif"/>
+  <jforum_smilies smilie_id="3" code=":D" url="&lt;img src=&quot;../../images/smilies/283a16da79f3aa23fe1025c96295f04f.gif&quot; /&gt;" disk_name="283a16da79f3aa23fe1025c96295f04f.gif"/>
+  <jforum_smilies smilie_id="4" code=":-D" url="&lt;img src=&quot;../../images/smilies/283a16da79f3aa23fe1025c96295f04f.gif&quot; /&gt;" disk_name="283a16da79f3aa23fe1025c96295f04f.gif"/>
+  <jforum_smilies smilie_id="5" code=":(" url="&lt;img src=&quot;../../images/smilies/9d71f0541cff0a302a0309c5079e8dee.gif&quot; /&gt;" disk_name="9d71f0541cff0a302a0309c5079e8dee.gif"/>
+  <jforum_smilies smilie_id="6" code=":mrgreen:" url="&lt;img src=&quot;../../images/smilies/ed515dbff23a0ee3241dcc0a601c9ed6.gif&quot; /&gt;" disk_name="ed515dbff23a0ee3241dcc0a601c9ed6.gif"/>
+  <jforum_smilies smilie_id="7" code=":-o" url="&lt;img src=&quot;../../images/smilies/47941865eb7bbc2a777305b46cc059a2.gif&quot;  /&gt;" disk_name="47941865eb7bbc2a777305b46cc059a2.gif"/>
+  <jforum_smilies smilie_id="8" code=":shock:" url="&lt;img src=&quot;../../images/smilies/385970365b8ed7503b4294502a458efa.gif&quot; /&gt;" disk_name="385970365b8ed7503b4294502a458efa.gif"/>
+  <jforum_smilies smilie_id="9" code=":?:" url="&lt;img src=&quot;../../images/smilies/0a4d7238daa496a758252d0a2b1a1384.gif&quot; /&gt;" disk_name="0a4d7238daa496a758252d0a2b1a1384.gif"/>
+  <jforum_smilies smilie_id="10" code="8)" url="&lt;img src=&quot;../../images/smilies/b2eb59423fbf5fa39342041237025880.gif&quot;  /&gt;" disk_name="b2eb59423fbf5fa39342041237025880.gif"/>
+  <jforum_smilies smilie_id="11" code=":lol:" url="&lt;img src=&quot;../../images/smilies/97ada74b88049a6d50a6ed40898a03d7.gif&quot; /&gt;" disk_name="97ada74b88049a6d50a6ed40898a03d7.gif"/>
+  <jforum_smilies smilie_id="12" code=":x" url="&lt;img src=&quot;../../images/smilies/1069449046bcd664c21db15b1dfedaee.gif&quot;  /&gt;" disk_name="1069449046bcd664c21db15b1dfedaee.gif"/>
+  <jforum_smilies smilie_id="13" code=":P" url="&lt;img src=&quot;../../images/smilies/69934afc394145350659cd7add244ca9.gif&quot; /&gt;" disk_name="69934afc394145350659cd7add244ca9.gif"/>
+  <jforum_smilies smilie_id="14" code=":-P" url="&lt;img src=&quot;../../images/smilies/69934afc394145350659cd7add244ca9.gif&quot; /&gt;" disk_name="69934afc394145350659cd7add244ca9.gif"/>
+  <jforum_smilies smilie_id="15" code=":oops:" url="&lt;img src=&quot;../../images/smilies/499fd50bc713bfcdf2ab5a23c00c2d62.gif&quot; /&gt;" disk_name="499fd50bc713bfcdf2ab5a23c00c2d62.gif"/>
+  <jforum_smilies smilie_id="16" code=":cry:" url="&lt;img src=&quot;../../images/smilies/c30b4198e0907b23b8246bdd52aa1c3c.gif&quot; /&gt;" disk_name="c30b4198e0907b23b8246bdd52aa1c3c.gif"/>
+  <jforum_smilies smilie_id="17" code=":evil:" url="&lt;img src=&quot;../../images/smilies/2e207fad049d4d292f60607f80f05768.gif&quot; /&gt;" disk_name="2e207fad049d4d292f60607f80f05768.gif"/>
+  <jforum_smilies smilie_id="18" code=":twisted:" url="&lt;img src=&quot;../../images/smilies/908627bbe5e9f6a080977db8c365caff.gif&quot; /&gt;" disk_name="908627bbe5e9f6a080977db8c365caff.gif"/>
+  <jforum_smilies smilie_id="19" code=":roll:" url="&lt;img src=&quot;../../images/smilies/2786c5c8e1a8be796fb2f726cca5a0fe.gif&quot; /&gt;" disk_name="2786c5c8e1a8be796fb2f726cca5a0fe.gif"/>
+  <jforum_smilies smilie_id="20" code=":wink:" url="&lt;img src=&quot;../../images/smilies/8a80c6485cd926be453217d59a84a888.gif&quot; /&gt;" disk_name="8a80c6485cd926be453217d59a84a888.gif"/>
+  <jforum_smilies smilie_id="21" code=";)" url="&lt;img src=&quot;../../images/smilies/8a80c6485cd926be453217d59a84a888.gif&quot; /&gt;" disk_name="8a80c6485cd926be453217d59a84a888.gif"/>
+  <jforum_smilies smilie_id="22" code=";-)" url="&lt;img src=&quot;../../images/smilies/8a80c6485cd926be453217d59a84a888.gif&quot; /&gt;" disk_name="8a80c6485cd926be453217d59a84a888.gif"/>
+  <jforum_smilies smilie_id="23" code=":!:" url="&lt;img src=&quot;../../images/smilies/9293feeb0183c67ea1ea8c52f0dbaf8c.gif&quot; /&gt;" disk_name="9293feeb0183c67ea1ea8c52f0dbaf8c.gif"/>
+  <jforum_smilies smilie_id="24" code=":?" url="&lt;img src=&quot;../../images/smilies/136dd33cba83140c7ce38db096d05aed.gif&quot; /&gt;" disk_name="136dd33cba83140c7ce38db096d05aed.gif"/>
+  <jforum_smilies smilie_id="25" code=":idea:" url="&lt;img src=&quot;../../images/smilies/8f7fb9dd46fb8ef86f81154a4feaada9.gif&quot; /&gt;" disk_name="8f7fb9dd46fb8ef86f81154a4feaada9.gif"/>
+  <jforum_smilies smilie_id="26" code=":arrow:" url="&lt;img src=&quot;../../images/smilies/d6741711aa045b812616853b5507fd2a.gif&quot; /&gt;" disk_name="d6741711aa045b812616853b5507fd2a.gif"/>
+  <jforum_smilies smilie_id="27" code=":hunf:" url="&lt;img src=&quot;../../images/smilies/0320a00cb4bb5629ab9fc2bc1fcc4e9e.gif&quot; /&gt;" disk_name="0320a00cb4bb5629ab9fc2bc1fcc4e9e.gif"/>
+  <jforum_smilies smilie_id="28" code=":-(" url="&lt;img src=&quot;../../images/smilies/9d71f0541cff0a302a0309c5079e8dee.gif&quot;  /&gt;" disk_name="9d71f0541cff0a302a0309c5079e8dee.gif"/>
+  <jforum_smilies smilie_id="29" code=":XD:" url="&lt;img src=&quot;../../images/smilies/49869fe8223507d7223db3451e5321aa.gif&quot; /&gt;" disk_name="49869fe8223507d7223db3451e5321aa.gif"/>
+  <jforum_smilies smilie_id="30" code=":thumbup:" url="&lt;img src=&quot;../../images/smilies/e8a506dc4ad763aca51bec4ca7dc8560.gif&quot; /&gt;" disk_name="e8a506dc4ad763aca51bec4ca7dc8560.gif"/>
+  <jforum_smilies smilie_id="31" code=":thumbdown:" url="&lt;img src=&quot;../../images/smilies/e78feac27fa924c4d0ad6cf5819f3554.gif&quot; /&gt;" disk_name="e78feac27fa924c4d0ad6cf5819f3554.gif"/>
+  <jforum_smilies smilie_id="32" code=":|" url="&lt;img src=&quot;../../images/smilies/1cfd6e2a9a2c0cf8e74b49b35e2e46c7.gif&quot; /&gt;" disk_name="1cfd6e2a9a2c0cf8e74b49b35e2e46c7.gif"/>
+  <jforum_topics topic_id="1" forum_id="1" topic_title="Welcome to GATE Teamware Forum" user_id="2" topic_time="2005-01-04 16:59:54.0" topic_views="11" topic_replies="0" topic_status="0" topic_vote_id="0" topic_type="0" topic_first_post_id="1" topic_last_post_id="1" topic_moved_id="0" moderated="false"/>
+  <jforum_user_groups group_id="1" user_id="1"/>
+  <jforum_user_groups group_id="2" user_id="2"/>
+  <jforum_users user_id="1" username="Anonymous" user_password="nopass" user_session_time="0" user_session_page="0" user_regdate="2008-09-24 13:43:10.0" user_posts="0" user_timezone="" user_lang="" user_dateformat="%d/%M/%Y %H:%i" user_new_privmsg="0" user_unread_privmsg="0" user_viewemail="false" user_attachsig="true" user_allowhtml="false" user_allowbbcode="true" user_allowsmilies="true" user_allowavatar="true" user_allow_pm="true" user_allow_viewonline="true" user_notify="true" user_notify_always="false" user_notify_text="false" user_notify_pm="true" user_popup_pm="true" rank_id="0" user_avatar_type="0" user_email="" user_viewonline="true"/>
+  <jforum_users user_id="2" username="superadmin" user_password="1b359d8753858b55befa0441067aaed3" user_session_time="0" user_session_page="0" user_regdate="2008-09-24 13:43:10.0" user_posts="1" user_timezone="" user_lang="" user_dateformat="%d/%M/%Y %H:%i" user_new_privmsg="0" user_unread_privmsg="0" user_viewemail="false" user_attachsig="true" user_allowhtml="false" user_allowbbcode="true" user_allowsmilies="true" user_allowavatar="true" user_allow_pm="true" user_allow_viewonline="true" user_notify="true" user_notify_always="false" user_notify_text="false" user_notify_pm="true" user_popup_pm="true" rank_id="0" user_avatar_type="0" user_email="agaton@dcs.shef.ac.uk" user_viewonline="true"/>
+</dataset>

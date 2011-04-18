@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="GaS-server" default="all">
+  <!-- sanity check 
+  <fail message="SAFE will not build using the ant in gate/bin.  Use gate-extras/ant/bin/ant instead">
+    <condition>
+      <available file="${ant.home}/plugins/ANNIE/creole.xml" />
+    </condition>
+  </fail>
+  -->
+  <import file="../../lib/lib.xml" />
+
+  <!--
+  GaS server code is segmented into several distinct parts.  The "worker" part
+  is the JMS message consumer that receives messages and processes them.  The
+  "endpoint" part is the web service endpoint that receives requests and
+  packages them up into JMS messages, and is itself split up into an "api" part
+  - the interfaces etc. required by both server and clients - and an
+  "implementation" part - the server-side implementation classes.
+  -->
+
+  <!--=========== Macro definitions =============-->
+
+  <!-- prepare a module - create directories -->
+  <macrodef name="prepare">
+    <attribute name="module" />
+    <sequential>
+      <mkdir dir="@{module}/classes" />
+    </sequential>
+  </macrodef>
+
+  <!-- compile sources for a module -->
+  <macrodef name="compile">
+    <attribute name="module" />
+    <element name="extrastuff" implicit="true" optional="true" />
+    <sequential>
+      <javac srcdir="@{module}/src"
+             destdir="@{module}/classes"
+             debug="true"
+             debuglevel="lines,source"
+             source="1.5"
+             target="1.5"
+             encoding="UTF-8"
+             classpathref="@{module}.compile.classpath">
+        <extrastuff/>
+      </javac>
+      <copy todir="@{module}/classes">
+        <fileset dir="@{module}/src" excludes="**/*.java" />
+      </copy>
+    </sequential>
+  </macrodef>
+
+  <!-- package up the classes for a module into a JAR and publish it to the
+  exports directory -->
+  <macrodef name="package">
+    <attribute name="module" />
+    <sequential>
+      <jar destfile="gas-@{module}.jar">
+        <fileset dir="@{module}/classes" />
+      </jar>
+    <copy todir="${gas.dir}" file="gas-@{module}.jar" />
+    </sequential>
+  </macrodef>
+
+  <!-- clean up a module -->
+  <macrodef name="clean">
+    <attribute name="module" />
+    <sequential>
+      <delete dir="@{module}/classes" />
+      <delete file="gas-@{module}.jar" />
+    </sequential>
+  </macrodef>
+
+  <!--============ Common stuff ===============-->
+
+  <path id="common.compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset id="pattern.common.compile.classpath">
+        <patternset refid="pattern.gate" />
+        <patternset refid="pattern.jdom" />
+        <patternset refid="pattern.commons-logging" />
+        <patternset refid="pattern.spring" />
+      </patternset>
+    </fileset>
+  </path>
+
+  <target name="common.prepare">
+    <prepare module="common" />
+  </target>
+
+  <target name="common.compile" depends="common.prepare">
+    <compile module="common" />
+  </target>
+
+  <target name="common.jar" depends="common.compile">
+    <package module="common" />
+  </target>
+
+  <target name="common.clean">
+    <clean module="common" />
+  </target>
+
+
+  <!--============ Worker ===============-->
+
+  <path id="worker.compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset id="pattern.worker.compile.classpath">
+        <patternset refid="pattern.common.compile.classpath" />
+        <patternset refid="pattern.activemq-5" />
+        <patternset refid="pattern.executive-proxy-api" />
+        <patternset refid="pattern.docservice-proxy-api" />
+        <patternset refid="pattern.servletapi" />
+        <patternset refid="pattern.safe-common" />
+      </patternset>
+    </fileset>
+    <pathelement location="gas-common.jar" />
+  </path>
+
+  <target name="worker.prepare">
+    <prepare module="worker" />
+  </target>
+
+  <target name="worker.compile" depends="worker.prepare, common.jar">
+    <require lib="executive-proxy-api" />
+    <require lib="docservice-proxy-api" />
+    <compile module="worker" />
+  </target>
+
+  <target name="worker.jar" depends="worker.compile">
+    <package module="worker" />
+  </target>
+
+  <target name="worker.clean">
+    <clean module="worker" />
+  </target>
+
+
+  <!--============ Endpoint-API ===============-->
+
+  <path id="endpoint-api.compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset id="pattern.endpoint-api.compile.classpath">
+        <patternset refid="pattern.common.compile.classpath" />
+        <patternset refid="pattern.activemq-5" />
+        <patternset refid="pattern.cxf" />
+        <patternset refid="pattern.servletapi" />
+      </patternset>
+    </fileset>
+    <pathelement location="gas-common.jar" />
+  </path>
+
+  <target name="endpoint-api.prepare">
+    <prepare module="endpoint-api" />
+  </target>
+
+  <!-- compile the interface -->
+  <target name="endpoint-api.compile" depends="endpoint-api.prepare, common.jar">
+    <compile module="endpoint-api" />
+  </target>
+
+  <!-- Build the endpoint API JAR file, including the JAX-WS artifacts (d) -->
+  <target name="endpoint-api.jar" depends="endpoint-api.compile">
+    <package module="endpoint-api" />
+  </target>
+
+  <target name="endpoint-api.clean">
+    <clean module="endpoint-api" />
+    <delete dir="endpoint-api/generated" />
+  </target>
+
+  <!--================== Endpoint implementation =================-->
+
+  <path id="endpoint.compile.classpath">
+    <fileset dir="${lib.dir}">
+      <patternset refid="pattern.endpoint-api.compile.classpath" />
+      <patternset refid="pattern.safe-common" />
+    </fileset>
+    <pathelement location="gas-common.jar" />
+    <pathelement location="gas-endpoint-api.jar" />
+  </path>
+
+  <target name="endpoint.prepare">
+    <prepare module="endpoint" />
+  </target>
+
+  <!-- compile the implementation (b) -->
+  <target name="endpoint.compile"
+          depends="endpoint.prepare, endpoint-api.jar, common.jar">
+    <compile module="endpoint" />
+  </target>
+
+  <!-- Build the endpoint implementation JAR file (e) -->
+  <target name="endpoint.jar" depends="endpoint.compile">
+    <package module="endpoint" />
+  </target>
+
+  <target name="endpoint.clean">
+    <clean module="endpoint" />
+  </target>
+
+  <!--================== Everything ==================-->
+
+  <target name="all" depends="common.jar, worker.jar, endpoint-api.jar, endpoint.jar" />
+
+  <!--================== Deployment =================-->
+
+  <property name="endpoint.dir" location="endpoint" />
+  <property name="endpoint.webapp.dir" location="${endpoint.dir}/webapp" />
+  <property name="endpoint.conf.dir" location="${endpoint.dir}/conf" />
+
+  <property name="staging.dir" location="staging" />
+
+  <!-- libraries required by the endpoint -->
+  <patternset id="libs.endpointonly">
+    <patternset refid="pattern.jdom" />
+    <patternset refid="pattern.safe-common" />
+    <patternset refid="pattern.javamail" />
+    <patternset refid="pattern.cxf" />
+    <patternset refid="pattern.activemq-5" />
+    <patternset refid="pattern.commons-logging" />
+    <patternset refid="pattern.log4j" />
+    <patternset refid="pattern.spring" />
+    <patternset refid="pattern.xbean" />
+  </patternset>
+
+  <!-- If an https truststore is configured, copy it and the relevant config
+  file into a staging directory -->
+  <target name="stage-web.https"
+       depends="stage-web.https.mkdir, stage-web.https.copy" />
+  
+  <target name="stage-web.https.mkdir">
+    <mkdir dir="${staging.dir}/https" />
+  </target>
+
+  <target name="stage-web.https.copy" if="https.truststore">
+    <mkdir dir="${staging.dir}/https/spring" />
+    <copy overwrite="true" todir="${staging.dir}/https/spring"
+          file="${endpoint.conf.dir}/https-client.xml">
+      <filterset>
+        <filter token="TRUSTSTORE_PASSWORD" value="${https.truststore.password}" />
+      </filterset>
+    </copy>
+    <mkdir dir="${staging.dir}/https/classes" />
+    <copy tofile="${staging.dir}/https/classes/trusted-certs.keystore"
+          file="${https.truststore}" overwrite="true" />
+  </target>
+
+
+  <!-- Copy the JARs required by the endpoint into a staging area -->
+  <target name="stage-web.endpointonly" depends="common.jar, endpoint.jar, stage-web.https">
+    <require lib="safe-common" />
+
+    <mkdir dir="${staging.dir}/endpointonly" />
+    <copy todir="${staging.dir}/endpointonly" flatten="true">
+      <fileset dir="${lib.dir}">
+        <patternset refid="libs.endpointonly" />
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- copy all the required libraries for the complete WAR into a staging area
+  -->
+  <target name="stage-web.complete"
+          depends="common.jar, worker.jar, endpoint.jar, stage-web.https">
+    <require lib="docservice-proxy-api" />
+    <require lib="docservice-proxy-impl" />
+    <require lib="executive-proxy-api" />
+    <require lib="executive-proxy-impl" />
+    <require lib="safe-common" />
+
+    <mkdir dir="${staging.dir}/complete" />
+    <copy todir="${staging.dir}/complete" flatten="true">
+      <fileset dir="${lib.dir}">
+        <patternset refid="libs.endpointonly" />
+        <patternset refid="pattern.gate" />
+        <patternset refid="pattern.docservice-proxy" />
+        <patternset refid="pattern.executive-proxy" />
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- build a complete WAR file to run a broker, endpoint and an
+       embedded worker in the same web application -->
+  <target name="war.complete"
+          depends="common.jar, worker.jar, endpoint-api.jar, endpoint.jar, stage-web.complete">
+    <war destfile="gate-service.war"
+         webxml="${endpoint.conf.dir}/web.xml"
+         duplicate="preserve">
+      <fileset dir="${endpoint.webapp.dir}" />
+      <lib dir="${staging.dir}/complete" />
+      <lib file="gas-common.jar" />
+      <lib file="gas-worker.jar" />
+      <lib file="gas-endpoint-api.jar" />
+      <lib file="gas-endpoint.jar" />
+      <webinf dir="${staging.dir}/https" />
+    </war>
+  </target>
+
+  <target name="war.endpointonly"
+          depends="common.jar, endpoint-api.jar, endpoint.jar, stage-web.endpointonly">
+    <war destfile="gate-service-endpoint.war"
+         webxml="${endpoint.conf.dir}/web.xml"
+         duplicate="preserve">
+      <fileset dir="${endpoint.webapp.dir}">
+        <exclude name="WEB-INF/spring/worker*" />
+      </fileset>
+      <lib dir="${staging.dir}/endpointonly" />
+      <lib file="gas-common.jar" />
+      <lib file="gas-endpoint-api.jar" />
+      <lib file="gas-endpoint.jar" />
+      <webinf dir="${staging.dir}/https" />
+    </war>
+  </target>
+
+  <!-- Standalone worker -->
+  <property name="worker.static-files.dir" location="worker/static-files" />
+  <property name="worker.conf.dir" location="worker/conf" />
+
+  <target name="stage.worker" depends="stage.worker.main, stage.worker.https"/>
+
+  <target name="stage.worker.main">
+    <mkdir dir="${staging.dir}/gate-service-worker" />
+    <mkdir dir="${staging.dir}/gate-service-worker/lib" />
+    <copy todir="${staging.dir}/gate-service-worker/lib" flatten="true">
+      <fileset dir="${lib.dir}">
+        <patternset refid="pattern.gate" />
+        <patternset refid="pattern.safe-common" />
+        <patternset refid="pattern.activemq-5" />
+        <patternset refid="pattern.commons-daemon" />
+        <patternset refid="pattern.commons-logging" />
+        <patternset refid="pattern.log4j" />
+        <patternset refid="pattern.spring" />
+        <patternset refid="pattern.xbean" />
+        <patternset refid="pattern.docservice-proxy" />
+        <patternset refid="pattern.executive-proxy" />
+        <!-- CXF required by {docservice,executive}-proxy-impl -->
+        <patternset refid="pattern.cxf" />
+      </fileset>
+      <fileset file="gas-common.jar" />
+      <fileset file="gas-worker.jar" />
+    </copy>
+  </target>
+
+  <target name="stage.worker.https" if="https.truststore">
+    <mkdir dir="${staging.dir}/gate-service-worker/gate-service/classes" />
+    <copy todir="${staging.dir}/gate-service-worker/gate-service/classes"
+          file="${worker.conf.dir}/cxf.xml">
+      <filterset>
+        <filter token="TRUSTSTORE_PASSWORD" value="${https.truststore.password}" />
+      </filterset>
+    </copy>
+    <copy tofile="${staging.dir}/gate-service-worker/gate-service/classes/trusted-certs.keystore"
+          file="${https.truststore}" />
+  </target>
+
+  <target name="dist.worker" depends="common.jar, worker.jar, stage.worker">
+    <zip destfile="gate-service-worker.zip" duplicate="preserve">
+      <!-- libraries -->
+      <fileset dir="${staging.dir}" includes="gate-service-worker/**" />
+      <!-- config, except gas-worker -->
+      <zipfileset prefix="gate-service-worker"
+                  dir="${worker.static-files.dir}"
+                  excludes="gas-worker" />
+      <!-- gas-worker script, with execute permissions -->
+      <zipfileset prefix="gate-service-worker"
+                  dir="${worker.static-files.dir}"
+                  includes="gas-worker"
+                  filemode="755" />
+      <!-- pull everything else in from endpoint/webapp/WEB-INF, except the
+      bean definition files that are specific to the webapp
+      (webapp-properties.xml) and the endpoint -->
+      <zipfileset prefix="gate-service-worker/gate-service"
+                  dir="${endpoint.webapp.dir}/WEB-INF">
+        <exclude name="spring/webapp-properties.xml" />
+        <exclude name="spring/endpoint*" />
+        <exclude name="classes/log4j-paths.properties" />
+      </zipfileset>
+    </zip>
+  </target>
+
+  <target name="clean" depends="common.clean, worker.clean, endpoint-api.clean, endpoint.clean">
+    <delete dir="${staging.dir}" />
+    <delete file="gate-service.war" />
+  </target>
+</project>

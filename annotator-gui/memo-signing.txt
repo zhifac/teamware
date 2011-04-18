@@ -1,0 +1,3 @@
+﻿C:\Progs\j2sdk1.4.2_09\bin\keytool -genkey -alias AnnotatorGUI -keystore ./keystore -storepass storepass -keypass keypass -dname "cn=GATE team - NLP Group - University of Sheffield, ou=Department of Computer Science, o=University of Sheffield, L=Sheffield, c=UK"
+
+C:\Progs\j2sdk1.4.2_09\bin\jarsigner -certs -verbose -verify activation.jar

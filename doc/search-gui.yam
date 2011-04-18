@@ -1,0 +1,146 @@
+Search GUIs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%contents
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Search GUI overview
+
+- schema annotation editor GUIs is the most advanced actually
+- all the GUIs should shared as much code as possible
+- we have to choose a query language that would be usable by all GUI: jape, Annic or regex ?
+
+%2 Abstract of opinions already expressed
+
+- K "replace all" is dangerous for the non-expert user
+- K restrict the search to regular expressions over text tokens for non-expert user
+- K keeping the more powerful annotation-based search for ANNIC
+- K AnnGUI to implement only the search, but not the replace functionality
+- K search functionality in the schema annotation editor, then one could just click "next", "next" and, then, on the right part, for example, select the annotation type and features, as if he has highlighted the piece of text itself.
+- K Search in ANNIC GUI, based on annotations and patterns, seem more natural, especially as the GUI is tailored to showing better all occurrences, so one can easily decide at a glance whether to do "replace all"
+- H if it is possible to write a good ANNIC-like pattern which improves the annotation performance, then this pattern should be captured and added to a JAPE phase in the processing before the AGUI gets launched?
+- I I agree that we don't want to encourage unskilled annotators to take shortcuts that might compromise the data
+- I We plan to have a "Annotate all" button in the Schema GUI similar to OAT that should match all IDENTICAL strings
+- T I agree with the idea to put just simple search and replace function in AnnGui and more complex in AnniC but the code in AnnGui should be a subset of the one in Annic for easier maintenance.
+- T For the danger of replace all, a preview may be a good idea, easiest way is to generate a new temporary document with the change highlighted ?
+- T Predefined regex would be very useful.
+- T In fact we have already at least two search and replace functions that is Jape rule and annic pattern, so we should make possible to reuse one of the search in the two others or even make the search and replace function writing Jape rule or annic pattern directly.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Search GUI in Document Editor
+
+%2 Improvements
+
+- already fine
+
+%2 Features
+
+- Search on
+  - only text without looking for annotation
+- Search options
+  - case insensitive
+  - whole word
+  - regular expression
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Search and annotate GUI in Default Annotation Editor
+
+%2 Improvements
+
+- search and annotate GUI to add
+
+%2 Features
+
+- Search on
+  - only text without looking for annotation
+  - (text inside) one annotation type
+  - (text inside) all annotation types
+- Search options
+  - case insensitive
+  - regular expression
+- Search actions
+  - find first, next, previous
+- Search results
+  - highlight in the whole document
+- Annotate on
+  - annotations found by search
+- Annotate with what
+  - existing annotation name
+  - new annotation name
+- Annotate actions
+  - annotate & next
+- Annotate results
+  - directly replacing it in the document
+
+%2 Design
+
+%<
+----------------------------------------------------------
+ _______________________
+|Edited/New_Annotation_V| (drop-down modifiable list)
+ __________   __________
+|Feature__V| |Value____V|
+ __________   __________
+|Feature__V| |Value____V|
+
+... (the top of the GUI is the same as before)
+_
+V Search and annotate (all what is below can be hidden)
+ _______________________   _        _
+|V_Searched_Text________| |_| Case |_| Regexp
+
+|First| |Previous| |Next| |Annotate|
+_
+V Annotate options
+ ______________________
+| Whole text          V| |Ann. & next| |Ann. all|
+| Any annotation       | 
+| Annotation1          | 
+|_Annotation2__________|
+
+-----------------------------------------------------------
+%>
+
+%2 Behavior
+- \|Next\| and \|First\| button can be merge into one with the \|First\| behavior only the first time the button is used
+- at the beginning \|Previous\| \|Next\| \|Annotate & next\| \|Annotate all\| are disabled
+- when \|first\| is activated and find a match \|Next\| is enabled
+- when \|Next\| is activated and find a match \|Previous\| is enabled
+- when is \|Next\| is activated and find a match and "Annotate annotations" box is not empty \|Annotate & next\| \|Annotate all\| are enabled
+- when \|annotate all\| is activated it become \|Undo\| until a button is activated or the search text or search options are modified
+- when the search text or search options are modified all button are disabled but \|first\|
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Search and annotate GUI in Schema Annotation Editor
+
+%2 Improvements
+
+- already fine, I will steal ideas from ^ )
+
+%2 Features
+
+- Search on
+  - only text without looking for annotation
+- Search options
+  - case insensitive
+  - regular expression
+- Search actions
+  - find first, next
+- Search results
+  - highlight in the whole document
+- Annotate on
+  - annotations found by search
+- Annotate with what
+  - last annotation name selected
+- Annotate actions
+  - annotate
+  - annotate all
+- Annotate results
+  - directly replacing it in the document
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

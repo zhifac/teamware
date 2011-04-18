@@ -1,0 +1,532 @@
+<!-- ======================================================================= -->
+<!-- $Id: web-tests.xml 1694 2006-07-09 05:22:30Z mraible $               -->
+<!-- ======================================================================= -->
+<!DOCTYPE project [
+    <!ENTITY config SYSTEM "config.xml">
+    <!ENTITY login SYSTEM "login.xml">
+]>
+
+<project basedir="." default="run-all-tests"> 
+    <!-- Use i18n bundle, 2nd one listed is the default -->
+    <property file="${build.dir}/test/properties/ApplicationResources_${user.language}.properties"/>
+    <property file="web/WEB-INF/classes/ApplicationResources.properties"/>
+
+    <!-- runs all targets -->
+    <target name="run-all-tests" 
+        depends="Login,Logout,PasswordHint,UserTests,FlushCache,RoleTests,ResourceTests,ServiceTests"
+        description="Call and executes all test cases (targets)"/>
+    
+    <!-- runs user-related tests -->
+    <target name="UserTests" 
+        depends="EditUser,SearchUser,SaveUser,AddDeleteUser,ActiveUsers"
+        description="Call and executes all user test cases (targets)">
+        <echo>Successfully ran all User JSP tests!</echo>
+    </target>
+    
+	<target name="RoleTests"
+		depends="SearchRole,AddDeleteRole,UpdateRole"
+		description="Call and executes all role test cases (targets)">
+		<echo>Successfully ran all Role JSP tests!</echo>
+	</target>
+	
+	<target name="ResourceTests"
+		depends="SearchResource"
+		description="Call and executes all resource test cases (targets)">
+		<echo>Successfully ran all Resource JSP tests!</echo>
+	</target>
+	
+	<target name="ServiceTests"
+			depends="SearchService"
+			description="Call and executes all service test cases (targets)">
+			<echo>Successfully ran all Service JSP tests!</echo>
+	</target>
+	
+	<!--SearchCorpora, AddCorpus -->
+	<target name="DocServiceTests"
+		depends="SearchCorpora,AddCorpus,ViewDocuments,RemoveCorpus"
+		description="Call and executes all docservice test cases(targets)">
+		<echo>Successfully ran all DocService JSP tests!</echo>
+	</target>
+	
+    <!-- Login to the application -->
+    <target name="Login" 
+        description="Runs login test and verifies Main Menu's Title">
+        <webtest name="login">
+            &config;
+            <steps>
+                &login;
+            </steps>
+        </webtest>
+    </target>
+
+    <!-- Logout of the application -->
+    <target name="Logout"
+        description="Runs logout test and verifies Login's Title">
+        <webtest name="login">
+            &config;
+            <steps>
+                &login;
+                <invoke description="get Logout Page" url="/logout.jsp"/>
+                <verifytitle description="we should see the login title"
+                    text=".*${login.title}.*" regex="true"/>
+            </steps>
+        </webtest>
+    </target>
+
+    <!-- Retrieve Password Hint -->
+    <target name="PasswordHint" 
+        description="Gets the user's password hint">
+        <webtest name="passwordHint">
+            &config;
+            <steps>
+                <invoke description="get Login Page" url="/"/>
+                <verifytitle description="we should see the login title" 
+                    text=".*${login.title}.*" regex="true"/>
+                <invoke description="click password hint link"
+                    url="/passwordHint.html?username=admin"/>
+                <verifytitle description="we should see the login title again"
+                    text=".*${login.title}.*" regex="true"/>
+            </steps>
+        </webtest>
+    </target>
+    
+	<!-- Sign up a new user (no login) -->
+	<target name="Signup" description="Signup a new user">
+		<webtest name="signup">
+			&config;
+			<steps>
+				<!-- Logout in case user is already signed in -->
+				<invoke description="get Logout Page" url="/logout.jsp"/>
+				<invoke description="click signup link" url="/signup.html"/>
+				<verifytitle description="view signup title" text=".*${signup.title}.*" regex="true"/>
+								                
+				<setinputfield description="set username" name="username" value="signup-user"/>
+				<setinputfield description="set password" name="password" value="test"/>
+				<setinputfield description="set confirmPassword" name="confirmPassword" value="test"/>
+				<setinputfield description="set firstName" name="firstName" value="Test"/>
+				<setinputfield description="set lastName" name="lastName" value="Name"/>
+				<setinputfield description="set city" name="addressForm.city" value="Denver"/>
+				<setinputfield description="set state" name="addressForm.province" value="CO"/>
+				<setselectfield description="select country" name="addressForm.country" value="US"/>
+				<setinputfield description="set postalCode" name="addressForm.postalCode" value="80210"/>
+				<setinputfield description="set phoneNumber" name="phoneNumber" value="0798241241"/>
+				<setinputfield description="set email" name="email" value="safe.test@yahoo.com"/>
+				<setinputfield description="set website" name="website" value="http://www.gate.ac.uk"/>
+				<setinputfield description="set passwordHint" name="passwordHint" value="test"/>
+				<clickbutton label="${button.register}" description="Click button 'Signup'"/>
+				<verifytitle description="view main menu" text=".*${mainMenu.title}.*" regex="true"/>
+				<verifytext description="verify success message" text="${user.registered}"/>
+				<!-- Delete new registered user from DB -->
+				<invoke description="get Logout Page" url="/logout.jsp"/>
+				&login;
+				<invoke description="Click edit user link" url="/editUser.html?username=signup-user&amp;from=list"/>
+				<prepareDialogResponse description="Confirm delete" dialogType="confirm" response="true"/>
+				<clickbutton label="${button.delete}" description="Click button 'Delete'"/>
+				<verifyNoDialogResponses/>
+				<verifytext description="verify success message" regex="true"
+						text='&lt;div class="message.*&gt;.*&lt;strong&gt;Test Name&lt;/strong&gt;.*&lt;/div&gt;'/>
+				<verifytitle description="display user list" text=".*${userList.title}.*" regex="true"/>	                
+			</steps>
+		</webtest>        
+	</target>			    
+	
+    <!-- Verify the edit user screen displays without errors -->
+    <target name="EditUser" 
+        description="Tests selecting the 'Edit Profile' forward">
+        <webtest name="editUser">
+            &config;
+            <steps>
+                &login;
+                <invoke description="click Edit Profile link" url="/editProfile.html"/>
+                <verifytitle description="we should see the user profile title" 
+                    text=".*${userProfile.title}.*" regex="true"/>
+            </steps>
+        </webtest>
+    </target>
+    
+    <!-- Verify the user list screen displays without errors -->
+    <target name="SearchUser" 
+        description="Tests search for and displaying all users">
+        <webtest name="searchUser">
+            &config;
+            <steps>
+                &login;
+                <invoke description="click View Users link" url="/users.html"/>
+                <verifytitle description="we should see the user list title" 
+                    text=".*${userList.title}.*" regex="true"/>
+            </steps>
+        </webtest>
+    </target>
+    
+    <!-- Edit a user and then save -->
+    <target name="SaveUser" 
+        description="Tests editing and saving a user">
+        <webtest name="saveUser">
+            &config;
+            <steps>
+                &login;
+                <invoke description="click Edit Profile link" url="/editProfile.html"/>
+                <verifytitle description="we should see the user profile title" 
+                    text=".*${userProfile.title}.*" regex="true"/>
+            	<setinputfield description="set phoneNumber" name="phoneNumber" value="089234323"/>
+                <setinputfield description="set address" name="addressForm.address" value="2255 Lane Avenue"/>
+                <setinputfield description="set zipcode" name="addressForm.postalCode" value="59826"/>
+                <clickbutton label="${button.save}" description="Click Save"/>
+                <verifytitle description="display Main Menu if save OK"
+                     text=".*${mainMenu.title}.*" regex="true"/>
+            </steps>
+        </webtest>
+    </target>
+    
+    <!-- Add a new user after logging in and then delete it-->
+    <target name="AddDeleteUser"
+        description="Adds a new user profile">
+        <webtest name="addUser">
+            &config;
+            <steps>
+                &login;
+                <invoke description="click Add Button" 
+                    url="/editUser.html?method=Add&amp;from=list"/>
+                <verifytitle description="we should see the user profile title" 
+                    text=".*${userProfile.title}.*" regex="true"/>
+                    
+                <setinputfield description="set username" name="username" value="newuser"/>
+                <setinputfield description="set password" name="password" value="test"/>
+                <setinputfield description="set confirmPassword" name="confirmPassword" value="test"/>
+                <setinputfield description="set firstName" name="firstName" value="Test"/>
+                <setinputfield description="set lastName" name="lastName" value="Name"/>
+                <setinputfield description="set city" name="addressForm.city" value="Denver"/>
+                <setinputfield description="select province" name="addressForm.province" value="CO"/>
+                <setselectfield description="select country" name="addressForm.country" value="US"/>
+                <setinputfield description="set postalCode" name="addressForm.postalCode" value="80210"/>
+            	<setinputfield description="set phoneNumber" name="phoneNumber" value="089234323"/>
+                <setinputfield description="set email" name="email" value="safe.test@yahoo.com"/>
+                <setinputfield description="set website" name="website" value="http://www.gate.ac.uk"/>
+                <setinputfield description="set passwordHint" name="passwordHint" value="test"/>
+                <setcheckbox description="select roles" name="userRoles" checked="user"/>
+                <clickbutton label="${button.save}" description="Click button 'Save'"/>
+                
+                <verifytitle description="Redisplay add user page" text=".*${userProfile.title}.*" regex="true"/>
+                <verifytext description="verify success message" regex="true"
+                    text='&lt;div class="message.*&gt;.*&lt;strong&gt;Test Name&lt;/strong&gt;.*&lt;/div&gt;'/>
+            </steps>
+        </webtest>
+    </target>
+	
+    <!-- View Active Users -->
+    <target name="ActiveUsers" 
+        description="View Active Users List">
+        <webtest name="activeUsers">
+            &config;
+            <steps>
+                &login;
+                <invoke description="get activeUsers URL" url="/activeUsers.html"/>
+                <verifytitle description="we should see the activeUsers title" 
+                    text=".*${activeUsers.title}.*" regex="true"/>
+            </steps>
+        </webtest>
+    </target>
+    
+    <!-- Flush OSCache -->
+    <target name="FlushCache" 
+        description="opens JSP to Flush Page Cache">
+        <webtest name="flushCache">
+            &config;
+            <steps>
+                &login;
+                <invoke description="get flushCache URL" url="/flush.html"/>
+                <verifytitle description="we should see the flush cache title" 
+                    text=".*${flushCache.title}.*" regex="true"/>
+            </steps>
+        </webtest>
+    </target>
+	
+	<!-- Verify the roles list screen displays without errors -->
+	<target name="SearchRole" 
+		description="Tests search for and displaying all roles">
+		<webtest name="searchRole">
+		    &config;
+		    <steps>
+		        &login;
+		        <invoke description="click View Roles link" url="/roles.html"/>
+		        <verifytitle description="we should see the role list title" 
+		            text=".*${roleList.title}.*" regex="true"/>
+		    </steps>
+		</webtest>
+	</target>
+	
+    <!-- Edit a role and then save -->
+    <target name="UpdateRole" 
+        description="Tests editing and saving a role">
+        <webtest name="saveRole">
+            &config;
+            <steps>
+                &login;
+                <invoke description="click Edit Role link" url="/editRole.html?from=list&amp;name=annotator"/>
+                <verifytitle description="we should see the edit role title" 
+                    text=".*${role.title}.*" regex="true"/>
+            	<setinputfield description="set roleName" name="name" value="TestUser"/>
+                <setinputfield description="set roleDescription" name="description" value="Test User Role"/>
+                <clickbutton label="${button.save}" description="Click Save"/>
+            	<verifytext description="verify success message" regex="true" text="${role.updated}"/>
+                <verifytitle description="display Role List page if save OK"
+                     				text=".*${roleList.title}.*" regex="true"/>
+            	<!--Change it back -->
+            	<invoke description="click Edit Role link" url="/editRole.html?from=list&amp;name=TestUser"/>
+            	<verifytitle description="we should see the edit role title" 
+            	    text=".*${role.title}.*" regex="true"/>
+            	<setinputfield description="set roleName" name="name" value="annotator"/>
+            	<setinputfield description="set roleDescription" name="description" value="Annotator"/>
+            	<clickbutton label="${button.save}" description="Click Save"/>
+            	<verifytext description="verify success message" regex="true" text="${role.updated}"/>
+            	<verifytitle description="display Role List page if save OK"
+            	                     				text=".*${roleList.title}.*" regex="true"/>
+            </steps>
+        </webtest>
+    </target>
+	
+	<!-- Add a new role after login and then remove it -->
+	<target name="AddDeleteRole"
+		description="Tests add a new role after login as an admin and remove it">
+		<webtest name="addRole">
+			&config;
+			<steps>
+				&login;
+				<invoke description="click Add Button" url="/editRole.html?method=Add&amp;from=list"/>
+				<verifytitle description="we should see the create role title"
+					text=".*${role.title}.*" regex="true"/>
+				<setinputfield description="set roleName" name="name" value="ROLE_TEST"/>
+				<setinputfield description="set roleDescription" name="description" value="Test Role Description"/>
+				<clickbutton label="${button.save}" description="Click Save"/>
+				<verifytitle description="display Role List page if save OK" text=".*${roleList.title}.*" regex="true"/>
+				<verifytext description="verify success message" regex="true" text="${role.added}"/>
+				<!-- Delete role -->
+				<invoke description="Click role list link" url="/roles.html?name=ROLE_TEST&amp;method=delete"/>
+				<prepareDialogResponse description="Confirm delete" dialogType="confirm" response="true"/>
+				
+				<verifytext description="verify success message" regex="true" text="${role.deleted}"/>
+				<verifytitle description="display role list" text=".*${roleList.title}.*" regex="true"/>
+			</steps>
+		</webtest>
+	</target>
+	
+	<!-- Verify the resources list screen displays without errors -->
+	<target name="SearchResource" 
+		description="Tests search for and displaying all resources">
+		<webtest name="searchResource">
+			&config;
+			<steps>
+			    &login;
+			    <invoke description="click View Resources link" url="/resources.html"/>
+			    <verifytitle description="we should see the resource list title" 
+			            text=".*${resourceList.title}.*" regex="true"/>
+			</steps>
+		</webtest>
+	</target>
+	
+	<!-- Add a new resource after login and then remove it -->
+	<target name="AddResource"
+		description="Tests add a new resource after login as an admin and remove it">
+		<webtest name="addResource">
+			&config;
+			<steps>
+				&login;
+				<invoke description="click Add Button" url="/editResource.html?method=Add&amp;from=list"/>
+				<verifytitle description="we should see the create resource title" 
+								text=".*${resource.title}.*" regex="true"/>
+				<setinputfield description="set resourceURL" name="url" value="/test.html*"/>
+				<setinputfield description="set resourceDescription" name="description" value="Test Resource Description"/>
+				<setcheckbox description="select user role" name="resourceRoles" value="user"/>
+				<clickbutton label="${button.save}" description="Click Save"/>
+				<verifytitle description="display Resource List page if save OK" text=".*${resourceList.title}.*" regex="true"/>
+				<verifytext description="verify success message" regex="true" text="${resource.added}"/>
+				<clickLink description="click on a remove resource link" htmlid="/test.html*"/>
+				<verifytext description="verify successful delete message" regex="true" text="${resource.deleted}"/>
+			</steps>
+		</webtest>
+	</target>
+	
+    <!-- Edit a resource and then save -->
+    <target name="UpdateResource" 
+        description="Tests editing and saving a resource">
+        <webtest name="saveResource">
+            &config;
+            <steps>
+                &login;
+                <invoke description="click Edit Resource link" url="/editResource.html?from=list&amp;method=edit&amp;id=2"/>
+                <verifytitle description="we should see the edit resource title" 
+                    text=".*${resource.title}.*" regex="true"/>
+            	<setinputfield description="set resourceURL" name="url" value="/activeUsers.html*"/>
+                <setinputfield description="set resourceDescription" name="description" value="Updated activeUsers URL"/>
+            	<setcheckbox description="select admin role" name="resourceRoles" value="admin"/>
+            	<setcheckbox description="select user role" name="resourceRoles" value="user"/>
+            	<setselectfield description="select a service" name="service_id" value="2"/>
+                <clickbutton label="${button.save}" description="Click Save"/>
+                <verifytitle description="display Resource List page if save OK"
+                     				text=".*${resourceList.title}.*" regex="true"/>
+            	<verifytext description="verify success message" regex="true" text="${resource.updated}"/>
+            </steps>
+        </webtest>
+    </target>
+	
+	<!-- Verify the resources list screen displays without errors -->
+	<target name="SearchService" 
+		description="Tests search for and displaying all services">
+		<webtest name="searchService">
+			&config;
+			<steps>
+		    	&login;
+				<invoke description="click View Services link" url="/services.html"/>
+				<verifytitle description="we should see the service list title" 
+				             text=".*${serviceList.title}.*" regex="true"/>
+			</steps>
+		</webtest>
+	</target>
+	
+    <!-- Disable a service and then enable it and assign roles to its relevant resources -->
+    <target name="UpdateService" 
+    	description="Tests disable and enable a service">
+        <webtest name="saveService">
+        	&config;
+            <steps>
+            	&login;
+            	<!-- Disable a service -->
+                <invoke description="click View Services link" url="/services.html"/>
+                <verifytitle description="we should see the service list title" 
+                             text=".*${serviceList.title}.*" regex="true"/>
+                <setcheckbox description="disable the ontology service" name="8" checked="8"/>
+                <clickbutton label="${button.save}" description="Click Save"/>
+                <verifytitle description="display Service List page if update OK"
+                             text=".*${serviceList.title}.*" regex="true"/>
+            	<verifytext description="verify success message" regex="true" text="${service.updated}"/>
+            	<!-- Enable a service -->
+                <invoke description="click View Services link" url="/services.html"/>
+            	<verifytitle description="we should see the service list title" 
+            	                       text=".*${serviceList.title}.*" regex="true"/>
+            	<setcheckbox description="disable the ontology service" name="8" checked="true"/>
+            	<clickbutton label="${button.save}" description="Click Save"/>
+            	<verifytitle description="display Service List page if update OK"
+            	                    text=".*${serviceList.title}.*" regex="true"/>
+            	<!-- Assign roles to the resource belonging to the service -->
+            	<invoke description="click Edit Resource link" url="/editResource.html?from=list&amp;method=edit&amp;id=23"/>
+            	<verifytitle description="we should see the edit resource title" 
+            	                    text=".*${resource.title}.*" regex="true"/>
+            	<setinputfield description="set resourceURL" name="url" value="/ontologyRepositoryList.html*"/>
+                <setinputfield description="set resourceDescription" name="description" value="Ontology Repository List"/>
+                <setcheckbox description="select admin role" name="resourceRoles" value="admin"/>
+            	<setcheckbox description="select manager role" name="resourceRoles" value="manager"/>
+            	<setselectfield description="select a service" name="service_id" value="8"/>
+            	<clickbutton label="${button.save}" description="Click Save"/>
+            	<verifytitle description="display Resource List page if save OK"
+            	                    text=".*${resourceList.title}.*" regex="true"/>
+            	<verifytext description="verify success message" regex="true" text="${resource.updated}"/>
+            </steps>
+        </webtest>
+    </target>
+	
+	<!-- Verify the corpous list screen displays without errors -->
+	<target name="SearchCorpora" 
+		description="Tests search for and displaying all corpora">
+		<webtest name="searchCorpora">
+			&config;
+			<steps>
+			    &login;
+			    <invoke description="click List Corpora link" url="/corpora.html" />
+				<verifytitle description="display Corpora List page if ok" regex="true"
+						text=".*${corpusList.title}.*"/>
+			</steps>
+		</webtest>
+	</target>
+	
+	<!-- Verify adding a new corpus to the datastore -->
+	<target name="AddCorpus"
+		description="Tests add a new corpus to the DataStore">
+		<property name="test.zip.to.upload" location="test/web/jspTestData/musing.zip" />
+				<echo>${test.zip.to.upload}</echo>
+		<webtest name="addCorpus">
+			&config;
+			<steps>
+				&login;
+				<invoke description="click List Corpora link" url="/corpora.html" />
+				<verifytitle description="display Corpora List page if ok" regex="true"
+							 text=".*${corpusList.title}.*"/>
+				<clickbutton label="${button.add}" description="Click Add Button"/>
+				<verifytitle description="we should see the title 'Create a New Corpus'" regex="true"
+										text=".*${corpusDetail.title}.*"/>
+				<setinputfield description="enter a corpus name" name="corpusName" value="testCorpus233"/>
+				<forceHiddenInputField name="switch" value="false"/>
+								<setInputField description="enter an encoding" name="encoding" value="UTF-8"/>
+								<setFileField name="file" fileName="${test.zip.to.upload}"/>
+								<clickbutton label="${button.upload}" description="Click Save button to populate the corpus"/>
+				
+				<verifytext description="verify success message" regex="true" text="${corpus.created}"/>
+				<verifytitle description="display Corpora List page if ok" regex="true"
+							 text=".*${corpusList.title}.*"/>
+			</steps>
+		</webtest>
+	</target>
+	
+	<!-- Verify populating an existing corpus with documents that are capsulated in a zip file -->
+	<target name="PopulateCorpus"
+		description="Tests and populate">
+		<property name="test.zip.to.upload" location="test/web/jspTestData/musing.zip" />
+		<echo>${test.zip.to.upload}</echo>
+		<webtest name="populateCorpus">
+			&config;
+			<steps>
+				&login;
+				<invoke description="click List Corpora link" url="/corpora.html" />
+				<verifytitle description="display Corpora List page if ok" regex="true"
+							 text=".*${corpusList.title}.*"/>
+				<clickLink description="click on a link specified by its id attribute" htmlid="testCorpus233"/>
+				<verifytitle description="display Document List page if ok" regex="true"
+											 text=".*${documentList.title}.*"/>
+				<clickButton label="${button.add}" description="Click Add Button on the Document List page"/>
+				<verifytitle description="we should see the title 'File Upload'" regex="true"
+														text=".*${upload.title}.*"/>
+				
+				
+        	 	<forceHiddenInputField name="switch" value="false"/>
+				<setInputField description="enter an encoding" name="encoding" value="UTF-8"/>
+				<setFileField name="file" fileName="${test.zip.to.upload}"/>
+				<clickbutton label="${button.save}" description="Click Save button to populate the corpus"/>
+			</steps>
+		</webtest>
+	</target>
+	
+	<!-- Search the documents in a specific corpus-->
+	<target name="ViewDocuments"
+		description="view the document list in a corpus">
+		<webtest name="viewCorpus">
+			&config;
+			<steps>
+				&login;
+				<invoke description="click List Corpora link" url="/corpora.html" />
+				<verifytitle description="display Corpora List page if ok" regex="true"
+											text=".*${corpusList.title}.*"/>
+				<clickLink description="click on a link specified by its id attribute" htmlid="testCorpus233"/>
+				<verifytitle description="display Document List page if ok" regex="true"
+											text=".*${documentList.title}.*"/>
+			</steps>
+		</webtest>
+	</target>
+		
+	<!--Remove a corpus from the datastore-->
+	<target name="RemoveCorpus"
+		description="remove a corpus from the DS">
+		<webtest name="removeCorpus">
+			&config;
+			<steps>
+				&login;
+				<invoke description="click List Corpora link" url="/corpora.html" />
+				<verifytitle description="display Corpora List page if ok" regex="true"
+										text=".*${corpusList.title}.*"/>
+				<clickLink description="click on a link specified by its id attribute" htmlid="removetestCorpus233"/>
+				<verifytitle description="display Document List page if ok" regex="true"
+															text=".*${corpusList.title}.*"/>
+				<verifytext description="verify success message" regex="true" text="${corpus.deleted}"/>
+			</steps>
+	   </webtest>
+	</target>
+		
+</project>

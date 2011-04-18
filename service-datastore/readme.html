@@ -1,0 +1,34 @@
+<html>
+<head>
+</head>
+<body>
+<font face="Verdana">
+
+<h3>This is a GATE plug-in to allow you using DocServise as GATE DataStore.</h3>
+
+<p><b>How to use it:</b><br></p>
+<p>You need only ./lib/* and creole.xml to run it as a GATE plug-in.</p>
+<p>Create a directory under your plugins directory of GATE. For example "gate31/plugins/service-datastore"</p>
+<p>Copy ./lib/* and creole.xml in this directory.</p>
+<p>Run GATE and open "Plugins management console", check "service-datastore" plugin and press OK</p>
+<p>In the GATE resource tree, right click on the "Data stores" and in the pop-up menu select "Open datastore"</p>
+<p>In the window which allows you to select the type of datastore select "ServiceDataStore: document service storage using Web Services".<br>
+This option becames visible only if plugin "service-datastore" is loaded.<br>
+<b>Note: </b> If you loaded "service-datastore" but don't see a new data store type "ServiceDataStore: document service storage using Web Services"
+among the other 3 well known datastores (serial, oracle and postgress), so you need to get latest version of GATE from the repository
+(DataStoreRegister and MainFrame classes was changed)</p>
+<p>In the next window you will be asked to enter document service URL.
+The basic form of URL is following: <code>http://localhost:8080/docservice/services/docservice</code><br>
+You don't need to change anything if document service is deployed with defaults on your local PC, just press OK.<br>
+Substitute 'localhost' with the name of the server if the document service is deployed with defaults on other computer and then press OK.</p>
+<p>If connection to the GLEAM document service was successfully established you will see a new data store in the GATE resource tree.</p>
+<p>You can use this data store as any normal GATE data store.</p>
+
+<p><b>How to build it:</b><br></p>
+<p>There is build.xml for ant in the root directory of this project. Use 'build' target.<br>
+As result it will produce/update 'service-datastore.jar' in the ./lib directory.</p>
+
+<p></p>
+
+</body>
+</html>

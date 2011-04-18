@@ -1,0 +1,114 @@
+<gate.util.persistence.GateApplication>
+  <urlList class="gate.util.persistence.CollectionPersistence">
+    <localList>
+      <gate.util.persistence.PersistenceManager-URLHolder>
+        <urlString>$relpath$../plugins/SchemaCleaner/</urlString>
+      </gate.util.persistence.PersistenceManager-URLHolder>
+      <gate.util.persistence.PersistenceManager-URLHolder>
+        <urlString>$relpath$../../../../lib/gate-6.1/plugins/Groovy/</urlString>
+      </gate.util.persistence.PersistenceManager-URLHolder>
+      <gate.util.persistence.PersistenceManager-URLHolder>
+        <urlString>$relpath$../../../../lib/gate-6.1/plugins/ANNIE/</urlString>
+      </gate.util.persistence.PersistenceManager-URLHolder>
+    </localList>
+    <collectionType>java.util.ArrayList</collectionType>
+  </urlList>
+  <application class="gate.groovy.ScriptableControllerPersistence">
+    <controlScript class="string">import gate.creole.ExecutionException
+
+File propertiesFile = new File(Gate.gateHome, &apos;common-services.properties&apos;)
+Properties props = new Properties()
+propertiesFile.withInputStream { props.load(it) }
+
+File schemaDir = new File(props[&apos;schema.dir&apos;])
+
+eachDocument {
+  try {
+    // load the relevant annotation schemas
+    def annotationSchemas = []
+    // take the list of annotation schemas to use as a comma-separated string
+    // in the &apos;annotationSchemas&apos; document feature.  These names should
+    // correspond to schemas in the schema dir, without their .xml extension,
+    // e.g. &quot;Person, Location, Organization&quot;
+    def schemaNames = doc.features.annotationSchemas?.split(/\s*,\s*/).collect { it + &apos;.xml&apos; }
+    if(!schemaNames) {
+      // if no schema names provided, use all schemas
+      schemaNames = schemaDir.list()
+    }
+    schemaNames?.each {
+      annotationSchemas &lt;&lt; Factory.createResource(
+         &apos;gate.creole.AnnotationSchema&apos;,
+         [xmlFileUrl:(new File(schemaDir, it).toURI().toURL())].toFeatureMap(),
+         [:].toFeatureMap(),
+         it)
+    }
+    
+    // run the schemaCleaner with these schemas
+    schemaCleaner(schema:annotationSchemas)
+  }
+  catch(Exception e) {
+    throw new ExecutionException(e)
+  }
+  finally {
+    // unload them again
+    annotationSchemas?.each { Factory.deleteResource(it) }
+  }
+}
+</controlScript>
+    <prList class="gate.util.persistence.CollectionPersistence">
+      <localList>
+        <gate.util.persistence.LanguageAnalyserPersistence>
+          <runtimeParams class="gate.util.persistence.MapPersistence">
+            <mapType>gate.util.SimpleFeatureMapImpl</mapType>
+            <localMap>
+              <entry>
+                <string>document</string>
+                <null/>
+              </entry>
+              <entry>
+                <string>inputASName</string>
+                <string>in</string>
+              </entry>
+              <entry>
+                <string>schema</string>
+                <gate.util.persistence.CollectionPersistence>
+                  <localList/>
+                  <collectionType>java.util.ArrayList</collectionType>
+                </gate.util.persistence.CollectionPersistence>
+              </entry>
+              <entry>
+                <string>outputASName</string>
+                <string>out</string>
+              </entry>
+              <entry>
+                <string>corpus</string>
+                <null/>
+              </entry>
+            </localMap>
+          </runtimeParams>
+          <resourceType>gate.creole.SchemaCleaner</resourceType>
+          <resourceName>schemaCleaner</resourceName>
+          <initParams class="gate.util.persistence.MapPersistence">
+            <mapType>gate.util.SimpleFeatureMapImpl</mapType>
+            <localMap/>
+          </initParams>
+          <features class="gate.util.persistence.MapPersistence">
+            <mapType>gate.util.SimpleFeatureMapImpl</mapType>
+            <localMap/>
+          </features>
+        </gate.util.persistence.LanguageAnalyserPersistence>
+      </localList>
+      <collectionType>java.util.ArrayList</collectionType>
+    </prList>
+    <resourceType>gate.groovy.ScriptableController</resourceType>
+    <resourceName>schema-aware-pre-manual</resourceName>
+    <initParams class="gate.util.persistence.MapPersistence">
+      <mapType>gate.util.SimpleFeatureMapImpl</mapType>
+      <localMap/>
+    </initParams>
+    <features class="gate.util.persistence.MapPersistence">
+      <mapType>gate.util.SimpleFeatureMapImpl</mapType>
+      <localMap/>
+    </features>
+  </application>
+</gate.util.persistence.GateApplication>

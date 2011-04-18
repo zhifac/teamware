@@ -1,0 +1,3 @@
+This directory will contain a test client to invoke a GaS in "GLEAM mode", i.e.
+taking a task definition referring to a document in a remote doc-service and
+returning the results of execution to an executive.

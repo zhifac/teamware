@@ -1,0 +1,28 @@
+BUILDING
+========
+
+1. Review/edit your "build.properties" file located in this project root
+   directory.
+
+ - Set "catalina.home" and "gate.home" in the file to point at your Tomcat and
+   GATE installations.
+ - If you want to used GATE datastore other than default one change properties:
+      ds.location=file:${user.home}/safe/docservice-ds/datastore
+      ds.index.location=file:${user.home}/safe/docservice-ds/index
+
+2. Run ant build. Simply running "ant" should compile the code and create a
+   .war file suitable for deploying to tomcat.
+
+3. Put the generated .war file in tomcat's webapps directory.
+
+4. You can check docservice installation with URL:
+   http://YourServerName:port/docservice
+
+
+CUSTOM BUILDS
+=============
+
+Directory "custom-builds" contain property files to build Docservice instance
+for particular projects. To make custom build use following command:
+
+ant -propertyfile ./custom-builds/FileName

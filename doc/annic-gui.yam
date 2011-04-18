@@ -1,0 +1,229 @@
+Annic GUIs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%contents
+
+NB: There are also related ideas on JAPE Rule grammar tool for skilled users under discussion here: 
+%(http://gate.ac.uk/wiki/Wiki.jsp?page=VisualJape)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Query GUI in Annic
+
+%2 Improvements
+- making query construction easier
+  - predefined queries
+    - based on history of queries
+    - based on annotations collocations in corpus
+  - form-based building of queries (see %(http://62.213.161.156/KIM/screen/EntityPatternSearch.jsp,KIM))
+  - graph based building of queries
+  - query by examples
+- a syntax corrector for avoiding to write wrong query and even correcting them (see %(http://www.gate.ac.uk/releases/gate-4.0-build2752-ALL/doc/javadoc/src-html/gate/creole/annic/lucene/QueryParser.html#line.63,annic/lucene/QueryParser/isValidQuery()))
+
+%2 Features
+
+- Search on
+  - only text without looking for annotation
+  - (text inside) one annotation type
+  - (text inside) all annotation types
+- Search options
+  - case insensitive
+  - whole word
+  - regular expression
+  - more than one condition (or/and)
+    - previous annotation ?
+    - another text/regular expression ?
+- Search actions
+  - find first, next, previous
+  - show all occurrences in one window (Annic ?)
+  - convert in jape/Annic pattern
+- Search results
+  - searched words plus context
+
+%2 Design
+
+%3 Utopian GUI
+
+%<
+------------------------------------------------------------------
+           __________                       __________
+Corpus -> |_All_____V|   Annotation set -> |_All_____V|
+          _________________________________________
+Query -> |_pattern_________________________________| |Clear query|
+
+ ______________
+|Result Details| Query building|_____________________________________
+
+
+
+         Text          this   is a pattern from   a document
+         Token.feature |value|             |Value|
+
+
+________________
+Results - Page 1|___________________________________|Next results|___
+Left context | Pattern | Right context   | Document  | Annotation set
+   this is a | pattern | from a document | document1 | annotationset1
+
+
+
+_____________________________________________________________________
+Results per page -> |1 |    Context size -> |3 |   |Export results|
+
+-----------------------------------------------------------
+%>
+
+The first time the GUI is display there is no query so the results are displayed for the "Result page size" first pattern and contexts of the document and the first line in the "Results" table is selected and displayed in the "Result details" pane.
+
+The "Query building" pane is like the form based building of queries below.
+
+Each time the query is change in the "Query" box or the "Query Building" pane the results are updated so no need of a \|Query\| button.
+
+If the "Query" box text is changed the "Query building" pane is updated and conversely.
+
+In the "Result details" pane, all the features that have non empty value for the current pattern and contexts are displayed.
+
+The "Query" box complete automatically the name of annotation type and features with drop-down box and tell if there is a mistake in the syntax when the focus is lost for this box.
+
+In the "Result details", when the user click on the value of a token it is added in the query with a AND connector and if the user Control click with a OR connector. When the user click on the text it just add the word or punctuation.
+
+For each annotation set, type and features in the drop-down boxes ther is in bracket the number of occurrences in the selected corpus to help the user decide which are the most useful according to their frequency.
+
+%3 Graph-based building of queries
+
+The user first choose in a pool of Annotation objects and drag and drop the object selected into the query window.
+
+%<
+------------------------------------------------------------------
+ ________________
+|_Any_annotation_|
+ _____________
+|_Annotation1_|
+ _____________
+|_Annotation2_|
+
+------------------------------------------------------------------
+%>
+
+Then the user can click on the Annotation object to change the value of string and/or feature and value of feature in a window exactly like the form hereinbefore and the Annotation object will reflect the change.
+
+%<
+------------------------------------------------------------------
+ _______________________
+| Annotation1           |
+| with Feature1 feature |
+|_of_value1_value_______|
+
+------------------------------------------------------------------
+%>
+
+Then the user can connect Annotation object between them with And / Or connector.
+
+%<
+------------------------------------------------------------------
+ _______________________                 _______________________
+| Annotation1           |     _____     | Annotation2           | 
+| with Feature1 feature |----|_And_|----|_contain_string_string_|
+|_of_value1_value_______|
+
+------------------------------------------------------------------
+%>
+
+%3 Form-based building of queries
+
+Feedback from users, incl. Matrixware has not been over-enthusiastic, as it's not that much easiesr or shorter than the actual notation. It's also not obvious how one would name the variables, to be then used on the RHS. Therefore, this will not be implemented for now. Alternative ideas for JAPE Visual editing are under discussion.
+
+The basic query form is this one.
+
+%<
+------------------------------------------------------------------
+
+Search for:
+  _______                    ____________   _________
+ | any  V| annotations that | contain   V| | any    V| string
+ | Type1 |                  |_is_exactly_| |_string__|
+ |_Type2_|
+       __________               _______
+ with | any  V   | features of | any   V| value.
+      | Feature1 |             | value1 |
+      |_Feature2_|             |_value2_|
+
+|And| |Or|
+
+-----------------------------------------------------------
+%>
+
+When the user click on \|And\| or \|Or\| button a new form like the previous one is displayed below the first one and the user can add a new query.
+
+
+%2 Niraj's idea for searching annotations collocations
+
+I just realized that we can actually use ANNIC to find relations between  two entities using the annotated corpus. May be someone has already  tried this before but wanted to share my thoughts and ask for your  suggestions.
+
+Given two classes C1 and C2 from Ontology O, we can issue different queries (see below) over the annotated corpus.
+
+# {C1} ({Token})+4 {C2} OR
+# {C2} ({Token})+4 {C1} OR
+# {C1} ({Token})+4 {some variable Y}
+
+which can be placed under observation to find out frequently occuring annotation type.
+
+The ANNIC will return a number of patterns.
+
+If we get at least a few patterns, we can then actually refer to the Tokens between the two entities.
+
+These tokens, based on their POS tags, can be analyzed to derive a relation between the two entities.
+
+Due to the "on the fly pattern matching" behaviour of ANNIC, we can play with different sorts of patterns and collect various statistics/evidences, which we can use to derive relations.
+
+Patterns such as 1 and 2 can be used not only for relation identification but to populate the ontology with instances of type C1 and C2.  Whereas, the patterns similar to 3, can be used to find out new ontology classes as well.
+
+Please do let me your views and thoughts about the same and whether this seems reasonable to try sometime.
+
+%2 Related projects and concepts
+
+%3 Related areas
+- GUI for regex that already exist in KDE or Gnome
+  - Visual REGEXP
+    - Let the user type the regex and see the result on a text sample with the same color for matches between regex and text sample (%(http://laurent.riesterer.free.fr/regexp/screenshot2.png,image))
+    - Let the user give some sample of line to be matched by the regex and compute a regex (%(http://laurent.riesterer.free.fr/regexp/screenshot4.png,image))
+  - KRegExpEditor
+    - building of the query with drag and drop of boxes (%(http://docs.kde.org/development/en/kdeutils/KRegExpEditor/theEditor.html,user guide with pictures))
+- GUIs for corpus query tools
+  - XARA (%(http://www.oucs.ox.ac.uk/rts/xaira/Doc/refman.xml?ID=X02#simple,user guide with pictures))
+    - Query builder use graph with link and node to create the query
+    - use regex, tags and string search
+  - Tiger Search - Stuttgart (%(http://www.ims.uni-stuttgart.de/projekte/TIGER/TIGERSearch/doc/html/TIGERSearch.html,user manual))
+- gui for SQL and XQuery
+  - I have found nothing simple
+
+%3 Papers
+- Indexing and Querying Linguistic Metadata and Document Content, Niraj, RANLP 2005
+  - %(http://gate.ac.uk/sale/ranlp05/ranlp05-annic.pdf)
+- Using the XARA XML-Aware Corpus Query Tool to Investigate the METER Corpus
+  - %(http://www.dcs.shef.ac.uk/nlp/meter/Documents/papers/Meter_CL2003_paper9.pdf)
+- Another good source of possibly relevant papers will be LREC in the past 4-6 years  and ACL as well
+  - Found no interesting GUI apart from XARA and TigerSearch
+
+%% http://scholar.google.co.uk/scholar?q=acl+query+corpus+graphical
+
+%3 Concepts
+- Query by example
+  - You list a few examples which are LIKE the kind of rows you're looking for, and a few more which are NOT LIKE the kind of rows you're looking for, and using a fast, flexible machine learning algorithm
+- Graphical programming language
+  - A Visual programming language (VPL) is any programming language that lets users specify programs by manipulating program elements graphically rather than by specifying them textually.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Jape actions (RHS) GUI
+
+%2 Improvements
+- allow to specify JAPE RHS actions in an easy way with the LHS provide by Annic
+- a syntax corrector ?
+
+%2 Features
+  - creating new annotation
+  - adding features
+  - replacing annotations
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

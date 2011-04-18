@@ -1,0 +1,40 @@
+<decorators defaultdir="/decorators">
+	<excludes>
+		<pattern>/resources/*</pattern>
+	</excludes>
+	<excludes>
+		<pattern>/ajaxtooltip/*</pattern>
+		<pattern>/download.html*</pattern>
+		<pattern>/viewDocument.html*</pattern>
+		<pattern>/annotatorGui.html*</pattern>
+		<pattern>/annicgui.html*</pattern>
+		<pattern>/annotationDiffJnlp.html*</pattern>
+		<pattern>/ontologyDisplay.html?method=download*</pattern>
+		<pattern>/corpus.html?method=downloadCorpus*</pattern>
+		<pattern>/datastore.html?method=downloadDS*</pattern>
+		<pattern>/docs/*</pattern>
+		<pattern>/admjforum.page*</pattern>
+		<pattern>/jforum.page?module=ajax*</pattern>
+		<pattern>/adm*</pattern>
+		<pattern>/posts/review*</pattern>
+		<pattern>/app/*</pattern>
+	</excludes>
+	<decorator name="popup" page="popup.jsp"> 
+	  <pattern>/popupEditUploadFile.html*</pattern>
+		<pattern>/popupEditUploadCorpus.html*</pattern>
+		<pattern>/popupAddSchema.html*</pattern>
+		<pattern>/popupAddAnnotationService.html*</pattern>
+		<pattern>/popupCorpusUploadInfo.html*</pattern>
+		<pattern>/popupSchemaUploadInfo.html*</pattern>
+		<pattern>/popupAnnotationServiceInfo.html*</pattern>
+	</decorator>
+	<decorator name="dwr" page="dwr.jsp">
+		<pattern>/chat.html*</pattern>
+		<pattern>/*UploadFile*</pattern>
+		<pattern>/*UploadCorpus*</pattern>
+	</decorator>
+	<decorator name="default" page="default.jsp">
+		<pattern>/jforum.page?module=posts*</pattern>
+		<pattern>/*</pattern>
+	</decorator>
+</decorators>

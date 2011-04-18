@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<configs>
+		<config>src/dao/gleam/executive/persistence/hibernate/applicationContext-hibernate.xml</config>
+		<config>src/service/gleam/executive/service/applicationContext-service.xml</config>
+	    <config>src/service/gleam/executive/service/applicationContext-gate.xml</config>
+	</configs>
+	<configSets>
+	</configSets>
+</beansProjectDescription>

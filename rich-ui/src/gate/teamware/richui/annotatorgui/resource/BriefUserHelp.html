@@ -1,0 +1,97 @@
+<html>
+<head>
+<title></title>
+</head>
+<body bgcolor="#f0f0ff">
+<font face="Verdana">
+
+<H1 align="CENTER"><A name="top"></A>Brief user help</H1>
+
+<p>
+This document briefly describes Graphic User Interface of the Annotator GUI.
+</p>
+
+<p>
+Annotator GUI is desined to be used in two modes: <b>pool</b> mode and <b>direct</b> mode.
+In the <b>pool</b> mode application connects to the Workflow Management System, fetches the first available task
+ if there are any and loads corresponding document from the datastore. In <b>direct</b> mode
+ application connects directly to the document service and loads a document with a given ID.
+</p>
+
+<p>
+The main window contains two parts: toolbar and document editor.
+Some toolbar buttons is different for different modes of the Annotator GUI.
+</p>
+
+<H2 align="CENTER">Toolbar buttons</H2>
+
+<p>
+Click button <IMG src="newtask-32.gif" align="center" border=0> to connect to the Workflow Management System.
+This button is only available in the <b>pool</b> mode.
+</p>
+
+<p>
+After successfull connection to the Workflow Management System, Annotator GUI will check whether you have any annotation tasks.<br>
+If you don't have any tasks Annotator GUI will display an appropriate message.<br>
+In case that you have a task, a matching document will be loaded and displayed in the document editor.
+</p>
+
+<p>
+Click button <IMG src="finishtask-32.gif" align="center" border=0> to inform Workflow Management System about finishing your current task.
+This button is only available in the <b>pool</b> mode.
+</p>
+
+<p>
+Click button <IMG src="canceltask-32.gif" align="center" border=0> to inform Workflow Management System about cancelling your current task.
+This button is only available in the <b>pool</b> mode.
+</p>
+
+<p>
+Click button <IMG src="save-32.gif" align="center" border=0> to save your current document.
+This button is available in both <b>pool</b> and <b>direct</b> modes.
+</p>
+
+<p>
+Click button <IMG src="log-32.gif" align="center" border=0> to view application messages.
+This button is available in both modes.
+</p>
+
+<p>
+Click button <IMG src="help-32.gif" align="center" border=0> to display this help window.
+This button is available in both modes.
+</p>
+
+<p>
+Click button <IMG src="settings.png" align="center" border=0> to edit the settings of the annotator GUI, for example the look and feel and fonts used.
+This button is available in both modes.
+</p>
+
+<H2 align="CENTER">Document Editor</H2>
+
+<p>
+This is a GATE Document Editor. Please read the documentation supplied with a GATE distribution to get idea how to use it.
+</p>
+
+
+<H2 align="CENTER">Other Application functions</H2>
+
+<p>
+Closing dialog windows should be performed either by pressing Cancel button or <b>ESC</b>.
+</p>
+
+<p>
+If you want to exit application simply close main window.
+</p>
+
+<p>
+At the window title you can see status of application:<br>
+<code><b>[Connected to: http://executiveCallbackURL]</b></code><br>
+</p>
+
+<p>
+If you are not connected to the service, you will see status:<br>
+<code><b>[Not connected]</b></code>
+</p>
+
+</body>
+</html>

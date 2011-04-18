@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spring bean definitions required for the @SERVICE@ service endpoint -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xmlns:gate="http://gate.ac.uk/ns/spring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+         http://cxf.apache.org/jaxws
+         http://cxf.apache.org/schemas/jaxws.xsd
+         http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://activemq.apache.org/schema/core
+         http://activemq.apache.org/schema/core/activemq-core.xsd
+         http://gate.ac.uk/ns/spring
+         http://gate.ac.uk/ns/spring.xsd">
+
+  <!-- Service definition -->
+  <bean id="@SERVICE@ServiceDefinition" parent="serviceDefinition">
+    <property name="xmlFile"
+              value="${gleam.gateservice.top.dir}/@SERVICE@-definition.xml" />
+  </bean>
+
+  <!-- JMS queue -->
+  <amq:queue id="@SERVICE@JmsQueue" physicalName="TW.@SERVICE@" />
+
+  <!-- GATE application -->
+  <gate:saved-application id="@SERVICE@GateApplication" scope="prototype"
+         location="${gleam.gateservice.top.dir}/@SERVICE@.xgapp" />
+
+  <!-- Worker configuration -->
+  <bean id="@SERVICE@WorkerConfig" parent="workerConfig">
+    <property name="serviceDefinition" ref="@SERVICE@ServiceDefinition" />
+    <property name="gateApplicationBeanName">
+      <idref bean="@SERVICE@GateApplication" />
+    </property>
+    <property name="queue" ref="@SERVICE@JmsQueue" />
+  </bean>
+
+  <!-- Endpoint handler -->
+  <bean id="@SERVICE@EndpointHandler" parent="endpointHandler">
+    <property name="serviceDefinition" ref="@SERVICE@ServiceDefinition" />
+    <property name="queue" ref="@SERVICE@JmsQueue" />
+  </bean>
+
+  <!-- The WS endpoint -->
+  <bean id="@SERVICE@ServiceImpl" parent="gateWebService">
+    <property name="endpointHandler" ref="@SERVICE@EndpointHandler" />
+  </bean>
+
+  <jaxws:endpoint id="@SERVICE@WebServiceEndpoint"
+                  implementor="#@SERVICE@ServiceImpl"
+                  implementorClass="gleam.gateservice.endpoint.GateWebServiceImpl"
+                  address="/@SERVICE@">
+    <jaxws:properties>
+      <entry key="mtom-enabled" value="true" />
+    </jaxws:properties>
+       <jaxws:features>
+     <bean class="org.apache.cxf.transport.http.gzip.GZIPFeature"/>
+    </jaxws:features>
+    
+  </jaxws:endpoint>
+
+</beans>

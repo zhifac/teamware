@@ -1,0 +1,176 @@
+SAFE project management notes
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Tasks, people, how to get help
+
+If you want help of any sort, ask Valy. He loves answering questions and the
+more we provide him with, the better pleased he'll be :-)
+
+Alternatively, here is a rough breakdown of our main current work areas, with
+a list of people (the first one being the main person responsible for that
+area). Please use this to decide who to ask about a particular subject.
+
+If you can't get the help you need, raise it as a problem in the scrum.
+
+%[
+ | Services (including the .gapps etc.)         | *IR*, NA, YL          |
+---
+ | Workflow and deployment                      | *MA*, IR, JS, VT      |
+---
+ | Annotation task specification                | *KB*, YL              |
+---
+ | Machine learning                             | *YL*, NA, KB          |
+---
+ | Webstart tools (AGUI/OAT, ANNIC, ADiff)      | *NA*, TH, IR          |
+---
+ | Quality control and testing                  | *KB*, IR, HC          |
+---
+ | Demos                                        | *KB*, VT, HC          |
+---
+ | Documentation                                | *HC*, all             |
+%]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 Notes about messenger meetings.
+
+These "meetings" are to help us coordinate and plan the
+SAFE/matrixware work over the next several months. We have to demo the
+results in 5 weeks and then complete the work by mid-december.
+
+If you want to contribute you have to ask the chairperson first, so type a
+"!". Then the chair will say "go ahead Ian" or whatever, and then you take
+your turn. This is to make it easier to follow a single thread of discussion
+without drowning each other out. Exceptions:
+
+- If you're commenting *within* the current thread then you can go ahead
+  without asking.
+- If someone asks a question which is clearly for you or that you can answer
+  then you can go ahead without asking.
+  
+When you finish a contribution type "." or say "I'm finished" or similar.
+
+Each time we have one of these chats we start by going around the group
+and saying:
+
+- what we did since the last meeting (in this case, what we're working
+  on now)
+- what we plan to do next
+- any problems that we're having or anticipate
+
+Any problems that are reported should be recorded by the chair, and by the
+person reporting them, and then when you make your next report you should
+detail whether the problem was fixed or not.
+
+Each person should be brief, and we should finish within half an hour
+or less.  (Don't give details; if you need some more information about
+a task then report that under the "problems" section and we'll agree
+that a discussion with other team members should happen, probably with
+a report back the day after.) The aim is to gradually reduce the
+length of the meetings to around 15 minutes.
+
+Please type your report before the meeting (keeping it short) and paste 
+it in when your turn comes.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1 SCRUM/XP
+
+These notes attempt to identify a light-weight set of organisational practices
+to help manage our expanded team. They are based on a few elements of XP and
+Scrum.
+
+XP is a way to keep focussed on user needs and to ensure stability through
+testing. Scrum is a way to organise regular deadlines and to encourage
+teamwork towards clearly defined objectives.
+
+We already have a commitment to certain elements of XP and the forest of Agile
+methods that have grown up around it. Some we're already good at, e.g. not
+producing endless design artefacts. Some we're not so good at, e.g. always
+testing, designing tests first, reviewing each others code, keeping a tight
+delivery/evaluation loop with users.
+
+Scrum is less about the code and more about how to split development time into
+manageable chunks, how to structure implementation iterations, and how to
+filter and prioritise ideas for new features and technical changes.
+
+The main elements of XP and Scrum that are included here are:
+- Test-driven development.
+- Deliver early, deliver often.
+- Only document where necessary (minimise design artefacts because they go out
+  of date or cost lots to maintain).
+- Development done by self-organising teams.
+- Development done on a monthly cycle; no new work can be taken on by a team
+  after a cycle starts. 
+- The list of features, functions, technologies, enhancements and bug fixes
+  that would ideally be performed are prioritised and listed in a "backlog"
+  which represents a snapshot of the ever-changing requirements and plan.
+- For each development cycle pick the highest priority items to do next.
+- There are no bad ideas for new features, only low priority features.
+- Meet every 2 working days to briefly report: what's been done since last
+  meeting; what is planned for next; what has been a barrier. These are called
+  "scrums" and should last around 15 minutes.
+
+In our case we have two developer teams: SAFE and SInS. (Lots of the products
+from these teams go into GATE and ANNIE, of course, and are delivered into our
+funded projects.)
+
+The process:
+- Develop a prioritised list of functionality, technology changes, bug fixes
+  etc.
+- Select a month's work.
+- Do a month's work (a "sprint").
+- Review.
+- Repeat.
+
+During a sprint new work items cannot be assigned to the developers', except
+for urgent show-stopper bugs. (New items that are identified are added to the
+backlog instead.) The team can reduce or increase the amount of work in the
+sprint if it needs to, but tries to avoid reductions if possible.
+
+As new functionality becomes available it is rolled into the applications and
+user feedback sought.
+
+Artefacts (one of each for SAFE and SInS):
+- Applications. (Currently the MUSING demonstrator for SAFE and the wiki and
+  project management systems for SInS.)
+- Backlog. This lists all new and changed functionality that we've decided we
+  need to develop to improve the applications. Items at the top of the list
+  should be detailed enough and fine-grained enough to be implemented.
+- Test suite. All the backlog items that the team produces are delivered as a
+  set of tests.
+- User guide. This has to contain enough information for users to understand
+  what the team outputs and to exploit it effectively.
+- Developer guide. This is written relatively informally as a set of notes
+  that point into the test suite javadocs/java2html.
+- Documentation: the sequence is: vision; backlog to-do; backlog done, linked
+  to developer or user documentation.
+
+Team members (drawn from HC, VT, KB, IR, NA, MA, TH, DD, JS, YL):
+- IR (editor of the SAFE backlog, SAFE chief architect)
+- HC (editor of the SInS backlog, scrum meeting chair, documentation lead)
+- MA (SAFE and SInS chief developer)
+- TH (SAFE developer)
+- JS (SAFE and SInS developer)
+- DD (SInS developer)
+- VT (SInS chief architect)
+- KB (SAFE chief scientist, SInS lead customer)
+
+Meetings:
+- First Monday of the month: sprint end review, sprint backlog elements
+  selection. (Changes when a sprint finishes early. Sprints can't finish late:
+  if the work isn't complete when they end we just stop, replan, and start
+  again.) A sprint end review looks at each backlog that was planned and asks
+  "Do tests exist that cover this item, and do they succeed?" and "Is the
+  customer using this, and if not then when?"
+- Monday/Wednesday/Friday bi-weekly and Tuesday/Thursday bi-weekly
+  alternating: 4-4.15: SAFE team meeting, or "scrum"; 4.15-4.30: SInS team
+  meeting. The team meeting is very short; each member summarises what they
+  did since the last meeting, what they plan to do next, and anything that is
+  a problem (technological, organisational, whatever).
+- Alternate Thursdays: management meeting (analyse problems raised in team
+  meetings, check backlog priorities, review code).
+- As required: user meetings. When we're the users or when the users are
+  remote we have to simulate them. In XP style new development should be
+  rolled into the applications as quickly as possible.

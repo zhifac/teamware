@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+            http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+            
+	<!-- Import the CXF stuff -->
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+
+	<aop:config>
+		<aop:advisor id="workflowManagerSync" advice-ref="concurrencyInterceptor"
+			pointcut="execution(* gleam.executive.workflow.manager.WorkflowManager.executeCallback(..)) || execution(* gleam.executive.workflow.manager.WorkflowManager.cancelTaskInstance(..)) || execution(* gleam.executive.workflow.manager.WorkflowManager.checkForNextTask(..)) || execution(* gleam.executive.workflow.manager.WorkflowManager.getNextTaskAsMap(..)) || execution(* gleam.executive.workflow.manager.WorkflowManager.completeTask(..))"
+			order="0" />
+		<aop:advisor id="userManagerTx" advice-ref="userManagerTxAdvice"
+			pointcut="execution(* *..service.UserManager.*(..))" order="1" />
+		<aop:advisor id="userManagerSecurity" advice-ref="userSecurityAdvice"
+			pointcut="execution(* *..service.UserManager.saveUser(..))" order="2" />
+		<aop:advisor id="managerTx" advice-ref="txAdvice"
+			pointcut="execution(* *..service.*Manager.*(..)) || execution(* *..workflow.manager.*Manager.*(..))"
+			order="3" />
+	</aop:config>
+
+
+	<tx:advice id="txAdvice">
+		<tx:attributes>
+			<tx:method name="get*" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+
+	<tx:advice id="userManagerTxAdvice">
+		<tx:attributes>
+			<tx:method name="save*" rollback-for="UserExistsException" />
+		</tx:attributes>
+	</tx:advice>
+
+
+	<bean id="concurrencyInterceptor"
+		class="org.springframework.aop.interceptor.ConcurrencyThrottleInterceptor">
+		<property name="concurrencyLimit" value="1" />
+	</bean>
+	<!-- ActiveMQ -->
+
+	<amq:broker useJmx="false" 
+	            persistent="false" 
+	            tmpDataDirectory="${instance.dir}/executive/activemq-data">
+		<amq:transportConnectors>
+			<amq:transportConnector uri="tcp://localhost:0" />
+		</amq:transportConnectors>
+	</amq:broker>
+	
+	
+
+	<amq:queue id="emailQueue" physicalName="emailQueue" />
+	<amq:queue id="processStartCommandQueue" physicalName="processStartCommandQueue" />
+	<amq:queue id="testQueue" physicalName="testQueue" />
+
+	<amq:connectionFactory id="jmsFactory" brokerURL="vm://localhost" />
+
+
+	<bean id="producerJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory">
+			<bean class="org.springframework.jms.connection.SingleConnectionFactory">
+				<property name="targetConnectionFactory" ref="jmsFactory" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="consumerJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="jmsFactory" />
+	</bean>
+
+	<bean id="emailProducer" class="gleam.executive.workflow.jms.EmailProducer">
+		<property name="template" ref="producerJmsTemplate" />
+		<property name="destination" ref="emailQueue" />
+	</bean>
+
+	<bean id="emailSender" class="gleam.executive.workflow.jms.EmailSender">
+		<property name="template" ref="consumerJmsTemplate" />
+		<property name="destination" ref="emailQueue" />
+		<property name="mailEngine" ref="mailEngine" />
+	</bean>
+	
+	<bean id="processStartCommandProducer" class="gleam.executive.workflow.jms.ProcessStartCommandProducer">
+		<property name="template" ref="producerJmsTemplate" />
+		<property name="destination" ref="processStartCommandQueue" />
+	</bean>
+	
+	<bean id="processStartCommandConsumer" class="gleam.executive.workflow.jms.ProcessStartCommandConsumer">
+		<property name="template" ref="consumerJmsTemplate" />
+		<property name="destination" ref="processStartCommandQueue" />
+		<property name="workflowManager" ref="workflowManager" />
+	</bean>
+
+	<bean id="messageConsumer" class="gleam.executive.workflow.jms.MessageConsumer">
+		<property name="template" ref="consumerJmsTemplate" />
+		<property name="destination" ref="testQueue" />
+		<property name="executiveCallbackService" ref="callbackHandler" />
+		<property name="threshold" value="${threshold}" />
+	</bean>
+
+	<bean id="messageProducer" class="gleam.executive.workflow.jms.MessageProducer">
+		<property name="template" ref="producerJmsTemplate" />
+		<property name="destination" ref="testQueue" />
+	</bean>
+
+    <bean id="emailListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsFactory" />
+		<property name="destination" ref="emailQueue" />
+		<property name="messageListener" ref="emailSender" />
+	</bean>
+	
+	<bean id="processStartCommandListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsFactory" />
+		<property name="destination" ref="processStartCommandQueue" />
+		<property name="messageListener" ref="processStartCommandConsumer" />
+	</bean>
+	
+	<bean id="testListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsFactory" />
+		<property name="destination" ref="testQueue" />
+		<property name="messageListener" ref="messageConsumer" />
+	</bean>
+
+
+	<!--End of JMS part -->
+
+
+	<!-- JBPM Config through Spring Modules -->
+	<bean id="jbpmConfig"
+		class="gleam.executive.workflow.sm.LocalJbpmConfigurationFactoryBean">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="configuration" value="classpath:jbpm.cfg.xml" />
+		<property name="createSchema" value="false" />
+		<property name="processDefinitionsResources">  
+		 <list>  
+			<value>classpath:setup.zip</value>
+			<value>classpath:automaticAnnotation.zip</value>  
+			<value>classpath:manualAnnotation.zip</value>  
+			<value>classpath:main.zip</value>    
+		 </list>  
+		</property>  
+		
+	</bean>
+
+	<!--
+		SafeJobExecutor is a DigitalRiver custom class to allow Spring to
+		create JobExecutor
+	-->
+	<bean id="jbpm.job.executor" class="org.jbpm.job.executor.JobExecutor"
+		lazy-init="false" init-method="start" destroy-method="stopAndJoin">
+		<property name="jbpmConfiguration" ref="jbpmConfig" />
+		<property name="name" value="JbpmJobExecutor" />
+		<property name="nbrOfThreads" value="1" />
+		<property name="idleInterval" value="5000" />
+		<property name="maxIdleInterval" value="3600000" />
+		<property name="historyMaxSize" value="20" />
+		<property name="maxLockTime" value="600000" />
+		<property name="lockMonitorInterval" value="60000" />
+		<property name="lockBufferTime" value="5000" />
+	</bean>
+
+	<!-- JBPM Template (main access point for JBPM calls -->
+	<bean id="jbpmTemplate" class="gleam.executive.workflow.sm.JbpmTemplate">
+		<constructor-arg index="0" ref="jbpmConfig" />
+	</bean>
+
+	<bean id="workflowManager" class="gleam.executive.workflow.manager.WorkflowManagerImpl">
+		<property name="jbpmTemplate" ref="jbpmTemplate" />
+		<property name="userManager" ref="userManager" />
+		<property name="docServiceManager" ref="docServiceManager" />
+		<!--
+		<property name="gosManager" ref="gosManager" />
+		-->
+		<property name="webAppBean" ref="webAppBean" />
+	</bean>
+
+	<!-- Callback service -->
+
+	<bean id="callbackHandler"
+		class="gleam.executive.workflow.callback.JBPMCallbackServiceImpl">
+		<property name="workflowManager" ref="workflowManager" />
+	</bean>
+
+	<!-- Define the CXF service endpoint -->
+	<jaxws:endpoint id="callbackServiceEndpoint"
+		implementor="#callbackHandler"
+		implementorClass="gleam.executive.workflow.callback.JBPMCallbackServiceImpl"
+		address="/ExecutiveCallbackService">
+		<jaxws:features>
+			<bean class="org.apache.cxf.transport.http.gzip.GZIPFeature" />
+		</jaxws:features>
+	</jaxws:endpoint>
+
+	<!--JBPM Actions part -->
+
+	<!-- Assignment -->
+	<bean id="setPerformerAssignmentHandler"
+		class="gleam.executive.workflow.assignment.SetPerformerAssignmentHandler"
+		scope="prototype">
+	</bean>
+
+
+
+	<!-- doc-centric action handlers -->
+	<bean id="forkAndInitDocumentFlowsActionHandler"
+		class="gleam.executive.workflow.action.ForkAndInitDocumentFlowsActionHandler"
+		scope="prototype">
+		<property name="docServiceManager" ref="docServiceManager" />
+	</bean>
+
+	<bean id="createAnnotationSetActionHandler"
+		class="gleam.executive.workflow.action.CreateAnnotationSetActionHandler"
+		scope="prototype">
+		<property name="docServiceManager" ref="docServiceManager" />
+	</bean>
+
+	<bean id="createAnnotationTasksActionHandler"
+		class="gleam.executive.workflow.action.CreateAnnotationTasksActionHandler"
+		scope="prototype">
+	</bean>
+
+	<bean id="gasActionHandler" class="gleam.executive.workflow.action.GASActionHandler"
+		scope="prototype">
+		<property name="gateServiceManager" ref="gateServiceManager" />
+		<property name="annotationServiceManager" ref="annotationServiceManager" />
+		<property name="messageProducer" ref="messageProducer" />
+		<property name="webAppBean" ref="webAppBean" />
+
+	</bean>
+
+	<bean id="annotationTaskStartActionHandler"
+		class="gleam.executive.workflow.action.AnnotationTaskStartActionHandler"
+		scope="prototype">
+	</bean>
+
+	<bean id="annotationTaskEndActionHandler"
+		class="gleam.executive.workflow.action.AnnotationTaskEndActionHandler"
+		scope="prototype">
+	</bean>
+
+	<bean id="roleBasedSwimlaneAssignmentHandler"
+		class="gleam.executive.workflow.assignment.RoleBasedSwimlaneAssignmentHandler"
+		scope="prototype">
+		<property name="userManager" ref="userManager" />
+	</bean>
+
+
+	<bean id="mailActionHandler" class="gleam.executive.workflow.action.MailActionHandler"
+		scope="prototype">
+		<property name="userManager" ref="userManager" />
+		<property name="mailEngine" ref="mailEngine" />
+		<property name="mailMessage" ref="mailMessage" />
+		<property name="emailProducer" ref="emailProducer" />
+		<property name="webAppBean" ref="webAppBean" />
+	</bean>
+
+	<bean id="simpleDataflowActionHandler"
+		class="gleam.executive.workflow.action.SimpleDataflowActionHandler"
+		scope="prototype">
+	</bean>
+	<bean id="loopDecisionHandler" class="gleam.executive.workflow.action.LoopDecisionHandler"
+		scope="prototype">
+	</bean>
+
+	<bean id="gasConfigurationActionHandler"
+		class="gleam.executive.workflow.action.GASConfigurationActionHandler"
+		scope="prototype">
+	</bean>
+
+
+	<bean id="applyProjectSettingsActionHandler"
+		class="gleam.executive.workflow.action.ApplyProjectSettingsActionHandler"
+		scope="prototype">
+		<property name="userManager" ref="userManager" />
+		<property name="projectManager" ref="projectManager" />
+	</bean>
+
+	<bean id="serviceLookupActionHandler"
+		class="gleam.executive.workflow.action.ServiceLookupActionHandler"
+		scope="prototype">
+		<property name="annotationServiceManager" ref="annotationServiceManager" />
+	</bean>
+
+	<bean id="listDocumentsFromCorpusActionHandler"
+		class="gleam.executive.workflow.action.common.ListDocumentsFromCorpusActionHandler"
+		scope="prototype">
+		<property name="docServiceManager" ref="docServiceManager" />
+	</bean>
+
+	<bean id="createGasTasksActionHandler"
+		class="gleam.executive.workflow.action.common.CreateGasTasksActionHandler"
+		scope="prototype">
+	</bean>
+
+</beans>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="cloud-tw" default="dist">
+  <import file="../common.xml" />
+
+  <target name="dist" depends="gate-service.war.complete">
+    <ant dir="common-services" target="dist" />
+  </target>
+
+  <target name="unwar" depends="dist">
+       <unwar src="common-services/dist/common-services.war" dest="${deploy.dir}/common-services" />
+  </target>
+
+  <target name="deploy-all" depends="unwar">
+    <!-- create context file -->
+    <ant antfile="../../common.xml" target="create-context"> 
+        <property name="webapp" value="common-services"/>
+    </ant>
+    <!-- create root context -->
+    <ant antfile="../../common.xml" target="create-context"> 
+        <property name="webapp" value=""/>
+    </ant>
+
+    <ant antfile="../../common.xml" target="republish-schemas"/> 
+  </target>
+
+  <target name="undeploy-all">
+    <delete dir="${deploy.dir}/common-services" />
+    <!-- deletes context file -->
+    <ant antfile="../../common.xml" target="delete-context">
+	 <property name="webapp" value="common-services"/>
+   </ant>
+   <!-- Delete root context file -->
+    <ant antfile="../../common.xml" target="delete-context">
+	 <property name="webapp" value=""/>
+   </ant>
+  </target>
+
+  <target name="clean">
+    <ant dir="common-services" target="clean" />
+  </target>
+</project>

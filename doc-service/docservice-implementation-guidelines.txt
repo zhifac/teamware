@@ -1,0 +1,35 @@
+Implementation guidelines for the DocService
+
+The DocService will be available as a web service. In our configuration, we will
+use axis2 with the latest version of apache tomcat.
+The sources will be located in sins/gleam/docService/src
+The directory 'resources' will contain all sorts of parameter files, files used 
+for testing...
+
+A test directory will contain a hierarchy of JUnit classes used to test that the
+service works. The test classes will use a parameter file containing the 
+informations about the location of the service and so on.
+The test will be like : 
+- testing that a DocService is available at a given URL (URL of the WSDL file)
+- creation of a corpus
+- deletion of a corpus
+- querying the corpora available on the service
+- same for documents
+- test the locking mechanism
+- etc...
+
+An ANT script will be used to compile the classes, generate the JARS and run a 
+test suite.
+
+The first step is to write or generate automatically the WSDL file for the 
+service and implement a basic interface + a dummy implementation returning fixed values.
+
+The second step after writing the Junit classes is to write a wrapper for the 
+Docservice in GATE, which means creating a new type of Datastore 
+(ServiceDataStore) which connects to a DocService. It must take as parameter 
+the URL of the service. The idea is to test that the docservice behaves exactly 
+as another storage.
+
+The third step is the implementation of the service itself. It must be initially
+based on the existing storage mechanism (SerialDataStore) + mysql through JDBC 
+for storing the list of locks.

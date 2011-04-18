@@ -1,0 +1,17 @@
+GATE Service (GaS)
+------------------
+
+This directory contains the various components of the GaS.  There are several
+subdirectories, the most important are:
+
+server:  The server-side implementation of a GaS
+gate-client:  The PR to support calling a GaS from GATE.
+
+Each subdirectory builds independently, and if you are an Eclipse user you must
+create a separate project for each.  For best results, use the following
+project names:
+
+server:  create an Eclipse project called "GAS-server"
+gate-client:  create an Eclipse project called "GASPR"
+
+Don't try and create a project for gate-service itself, this won't work.

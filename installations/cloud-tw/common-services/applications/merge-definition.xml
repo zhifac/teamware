@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service xmlns="http://gate.ac.uk/gleam/gate-service/definition">
+  <annotationSets>
+    <annotationSet name="annotator2.original" out="true" />
+    <annotationSet name="annotator2" in="true" out="true" />
+    <annotationSet name="annotator1.original" out="true" />
+    <annotationSet name="annotator1" in="true" out="true" />
+    <annotationSet name="consensus" out="true" />
+  </annotationSets>
+  <parameters />
+</service>
+

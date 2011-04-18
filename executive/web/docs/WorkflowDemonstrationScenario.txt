@@ -1,0 +1,105 @@
+Manual Annotation Project Demonstration Scenario:
+
+Prerequisites:
+- You have available users with the annotator role in database
+- For the demonstration purpose prepare zip file with only two documents.
+
+
+1. Login as user with manager role and create annotation project
+
+   1.1 Create new Project
+       1.1.1 Go to "Projects Menu" and click on "New Project" option, or directly from the home page.
+       1.1.2 You will be redirected to Workflow template Form where you need to provide some name and description.
+             (Note: since you did not start project from the existing template, you have to create template first).
+             After click on Go button you will enter Workflow Template Wizard.
+       1.1.3 Configuration: "select annotation modes" 
+             - check Manual Annotation and click Next
+       1.1.3 Configuration: "select annotation rules" 
+             - select 2 annotators per document, 
+             - leave "cancel task allowed" and "anonymous annotation" checked
+             - select some of the existing annotation schemas you want to use in manual annotation.
+               (You have the option to add new schema, if you want)     
+       1.1.5 Configuration: "project settings overview"
+             - check the options you entered and click on Save Template.
+             Note: If you are not happy with the settings, by pressing "Start Again", you will be able to repeat the setup procedure.
+       1.1.6 You will be redirected to the list of your workflow templates
+             Note: In case that you created workflow templates before, you will be able 
+             to see them by clicking on "Projects Menu/My Workflow Templates" option or link in 
+             "My Workflow Templates link" on your home page
+       1.1.7 To create the project from specified template, you need to click on:
+             "New project" icon. Then you will be redirected to Project Data form where you need to configure your project.
+       1.1.8 Choose the name for your project, corpus, you want to annotate and the users
+             with roles which participate in project execution, in this case: manager, curators and annotators.
+             Note: Manager will be you, by default. For the purpose of demonstration select 3 annotators.
+       1.1.9 When you click on Save & Start button, you will start annotation project and be able to manage it.
+   
+   
+2. Project management
+   2.1 In any time you can delete, suspend/resume project and change its actors.
+   2.2 Project can have one or more sub-processes which you can see if you click on "sub-processes icon"
+   2.3 Project Monitoring   
+       2.3.1 Project monitoring is available on sub-process level, so in order to see annotation process, you 
+       meed to click on "monitor icon" for specified sub-process.
+       2.3.2 You can navigate from:
+             - Annotation Status overview, where you can see real time status of each document via pie chart
+             - Annotation Status detailed view, where you can see the status of each document and who work(ed) on it
+             - Annotator Record View, where you can see the work done by selected annotator.
+       2.3.2 When annotators start to annotate, you will be able to see task statuses if you click on "View task instances" icon.
+        
+   2.4 Notification
+       After Annotation process is completed, you as manager will be notified by email.
+  
+
+3. Login as annotator1
+
+   3.1 Participating in Workflow
+       3.1.1 Open Annotation Editor (note that there is no Pending tasks link)
+       3.1.2 Click on Get new task and wait for the 1st task (Doc1) to be loaded inside Annotator GUI
+       3.1.3 Finish 1st task (Doc1)
+       3.1.3 Click on Get new task and wait for the 2nd task (Doc2) to be loaded inside Annotator GUI
+       3.1.4 Cancel 2nd task
+       3.1.5 Click on Get new task. "No new task" message will appear.
+             Explanation: Doc1 was accepted and annotated by annotator1
+                          Doc2 was accepted and canceled by annotator1
+                          since there is no more available documents and annotator
+                          cannot get the document, he canceled before,
+                          he will see No new tasks message.
+
+   3.2 Logout
+
+4. Login as annotator2
+
+   4.1 Participating in Workflow
+       4.1.1 Open Annotation Editor (note that there is no Pending tasks link)
+       4.1.2 Click on Get new task and wait for the 1st task (Doc1) to be loaded inside Annotator GUI
+       4.1.3 Cancel 1st task
+       4.1.4 Click on Get new task and wait for the 2nd to be loaded inside Annotator GUI
+       4.1.5 Finish 2nd task (Doc2)
+       4.1.6 Click on Get new task. "No new task" message will appear.
+             Explanation: since there is no more available documents (canceled Doc1 and annotated Doc2)
+                          he will see "No new tasks message"
+
+   4.2 Logout
+
+5. Login as annotator3
+   5.1 Participating in Workflow
+       5.1.1 Open Annotation Editor (note that there is no Pending tasks link)
+       5.1.2 Click on Get new task and wait for the 1st task (Doc1) to be loaded inside Annotator GUI
+       5.1.3 Finish 1st task
+       5.1.4 Click on Get new task and wait for the 2nd to be loaded inside Annotator GUI
+       5.1.5 Finish 2nd task (Doc2)
+       5.1.6 Click on Get new task. "No new task" message will appear.
+             Explanation: since there is no more available documents (canceled Doc1 and annotated Doc2)
+                          he will see "No new tasks message"
+
+   5.2 Logout
+
+
+6. End of demo
+
+
+
+
+
+
+

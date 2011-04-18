@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<project name="Installation Build"  default="core" basedir="${basedir}">
+  <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+  <taskdef name="dbunit" classname="org.dbunit.ant.DbUnitTask"/>
+  <!-- this is required to pick up the properties generated during the install pages -->
+  <property file="${basedir}/ant.install.properties"/>
+
+  <property name="default.instance.name" value="__teamware__"/>
+  <property name="update.dir.name" value="${default.instance.name}-update"/>
+  <property name="deploy.dir.name" value="${default.instance.name}-webapps"/>
+  <property name="deploy.dir" value="${tomcatDir}/${deploy.dir.name}"/>
+  <property name="database.driver_class" value="com.mysql.jdbc.Driver"/>
+  
+  <condition property="isUnix"> <os family="unix" /> </condition>
+
+  <filterset id="variables.to.replace">
+    <filter token="URLBASE" value="${urlBase}"/>
+    <filter token="PRIVATEURLBASE" value="${privateUrlBase}"/>
+    <filter token="INSTANCENAME" value="${instanceName}"/>
+    <filter token="INSTANCETITLE" value="${instanceTitle}"/>
+    <filter token="INSTANCELOGO" value="${instanceLogo}"/>
+    <filter token="INSTANCEDIR" value="${instanceDir}"/>
+    <filter token="DATABASEHOST" value="${databaseHost}"/>
+    <filter token="DB-NAME" value="${databaseHost}"/>
+    <filter token="DATABASENAME" value="${databaseName}"/>
+    <filter token="DATABASEUSERNAME" value="${databaseUsername}"/>
+    <filter token="DATABASEPASSWORD" value="${databasePassword}"/>
+    <filter token="MAILDEFAULTFROM" value="${mailFrom}"/>
+    <filter token="MAILHOST" value="${mailServerAddress}"/>
+    <filter token="MAILUSERNAME" value="${mailServerUsername}"/>
+    <filter token="MAILPASSWORD" value="${mailServerPassword}"/>
+  </filterset>
+
+  <filterset id="sql.to.replace">
+    <filter token="DB-NAME" value="${databaseName}"/>
+    <filter token="DB-USERNAME" value="${databaseUsername}"/>
+    <filter token="DB-PASSWORD" value="${databasePassword}"/>
+  </filterset>
+
+
+  <target name="init">
+    <echo message="basedir: ${basedir}"/>
+    <condition property="isWindows"><os family="windows"/></condition>
+    <if>
+      <isset property="isWindows"/>
+      <then>
+        <var name="file.url.prefix.var" value="file:///"/>
+        <echo>Fixing file.url.prefix for windows ${file.url.prefix}</echo>
+      </then>
+      <else>
+        <var name="file.url.prefix.var" value="file://"/>
+      </else>
+    </if>
+    <property name="file.url.prefix" value="${file.url.prefix.var}"/>
+    <echo message="file.url.prefix: ${file.url.prefix}"/>
+  </target>
+
+  <target name="core" depends="cleanup,init">
+    <echo message="Instance Name [${instanceName}]"/>
+    <echo message="Tomcat Directory [${tomcatDir}]"/>
+    <echo message="Instance Directory [${instanceDir}]"/>
+    <echo message="URL base [${urlBase}]"/>
+    <echo message="Private URL base [${privateUrlBase}]"/>
+    <echo message="SMTP Mail Server Address [${mailServerAddress}]"/>
+    <echo message="SMTP Mail Server Username [${mailServerUsername}]"/>
+    <echo message="SMTP Mail Server Password [${mailServerPassword}]"/>
+    <echo message="Mail From Address [${mailFrom}]"/>
+    <echo message="Database Host [${databaseHost}]"/>
+    <echo message="Database Name [${databaseName}]"/>
+    <echo message="Database Username [${databaseUsername}]"/>
+    <echo message="Database Password [${databasePassword}]"/>
+
+    <unjar src="${antinstaller.jar}" dest="${basedir}">
+      <patternset>
+        <include name="teamware-update.zip"/>
+      </patternset>
+    </unjar>
+
+    <unzip src="${basedir}/teamware-update.zip" dest="${basedir}">
+      <patternset>
+        <include name="**/*"/>
+      </patternset>
+    </unzip>
+
+    <echo message="copying non configuration files to ${tomcatDir}/${instanceName}-webapps"/>
+    <copy todir="${tomcatDir}/${instanceName}-webapps" includeEmptyDirs="no" overwrite="true">
+      <fileset dir="${basedir}/${deploy.dir.name}">
+        <exclude name="**/*.properties"/>
+        <exclude name="**/*.dtd"/>
+        <exclude name="**/*.xml"/>
+        <exclude name="**/*.conf"/>
+      </fileset>
+    </copy>
+    <echo message="copying configuration files to ${tomcatDir}/${instanceName}-webapps"/>
+    <copy todir="${tomcatDir}/${instanceName}-webapps" includeEmptyDirs="no" overwrite="true">
+
+      <fileset dir="${basedir}/${deploy.dir.name}">
+        <include name="**/*.properties"/>
+        <include name="**/*.dtd"/>
+        <include name="**/*.xml"/>
+        <include name="**/*.conf"/>
+      </fileset>
+      <filterset refid="variables.to.replace"/>
+      <filterset>
+        <filter token="FILEPROTOCOLPREFIX" value="${file.url.prefix}"/>
+      </filterset>
+    </copy>
+
+    <echo message="copying context files to ${tomcatDir}/conf/Catalina/localhost"/>
+    <copy todir="${tomcatDir}/conf/Catalina/localhost" includeEmptyDirs="no" overwrite="true">
+      <mapper type="glob" to="${instanceName}*" from="__teamware__*"/>
+
+      <fileset dir="${basedir}/conf/Catalina/localhost"/>
+
+      <filterset refid="variables.to.replace"/>
+      <filterset>
+        <filter token="FILEPROTOCOLPREFIX" value="${file.url.prefix}"/>
+      </filterset>
+    </copy>
+
+    <echo message="Replacing '__teamware__' with '${instanceName}'"/>
+    <replace dir="${tomcatDir}/conf/Catalina/localhost"
+      includes="**/*.xml"
+      value="${instanceName}">
+      <replacetoken><![CDATA[__teamware__]]></replacetoken>
+    </replace>
+    <replace dir="${tomcatDir}/${instanceName}-webapps"
+      includes="**/*.properties,docservice/WEB-INF/web.xml"
+      value="${instanceName}">
+      <replacetoken><![CDATA[__teamware__]]></replacetoken>
+    </replace>
+
+    <echo message="preparing sql for execution"/>
+    <mkdir dir="${basedir}/exe"/>
+    <copy todir="${basedir}/exe"  overwrite="true">
+      <fileset dir="${basedir}/sql"/>
+      <filterset refid="sql.to.replace"/>
+    </copy>
+
+    <echo message="Setting custom logo"/>
+    <basename property="logoFileName" file="${instanceLogo}" />
+    <copy file="${instanceLogo}" tofile="${tomcatDir}/${instanceName}-webapps/executive/images/${logoFileName}" overwrite="yes"/>
+    <replace file="${tomcatDir}/${instanceName}-webapps/executive/common/header.jsp" token="logo.gif" value="${logoFileName}"/>
+
+    <if>
+      <isset property="isUnix"/>
+      <then>
+        <echo message="copying utils"/>
+        <copy todir="${instanceDir}/utils">
+          <fileset dir="${basedir}/utils/">
+            <include name="**/*.sh"/>
+          </fileset>
+          <filterset>
+            <filter token="DEPLOYDIR" value="${tomcatDir}/${instanceName}-webapps"/>
+          </filterset>
+        </copy>
+      </then>
+    </if>
+  </target>
+
+  <macrodef name="setTeamwareVersion">
+    <sequential>
+      <echo message="Recording current GATE Teamware version" />
+      <propertyfile file="${instanceDir}/gate-teamware.properties">
+        <entry key="version" value="${teamware.version}" />
+      </propertyfile>
+    </sequential>
+  </macrodef>
+
+  <target name="install" depends="core">
+    <sql onerror="stop"
+         driver="${database.driver_class}"
+         url="jdbc:mysql://${databaseHost}/"
+         userid="${databaseUsername}"
+         password="${databasePassword}" src="${basedir}/exe/mysql-create-full.sql">
+    </sql>
+    <echo message="recreated database"/>
+      <dbunit driver="${database.driver_class}"
+            supportBatchStatement="false" url="jdbc:mysql://${databaseHost}/${databaseName}?useUnicode=true&amp;amp;characterEncoding=utf-8"
+            userid="${databaseUsername}" password="${databasePassword}">
+        <operation type="CLEAN_INSERT" src="${basedir}/exe/sample-data.xml" format="flat"/>
+      </dbunit>
+    <echo message="populated database"/>
+    <setTeamwareVersion />
+  </target>
+
+  <macrodef name="upgrade-db">
+    <attribute name="version" />
+    <sequential>
+     <sql onerror="stop"
+          driver="${database.driver_class}"
+          url="jdbc:mysql://${databaseHost}/"
+          userid="${databaseUsername}"
+          password="${databasePassword}" src="${basedir}/exe/mysql-update-@{version}.sql">
+     </sql>
+    </sequential>
+  </macrodef>
+ 
+  <target name="update-12" depends="core">
+    <upgrade-db version="1.3" />
+    <upgrade-db version="1.3.1" />
+    <upgrade-db version="1.4" />
+    <setTeamwareVersion />
+  </target>
+ 
+  <target name="update-13" depends="core">
+    <upgrade-db version="1.3.1" />
+    <upgrade-db version="1.4" />
+    <setTeamwareVersion />
+  </target>
+ 
+  <target name="update-131" depends="core">
+    <upgrade-db version="1.4" />
+    <setTeamwareVersion />
+  </target>
+
+
+  <target name="cleanup">
+    <delete dir="${tomcatDir}/${instanceName}-webapps"/>
+  </target>
+</project>

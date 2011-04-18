@@ -1,0 +1,283 @@
+GATE Services (GaS) User Guide
+
+%contents
+
+%1 Architecture
+
+The GATE Service platform consists of two principal components:
+- The web service _endpoint_, that accepts requests from clients and queues
+  them for processing.
+- One or more _workers_ that take the queued requests and process them.
+
+The two sides communicate using the Java Messaging System (JMS), a framework
+for reliable messaging between (possibly distributed) Java components.  The
+standard implementation uses Apache ActiveMQ as the message broker, but the
+code is not tied to any particular JMS provider.
+
+In the simplest (and probably most frequent) case, the endpoint, messge broker
+and the workers can run in the same JVM, but it is also possible to run each
+component separately, either in several JVMs on the same physical machine, or
+distributed over the network.  If a particular service is heavily loaded it is
+a simple matter to add extra worker nodes to spread the load, and workers can
+be added or removed dynamically without needing to shut down the web service.
+
+The configuration and wiring together of these components is handled using the
+%(http://www.springframework.org, Spring framework).  A number of standard
+configurations are available but with a little knowledge of Spring you can wire
+together complex combinations of workers and endpoints in a few XML files.
+
+
+%1 Defining a GATE Service 
+
+The Java code making up the GaS is completely generic and will work for any
+GATE application you wish to expose as a service.  A specific service is
+configured with two files, first the ^.xgapp^ file defining the pipeline as
+produced by saving the application state from GATE, and second a _service
+definition_ defining the input and output annotation sets required by the
+service and any parameters the service takes.  These files are described in
+this section.
+
+
+%2 The saved application state
+
+The GATE pipeline run by a service is typically defined by an ^.xgapp^ file,
+created in the GATE GUI using "Save application state"%footnote(If you are a
+Spring guru it is technically possible to define the application in other ways,
+but probably not worth the bother...).  The application should be fully
+configured before saving, i.e. all required runtime parameters should be set
+(except possibly those that will be mapped to _required_ service parameters, as
+described in the next section).
+
+The saved application should be as self-contained as possible, i.e. the plugins
+used by the application should be in subdirectories under the saved application
+location.  This is particularly important when the service is to be run in
+all-in-one mode, as read permission on parent directories may be restricted by
+the servlet container.
+
+
+%2 The service definition
+
+A GaS can declare required and optional parameters whose values are provided by
+the caller.  The parameter values are mapped onto either feature values on the
+document being processed by the embedded GATE PRs (useful in the case of a
+conditional controller), or runtime parameter values of the various PRs
+that make up the application.  The mapping is defined in a _service
+definition_, an XML file supplied by the GaS creator:
+%<
+&lt;parameters>
+  &lt;param name="depth">
+    &lt;runtimeParameter prName="MyAnnotator" prParam="maxDepth" />
+  &lt;/param>
+  &lt;param name="annotatorName">
+    &lt;documentFeature name="annotator" />
+  &lt;/param>
+&lt;/parameters>
+%>
+
+Parameter values are all strings, but when mapping to PR parameters the usual
+GATE ^Resource.setParameterValue()^ is used, which can convert strings into
+other types (e.g. URL, Integer, etc.).
+
+The service definition also specifies what annotation sets the service requires
+as input and populates as output:
+%<
+&lt;annotationSets>
+  &lt;annotationSet name="Original markups" in="true" />
+  &lt;annotationSet name="" out="true" />
+  &lt;annotationSet name="Key" in="true" out="true" />
+&lt;/annotationSets>
+%>
+
+Note that a service can use the same set for both input and output, and can use the default annotation set (the second example above).
+
+
+%1 Standard Configurations
+
+The Ant build file provided with the GaS can build several standard configurations of GaS:
+- All-in-one - the endpoint, message broker and a worker node all packaged in
+  one WAR file and running in one JVM.
+- Endpoint only - a WAR file that runs just the web service endpoint for a
+  service.  It must be configured with the URL to a remote message broker, and
+  workers must be run separately.
+- Standalone worker - a ZIP file containing an installation for a standalone
+  worker node.  It must be configured with a URL to a remote broker, into which
+  an endpoint is queuing jobs.
+
+
+%2 All-in-one WAR file
+
+The ^war.complete^ Ant target creates a WAR file that will run a message
+broker, service endpoint and one or more workers all within the same web
+application context in a servlet container (e.g. Tomcat or Jetty).  Despite the
+name, the WAR file generated is not quite complete, the following files must be
+inserted to complete the deployment:
+- ^/WEB-INF/serviceDefinition.xml^ - the service definition for this service.
+- ^/WEB-INF/application.xgapp^ - the saved application state.  Any plugins or
+  resource files which this requires should also be added at the appopriate
+  places under ^WEB-INF^.
+
+Once these files have been added to the WAR it should be deployable on any
+Servlet 2.4 container (e.g. Tomcat 5.5, Jetty 6, etc.)
+
+In addition, you may wish to edit ^/WEB-INF/gate-service.properties^ if you
+want to run more than one worker to allow for parallel processing of requests.
+
+Finally, ^/WEB-INF/classes/log4j.properties^ defines the logging configuration
+for the service.  The default file logs all informative, warning and error
+messages - when debugging you may wish to enable debug messages too.
+
+
+%2 Endpoint only
+
+The ^war.endpointonly^ target creates a WAR file that runs just the web service
+endpoint for a service.  It expects to post jobs to a remote message broker,
+and you will need to run one or more standalone workers to process the jobs.
+The endpoint-only WAR file requires the addition of just
+^/WEB-INF/serviceDefinition.xml^ as described above.  In addition, you will
+need to edit ^/WEB-INF/gate-service.properties^ and set the correct brokerURL
+(typically ^failover:tcp://hostname:61616^), and you may wish to configure
+logging as above.
+
+
+%2 Standalone worker
+
+The ^dist.worker^ target creates a ZIP file which is a suitable installation
+from which to run a set of standalone workers for a GaS.  You will need to add
+the following files to the distribution:
+- ^gate-service-worker/conf/serviceDefinition.xml^ - the service definition.
+- ^gate-service-worker/gate/application.xgapp^ - the saved application state.
+  Plugins should be added here too.
+
+You may also wish to edit ^gate-service.properties^ and ^log4j.properties^ in
+the ^conf^ directory to set the broker location, number of workers and logging
+configuration for the workers.
+
+The workers are run using Ant: a ^build.xml^ file is provided in the
+^gate-service-worker^ directory, just run ^ant^ in this directory to run the
+workers.
+
+
+%1 Advanced configuration
+
+_This section assumes some knowledge of the Spring framework, and in particular
+the Inversion of Control container and the format of bean definition XML
+files._
+
+The various components of a GaS are configured using Spring.  The standard
+configurations described above are simply pre-defined Spring contexts
+containing the relevant beans, which require minimal additional configuration
+to be useable.
+
+
+%2 Endpoints
+
+The web service endpoint object for a particular GaS is instantiated by Axis.
+However, the endpoint object itself is simply a thin wrapper around a Spring
+bean, called the _endpoint handler_, that does the actual work.
+
+When the GaS web application starts up it uses the standard Spring
+^ContextLoaderListener^ to load an ApplicationContext from a number of bean
+definition files, typically stored in ^/WEB-INF/spring^.  The Axis-managed
+endpoint object then looks up the endpoint handler bean in this context under
+the ID ^endpointHandler^.  The ^endpointHandler^ bean is a prototype
+(non-singleton) bean, of which several instances will be created by the Axis
+service object to allow for multiple concurrent requests.
+
+The usual endpoint handler is an instance of the class
+^gleam.gateservice.endpoint.GateWebServiceHandler^, and takes the following
+properties:
+- ^serviceDefinition^ - a ^gleam.gateservice.definition.GateServiceDefinition^,
+  typically created from an XML definition file by the
+  ^GateServiceDefinitionFactoryBean^.
+- ^jmsConnectionFactory^ - the ^javax.jms.ConnectionFactory^ used to connect to
+  the message broker.
+- ^queue^ - the ^javax.jms.Destination^ to which jobs are posted.
+
+Creation of the connection factory and destination are JMS provider specific.
+In a JEE application server they would come from JNDI but for ActiveMQ they can
+simply be created as singleton beans in Spring.  See
+^/WEB-INF/spring/commonBeans.xml^ in a generated WAR file for an example.
+
+
+%2 Workers
+
+Workers are started by ^gleam.gateservice.worker.WorkerRunner^, which takes a
+Spring application context and looks for all beans of type
+^gleam.gateservice.worker.WorkerConfig^.  Each WorkerConfig bean defines a set
+of workers to run, and has the following properties:
+- ^connectionFactory^ - the JMS connection factory used to connect to the
+  broker.
+- ^queue^ - the Destination from which jobs are to be consumed.
+- ^serviceDefinition^ - the service definition, typically created by
+  ^GateServiceDefinitionFactoryBean^ as above.
+- ^executiveProxyFactory^ - the ^gleam.executive.proxy.ExecutiveProxyFactory^
+  used to communicate with the executive.  If this set of workers will not
+  service any GLEAM-mode requests, a dummy proxy may be used.
+- ^docServiceProxyFactory^ - the
+  ^gleam.docservice.proxy.DocServiceProxyFactory^ used to communicate with the
+  document service.  A dummy may be used for a GATE-mode-only worker, as above.
+- ^gateApplicationBeanName^ - the name of the prototype bean providing the GATE
+  application to run.  Typically this will be defined using the GATE
+  ^SpringFactory^'s ^loadObjectFromResource^ method to load a ^.xgapp^ file,
+  but a custom factory bean could be used instead.  Each worker started by the
+  runner will receive a fresh copy of this application.
+- ^numWorkers^ - the number of identical workers to start.
+
+
+%2 Running workers in a web application
+
+To run workers in a web application, for example in the all-in-one case where
+the workers run in the same webapp as the endpoint, there is a
+^ServletContextListener^ provided which creates a ^WorkerRunner^ and starts
+workers defined by all the ^WorkerConfig^ beans in the Spring web application
+context.  The listener must be declared in ^web.xml^, _after_ the Spring
+^ContextLoaderListener^, as follows:
+%<
+&lt;listener>
+  &lt;listener-class>
+    gleam.gateservice.worker.WorkerRunnerListener
+  &lt;/listener-class>
+&lt;listener>
+%>
+
+The spring context must of course include all the beans required by the
+WorkerConfigs...
+
+
+%1 Complex configurations - more than one service
+
+There is nothing to stop you running endpoints and/or workers for more than one
+GaS in the same web application or JVM.  However, some additional configuration
+is necessary.
+
+
+%2 Multiple endpoints in one webapp
+
+To run endpoints for multiple services in the same web application, you must
+first create your Spring bean definitions such that the two independent
+endpoint handlers are defined correctly under different bean IDs (say
+^serviceOneHandler^ and ^serviceTwoHandler^).  In particular, the two handlers
+_must_ post their jobs to different JMS queues - either two different queues in
+the same broker or two independent brokers.
+
+Once this is done you must modify the Axis ^server-config.wsdd^ file in
+^WEB-INF^ and duplicate the ^service^ section defining the GATEService,
+changing the service ^name^ attributes to distinguish between the two
+services.  Then you must add a parameter to each service to tell it which
+handler bean to use:
+%<
+&lt;service name="ServiceOne" provider="java:RPC" ...>
+ ...
+ &lt;parameter name="scope" value="Application"/>
+ &lt;!-- Use a different bean name for the handler -->
+ &lt;parameter name="endpointHandlerBeanName" value="serviceOneHandler"/>
+ ...
+&lt;/service>
+%>
+
+
+%2 Multiple workers in one JVM
+
+This case is very simple - just define multiple independent WorkerConfig beans
+in your Spring configuration, and all the defined workers will be run
+automatically by the WorkerRunner.

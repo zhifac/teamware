@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spring bean definitions shared by the endpoint and workers -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                      http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+ 
+   <amq:broker useJmx="false" 
+	            persistent="false">
+		<amq:transportConnectors>
+			<amq:transportConnector uri="tcp://localhost:0" />
+		</amq:transportConnectors>
+	</amq:broker>
+	
+
+	<amq:connectionFactory id="connectionFactory" brokerURL="vm://localhost">
+   <property name="prefetchPolicy">
+      <amq:prefetchPolicy all="1" />
+    </property>
+  </amq:connectionFactory>
+
+  <bean id="serviceDefinition"
+    class="gleam.gateservice.spring.GateServiceDefinitionFactoryBean">
+    <property name="xmlFile"
+              value="${gleam.gateservice.top.dir}/serviceDefinition.xml" />
+  </bean>
+
+  <amq:queue id="queue" physicalName="${gleam.gateservice.queueName}" />
+
+</beans>

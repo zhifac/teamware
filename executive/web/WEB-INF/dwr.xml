@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN" "http://getahead.org/dwr/dwr20.dtd">
+
+<dwr>
+    <allow>
+        <!--create creator="spring" javascript="UserManager">
+            <param name="beanName" value="userManager"/>
+            <include method="getUsers"/>
+        </create>
+        <convert converter="bean" match="gleam.executive.model.User"/-->
+        <convert converter="bean" match="gleam.executive.service.dwr.*"/>
+        <create creator="spring" javascript="docServiceDetailDWRManager">
+        	<param name="beanName" value="docServiceDetailManager"></param>
+        </create>
+        <create creator="new" javascript="UploadMonitor">
+            <param name="class" value="gleam.executive.webapp.action.fileupload.upload.UploadMonitor"/>
+        </create>
+        <convert converter="bean" match="gleam.executive.webapp.action.fileupload.upload.UploadInfo"/>
+         <convert converter="bean" match="gleam.executive.model.Corpus"/>
+        
+        <create creator="new" javascript="DSMonitor">
+            <param name="class" value="gleam.executive.webapp.action.fileupload.upload.DSMonitor"/>
+        </create>
+        <convert converter="bean" match="gleam.executive.webapp.action.fileupload.upload.DSInfo"/>
+
+       <!-- intro - for the test on index.html -->
+
+    <!-- chat -->
+    <create creator="new" javascript="JavascriptChat" scope="application">
+      <param name="class" value="gleam.executive.webapp.chat.JavascriptChat"/>
+    </create>
+    <convert converter="bean" match="gleam.executive.webapp.chat.Message"/>
+
+    <!-- this is a bad idea for live, but can be useful in testing -->
+    <convert converter="exception" match="java.lang.Exception"/>
+    <convert converter="bean" match="java.lang.StackTraceElement"/>
+    </allow>
+</dwr>

@@ -1,0 +1,29 @@
+SAFE
+
+Main documentation
+- %(safe-method.html): the SAFE method (not a new form of contraception - this
+  is the main user documentation entry point) (%(safe.html, old stuff))
+- %(safe-develop.html): developer documentation [needs revising / cutting down
+  a bit]
+  - %(learning.html): learning design (also part of the %(safe-develop.html))
+
+Design and discussion documents
+- %(xp-scrum-safe.html): project management
+- %(safe-reqs.html): original vision document
+- %(gas-user-guide.html): GaS (developer) usage guide
+- %(../annotator-gui/annotator-gui-implementation-guidelines.html): annotator
+  GUI notes
+- %(safe-jocch.html): notes for the JoCCH paper
+
+Talks
+- %(gate-training-course-talk-slidy.html)
+- %(london-escience-talk.html)
+- %(salzburg-eculture-talk-slidy.html)
+- %(gleam-docservice.ppt)
+- %(gleam-soa.ppt)
+- %(gleam-vs-kim.ppt)
+
+Misc
+- %(iasi-eswan-msc-projects.rtf)
+- %(ideas.ppt)
+- %(pics.html)

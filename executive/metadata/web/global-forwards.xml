@@ -1,0 +1,60 @@
+    <global-forwards>
+        <forward name="mainMenu" path="/mainMenu.html" redirect="true"/>
+		<forward name="helpInfo" path="/helpInfo.html" redirect="true"/>
+		<forward name="jnlp" path="/jnlp.html" redirect="true"/>
+		<forward name="annotationDiffJnlp" path="/annotationDiffJnlp.html" redirect="true"/>
+		<forward name="chat" path="/chat.html" redirect="true"/>
+        <!-- Forwards specified in actions -->
+        <forward name="addUser" path="/editUser.html?method=Add&amp;from=list" redirect="false"/>
+        <forward name="cancelUser" path="/editUser.html?method=Cancel"/>
+        <forward name="deleteUser" path="/editUser.html?method=Delete"/>
+        <forward name="updateUser" path="/userProfile.html"/>
+        <forward name="addCorpus" path="/editUploadCorpus.html?method=Add" redirect="true"/>
+        <forward name="addSchema" path="/addSchema.html?method=add&amp;from=list" redirect="true"/>
+        <forward name="addOntologyRepository" path="/addOntologyRepository.html?method=Add&amp;from=list" redirect="true"/>
+		<forward name="addRole" path="/editRole.html?method=Add&amp;from=list" redirect="true"/>
+		<forward name="addProject" path="/editProject.html?method=Add&amp;skipUpload=true" redirect="true"/>
+		<forward name="uploadProject" path="/editProject.html?method=Add" redirect="true"/>
+		<forward name="addResource" path="/editResource.html?method=Add&amp;from=list" redirect="true"/>
+		<forward name="selectZipFile" path="/selectZipFile.html"/>
+		<forward name="addAnnotationService" path="/editAnnotationService.html?method=Add" redirect="true"/>
+	 
+        <!-- Forwards for links used in Menu -->
+        <forward name="editProfile" path="/editProfile.html"/>
+        <forward name="workflowMenu" path="/workflowMenu.html" redirect="true"/>
+        <forward name="editUser" path="/editUser.html"/>
+        <forward name="editRole" path="/editRole.html"/>
+        <forward name="editProject" path="/editProject.html"/>
+        <forward name="loadProject" path="/loadProject.html?method=load"/>
+        <forward name="viewUsers" path="/users.html" redirect="true"/>
+        <forward name="viewRoles" path="/roles.html" redirect="true"/>
+        <!-- 
+        <forward name="viewProjects" path="/projects.html" redirect="true"/>
+         -->
+        <forward name="viewAllProjects" path="/projects.html?method=listAll" redirect="true"/>
+        <forward name="viewAnnotationServices" path="/annotationServices.html" redirect="true"/>
+        <forward name="viewResources" path="/resources.html" redirect="true"/>
+        <forward name="viewServices" path="/services.html" redirect="true"/>
+        <forward name="viewCorpora" path="/corpora.html" redirect="true"/>
+        <forward name="viewAnnoSchemas" path="/schemas.html" redirect="true"/>
+        <forward name="viewOntologyRepositories" path="/ontologyRepositoryList.html" redirect="true"/>
+        <forward name="displayOntology" path="/ontologyDisplay.html" redirect="true"/>
+        <forward name="logout" path="/logout.jsp"/>
+        <forward name="processDefinitionUpload" path="/processDefinitionUpload.html" redirect="true"/>
+        <forward name="processDefinitionList" path="/processDefinitionList.html?method=list"/>
+        <forward name="allProcessInstanceList" path="/processInstanceList.html?method=listAll"/>
+        <!-- 
+        <forward name="myProcessInstanceList" path="/processInstanceList.html?method=listByUser"/>
+         -->
+        <forward name="subProcessInstanceList" path="/processInstanceList.html?method=listSubProcessesForProcessInstance"/>
+        <forward name="listTopProcessesWithTheSameKeyAndName" path="/processInstanceList.html?method=listTopProcessesWithTheSameKeyAndName"/>       
+        <forward name="taskInstanceList" path="/taskInstanceList.html?method=list"/>
+        <forward name="pendingTasksList" path="/taskInstanceList.html?method=listByActor"/>
+        <forward name="startTask" path="/taskInstanceList.html?method=start"/>
+        <forward name="processDefinitionProperties" path="/processDefinitionProperties.html?method=list"/>
+        <forward name="processInstanceListForProcessDefinition" path="/processInstanceList.html?method=list"/>
+        <forward name="taskInstanceList" path="/taskInstanceList.html?method=list"/>
+        <forward name="taskInstance" path="/taskInstanceList.html?method=start"/>
+        <forward name="forum" path="/forum.html"/>
+        <forward name="supportMenu" path="/supportMenu.html" redirect="true"/>   
+    </global-forwards>
