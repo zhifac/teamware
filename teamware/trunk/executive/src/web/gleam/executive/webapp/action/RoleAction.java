@@ -1,3 +1,20 @@
+/*
+ *  RoleAction.java
+ *
+ *  Copyright (c) 2006-2011, The University of Sheffield.
+ *
+ *  This file is part of GATE Teamware (see http://gate.ac.uk/teamware/), 
+ *  and is free software, licenced under the GNU Affero General Public License,
+ *  Version 3, November 2007 (also included with this distribution as file 
+ *  LICENCE-AGPL3.html).
+ *
+ *  A commercial licence is also available for organisations whose business
+ *  models preclude the adoption of open source and is subject to a licence
+ *  fee charged by the University of Sheffield. Please contact the GATE team
+ *  (see http://gate.ac.uk/g8/contact) if you require a commercial licence.
+ *
+ *  $Id$
+ */
 package gleam.executive.webapp.action;
 
 import java.util.List;
@@ -27,16 +44,6 @@ import gleam.executive.webapp.listener.StartupListener;
  * Implementation of <strong>Action</strong> that interacts with the
  * {@link RoleForm} and retrieves values. It interacts with the {@link
  * RoleManager} to retrieve/persist values to the database.
- * Copyright (c) 1998-2007, The University of Sheffield.
- *
- * This file is part of GATE (see http://gate.ac.uk/), and is free
- * software, licenced under the GNU Library General Public License,
- * Version 2, June 1991 (in the distribution as file licence.html, and
- * also available at http://gate.ac.uk/gate/licence.html).
- * <p>
- * <a href="RoleAction.java.html"><i>View Source</i></a>
- * </p>
- *
  *
  * @struts.action name="roleForm" path="/roles" scope="request"
  *                validate="false" parameter="method" input="mainMenu"

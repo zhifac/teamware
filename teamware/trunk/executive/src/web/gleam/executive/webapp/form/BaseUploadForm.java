@@ -1,3 +1,22 @@
+/*
+ *  BaseUploadForm.java
+ *
+ *  Copyright (c) 2006-2011, The University of Sheffield.
+ *
+ *  This file is part of GATE Teamware (see http://gate.ac.uk/teamware/), 
+ *  and is free software, licenced under the GNU Affero General Public License,
+ *  Version 3, November 2007 (also included with this distribution as file 
+ *  LICENCE-AGPL3.html).
+ *
+ *  A commercial licence is also available for organisations whose business
+ *  models preclude the adoption of open source and is subject to a licence
+ *  fee charged by the University of Sheffield. Please contact the GATE team
+ *  (see http://gate.ac.uk/g8/contact) if you require a commercial licence.
+ *
+ * Ivaylo Kabakov
+ *
+ *  $Id$
+ */
 package gleam.executive.webapp.form;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,17 +31,6 @@ import org.apache.struts.upload.MultipartRequestHandler;
  * <p>
  * 	Serves as a base form class for handling file upload.
  * </p>
- * <p>
- * 	Copyright &copy; 1998-2010, The University of Sheffield. <br />
- * </p>
- * <p>
- * 	This file is part of <a href="http://gate.ac.uk/">GATE</a> and is free software,
- * 	licenced under the GNU Library General Public License, Version 2, June 1991
- * 	(in the distribution as file <code>licence.html</code>, and also available at 
- * 	<a href="http://gate.ac.uk/gate/licence.html">http://gate.ac.uk/gate/licence.html</a>).
- * </p>
- * 
- * @author <a href="mailto:ivaylo.kabakov@ontotext.com">Ivaylo Kabakov</a>
  */
 public class BaseUploadForm extends BaseForm implements java.io.Serializable {
 

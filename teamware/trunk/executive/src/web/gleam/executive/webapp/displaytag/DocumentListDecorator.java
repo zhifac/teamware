@@ -1,3 +1,22 @@
+/*
+ *  DocumentListDecorator.java
+ *
+ *  Copyright (c) 2006-2011, The University of Sheffield.
+ *
+ *  This file is part of GATE Teamware (see http://gate.ac.uk/teamware/), 
+ *  and is free software, licenced under the GNU Affero General Public License,
+ *  Version 3, November 2007 (also included with this distribution as file 
+ *  LICENCE-AGPL3.html).
+ *
+ *  A commercial licence is also available for organisations whose business
+ *  models preclude the adoption of open source and is subject to a licence
+ *  fee charged by the University of Sheffield. Please contact the GATE team
+ *  (see http://gate.ac.uk/g8/contact) if you require a commercial licence.
+ *
+ * Milan Agatonovic
+ *
+ *  $Id$
+ */
 package gleam.executive.webapp.displaytag;
 
 import javax.servlet.http.HttpServletRequest;
@@ -6,15 +25,6 @@ import gleam.executive.model.Document;
 import org.displaytag.decorator.TotalTableDecorator;
 /**
  *A custom list wrapper that override the TableDecorator
- * Copyright (c) 1998-2007, The University of Sheffield.
- *
- * This file is part of GATE (see http://gate.ac.uk/), and is free
- * software, licenced under the GNU Library General Public License,
- * Version 2, June 1991 (in the distribution as file licence.html, and
- * also available at http://gate.ac.uk/gate/licence.html).
- *
- * @author <a href="mailto:agaton@dcs.shef.ac.uk">Milan Agatonovic</a>
- *
  */
 public class DocumentListDecorator extends TotalTableDecorator {
   String checkBox;

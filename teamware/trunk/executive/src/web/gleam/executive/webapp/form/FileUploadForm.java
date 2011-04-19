@@ -1,3 +1,22 @@
+/*
+ *  FileUploadForm.java
+ *
+ *  Copyright (c) 2006-2011, The University of Sheffield.
+ *
+ *  This file is part of GATE Teamware (see http://gate.ac.uk/teamware/), 
+ *  and is free software, licenced under the GNU Affero General Public License,
+ *  Version 3, November 2007 (also included with this distribution as file 
+ *  LICENCE-AGPL3.html).
+ *
+ *  A commercial licence is also available for organisations whose business
+ *  models preclude the adoption of open source and is subject to a licence
+ *  fee charged by the University of Sheffield. Please contact the GATE team
+ *  (see http://gate.ac.uk/g8/contact) if you require a commercial licence.
+ *
+ * Milan Agatonovic and Haotian Sun
+ *
+ *  $Id$
+ */
 package gleam.executive.webapp.form;
 
 import javax.servlet.http.HttpServletRequest;
@@ -5,20 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionMapping;
 
 /**
- * <p>
- * 	Copyright &copy; 1998-2010, The University of Sheffield.
- * </p>
- * <p>
- * 	This file is part of <a href="http://gate.ac.uk/">GATE</a> and is free software,
- * 	licenced under the GNU Library General Public License, Version 2, June 1991
- * 	(in the distribution as file <code>licence.html</code>, and also available at 
- * 	<a href="http://gate.ac.uk/gate/licence.html">http://gate.ac.uk/gate/licence.html</a>).
- * </p>
  * 
  * @struts.form name="fileUploadForm"
  *
- * @author <a href="M.Agatonovic@dcs.shef.ac.uk">Milan Agatonovic</a>
- * @author <a href="mailto:H.Sun@dcs.shef.ac.uk>Haotian Sun</a>
  */
 public class FileUploadForm extends ZipArchiveUploadForm implements java.io.Serializable {
 
