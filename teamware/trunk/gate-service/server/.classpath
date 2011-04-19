@@ -14,7 +14,6 @@
 	<classpathentry kind="lib" path="/teamware-lib/exports/docservice-proxy/docservice-proxy-api.jar"/>
 	<classpathentry kind="lib" path="/teamware-lib/exports/executive-proxy/executive-proxy-api.jar"/>
 	<classpathentry kind="lib" path="/teamware-lib/jdom-1.0/jdom-1.0.jar"/>
-	<classpathentry kind="lib" path="/teamware-lib/javamail-1.4.1/activation.jar"/>
 	<classpathentry kind="lib" path="/teamware-lib/jakarta-commons/commons-logging-1.1.jar"/>
 	<classpathentry kind="lib" path="/teamware-lib/logging-log4j-1.2.15/dist/lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="/teamware-lib/servletapi-2.5/servletapi-2.5.jar"/>
@@ -23,5 +22,6 @@
 	<classpathentry kind="lib" path="/teamware-lib/geronimo-spec/geronimo-ws-metadata_2.0_spec-1.1.2.jar"/>
 	<classpathentry kind="lib" path="/teamware-lib/geronimo-spec/geronimo-jaxws_2.1_spec-1.0.jar"/>
 	<classpathentry kind="lib" path="/teamware-lib/cxf-2.2.4/cxf-2.2.4.jar"/>
+	<classpathentry kind="lib" path="/teamware-lib/javamail-1.4.3/activation-1.1.1.jar"/>
 	<classpathentry kind="output" path="worker/classes"/>
 </classpath>
