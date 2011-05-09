@@ -1,0 +1,177 @@
+Installing GATE Teamware
+
+%contents
+
+%1 Introduction
+
+While the bundled tomcat6 is useful for running GATE Teamware in development
+mode, in production systems you will probably need to deploy Teamware to a
+standalone server.  The "dist" target in the top-level Teamware build file
+produces a graphical installer that can be used to install teamware into an
+existing Tomcat and MySQL setup, and the following sections of this document
+describe the requirements that must be in place on the production server before
+deploying Teamware, and the installation process itself.
+
+%1 Requirements
+
+A server that will be hosting GATE Teamware requires the following:
+
+- A recent Java 6 JDK (Sun/Oracle or OpenJDK), 1.6.0\_14 or later.
+- An installation of Apache Tomcat 6 (Teamware should work with any Tomcat of
+  version 5.5 or later but has been tested only with 6.0.x).
+  - To work with the installer, the server configuration must use the default
+    <Engine> name "Catalina" and the default <Host> name "localhost".  If your
+    tomcat does not use these names manual intervention will be required after
+    the installer is run to rename the configuration files.
+- A MySQL server, with a user account that has been granted "ALL PRIVILEGES" on
+  a database.  The installer will create and populate this database during
+  Teamware installation.
+- A directory to store the non-database persistent data for Teamware, which
+  must be readable and writeable by the user account under which the Tomcat
+  server runs.  The doc-service searchable datastore is stored here, which
+  requires disk space up to ten times the total size of the documents stored.
+  On a development system this defaults to ~/safe/{instancename}.
+
+The various components of Teamware need to communicate with one another at
+runtime, so if your Tomcat is running behind a front-end proxy (typically
+Apache HTTPD) then it is useful to configure a second non-proxy-aware
+<Connector> in the Tomcat configuration so this inter-service communication can
+go direct to localhost rather than having to go through the proxy server.  This
+is especially important if the front-end proxy uses SSL.
+
+%1 Building the installer
+
+To build the GATE Teamware installer, start with a fresh checkout of the
+relevant version of the Teamware source code.  It is especially important that
+the ^tomcat6^ directory is _completely_ clean and does not have any left-over
+^_anything_-webapps^ directories or ^conf/Catalina/localhost^ configuration
+files.
+
+To build an installer for the default "cloud-tw" installation of GATE Teamware,
+run:
+
+%<
+ant -propertyfile install.properties dist
+%>
+
+The installer will be placed in dist/install.jar.  To build an installer for an
+installation other than the default cloud-tw, you need to provide additional
+system property definitions to ant.  For the installation specified in
+^installations/myinstance^, specify ^-Ddefault.instance.name=myinstance^.  For
+an installation specified by an instance directory that is _not_ under the
+^installations^ directory you must additionally specify
+^-Ddefault.instance.project.dir=/path/to/myinstance^.  Note that this is
+different from installing a non-default instance into the bundled tomcat6 -
+when building the installer you *must not* provide ^-Dinstance.name=...^, as
+the installer build uses a special dummy value for this property.
+
+%1 Installing Teamware
+
+To install GATE Teamware, copy the generated install.jar to the production
+server and run it (using java -jar) as a user that has write permission to the
+Tomcat directory and the intended data directory.  This will present a
+graphical installer which will prompt you for various settings.  The first page
+asks for:
+
+- The location of your Tomcat installation.  This is the top directory, i.e.
+  the parent of of bin, conf, webapps, etc.
+- The instance name for the target installation.  Obviously, the services and
+  settings installed will be those for the installation that was specified when
+  the installer was built, but this option allows you to configure the context
+  path under which the Teamware web applications will be deployed.  For
+  example, setting this to "customtw" will make the executive available at
+  \http://someserver.com/customtw/executive/
+- The data directory described above, where the datastore and other
+  non-database persistent data will be stored.
+
+The second page asks for the public and private _URL base_ patterns.  These are
+the protocol, host and possibly port number at which your Teamware will be
+visible, and must match the values configured for the Tomcat server.  The
+public URL base is the URL which remote users will use to connect to Teamware.
+For a standalone Tomcat this would be something like
+^\http://teamware.example.com:8080^, for a Tomcat which is behind a front-end
+Apache HTTPD it might be ^\http://teamware.example.com^ or
+^\https://secure.example.com^.  The URL base _must not_ have a trailing slash.
+
+The _private_ URL base is the URL that the teamware services use to talk to one
+another, and will typically be ^\http://localhost:8080^ (or whatever port
+number the non-proxied <Connector> is set to use).  If in doubt, use the same
+value as for the public URL base.
+
+The third page asks for the settings that Teamware should use to send out
+notification emails to users, and the fourth page asks for details of the MySQL
+database that Teamware should use.  As mentioned above, the username/password
+combination you supply here must have ALL PRIVILEGES on the specified database
+for the installer to be able to create the database schema.  You may be able to
+restrict these privileges somewhat once Teamware is up and running but this is
+not something that has been extensively tested.
+
+The final page allows you to choose a custom logo and title to brand your
+Teamware installation.
+
+Once all options have been set, the installer will install the Teamware web
+applications into your Tomcat, create the schema and install the initial data
+into MySQL, and seed the persistent data directory with initial annotation
+schemas, etc.
+
+After the installation is complete you may need to change the permissions
+and/or ownership of the persistent data directory, if you ran the installer as
+a different user from the one that will be used to run Tomcat.
+
+%1 Customizing the installer build
+
+There are a number of things you may wish to customize when building the
+installer.  Using a non-default Teamware installation as the base for the
+installer has been described above.  The other common customizations are to use
+a custom code signing certificate for the Java Web Start JAR files, and to
+configure Teamware to be able to run over https.
+
+%2 Code signing
+
+GATE Teamware includes a number of Java Web Start applications, most notably
+the manual annotation GUI.  For Java Web Start all the JAR files in the
+application must be cryptographically signed, and when the user runs the app
+they will be prompted to trust the signing certificate, and warned if the
+certificate is not trusted or has expired.  If you are deploying Teamware in an
+enterprise where you already use code signing for other applications you may
+wish to sign the Teamware JWS applications with an existing trusted
+certificate.
+
+To do this, you need the private key and certificate in a JKS-format Java
+keystore (see the keytool documentation for details).  The keystore must also
+contain the chain of certificates from the issuer of the signing certificate up
+to the relevant CA root certificate.  The following ant properties are used to
+direct the build to use your signing certificate instead of the default one:
+
+- ^keystore^ - the absolute path to the keystore file containing the signing
+  key and certificate.
+- ^alias^ - the alias of the signing key (i.e. its identifier in the keystore).
+- ^storepass^ and ^keypass^ - the passphrases protecting the keystore itself
+  and the key within the store respectively.
+
+You can either specify these properties using ^-D^ command line options when
+running ant, or by putting them in a properties file and pointing ant to that
+file using a second ^-propertyfile^ argument.
+
+%2 Configuring Teamware for HTTPS
+
+The web service toolkit used by the various Teamware components to talk to the
+back-end services is able to communicate with https endpoints, but unlike a
+regular web browser it does not trust any https server certificates by default.
+Thus if your public URL base is an https URL, you need to provide configuration
+when building the installer in order to allow the manual annotation GUI to
+trust your server.
+
+To do this, you must create a JKS keystore file containing the certificate of
+the root CA that is the ultimate issuer of your https server's certificate
+(i.e. if your certificate was signed by an intermediate authority A and that
+certificate was issued by a root authority B then it is B's certificate you
+need, not A's).  This keystore must have a passphrase set but as the store
+should contain only trusted certificate entries (no private keys) this need not
+be a secure password - "password" or "changeit" is perfectly adequate.
+
+To point the build at this keystore, use the following system properties (as
+^-D^ options or in a propertyfile as described above):
+
+- ^https.truststore^ - the absolute path to the keystore file
+- ^https.truststore.password^ - the keystore password
