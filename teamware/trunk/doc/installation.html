@@ -123,8 +123,8 @@ the installer build uses a special dummy value for this property.</p>
 <p>To install GATE Teamware, copy the generated install.jar to the production
 server and run it (using java -jar) as a user that has write permission to the
 Tomcat directory and the intended data directory.  This will present a
-graphical installer which will prompt you for various settings.  The first page
-asks for:</p>
+graphical installer which will prompt you for various settings<span class="cow-footnote" name="footnote1"><sup><a href="#footnote1">1</a></sup></span>.  The first
+page asks for:</p>
 
 <ul>
 <li>The location of your Tomcat installation.  This is the top directory, i.e.
@@ -140,7 +140,7 @@ asks for:</p>
 </ul>
 
 <p>The second page asks for the public and private <em>URL base</em> patterns.  These are
-the protocol, host and possibly port number at which your Teamware will be
+the protocol, host and port number (if required) at which your Teamware will be
 visible, and must match the values configured for the Tomcat server.  The
 public URL base is the URL which remote users will use to connect to Teamware.
 For a standalone Tomcat this would be something like
@@ -231,4 +231,15 @@ be a secure password - &quot;password&quot; or &quot;changeit&quot; is perfectly
 <li><tt>https.truststore</tt> - the absolute path to the keystore file</li>
 <li><tt>https.truststore.password</tt> - the keystore password</li>
 </ul>
+<span class="cow-footnote-section">
+<h1 class="cow-heading">Footnotes</h1>
+<p><ol>
+<li>
+<a class="cow-footnote-anchor" name="footnote1"></a>
+<span class="cow-footnote-text" name="footnote1">If you
+cannot run graphical applications on the target server then you can run 
+a text-mode installer instead using "java -jar install.jar text"</span>
+</li>
+</ol></p>
+</span>
 </body></html>
