@@ -70,8 +70,10 @@ the installer build uses a special dummy value for this property.
 To install GATE Teamware, copy the generated install.jar to the production
 server and run it (using java -jar) as a user that has write permission to the
 Tomcat directory and the intended data directory.  This will present a
-graphical installer which will prompt you for various settings.  The first page
-asks for:
+graphical installer which will prompt you for various settings%footnote(If you
+cannot run graphical applications on the target server then you can run 
+a text-mode installer instead using "java -jar install.jar text").  The first
+page asks for:
 
 - The location of your Tomcat installation.  This is the top directory, i.e.
   the parent of of bin, conf, webapps, etc.
@@ -85,7 +87,7 @@ asks for:
   non-database persistent data will be stored.
 
 The second page asks for the public and private _URL base_ patterns.  These are
-the protocol, host and possibly port number at which your Teamware will be
+the protocol, host and port number (if required) at which your Teamware will be
 visible, and must match the values configured for the Tomcat server.  The
 public URL base is the URL which remote users will use to connect to Teamware.
 For a standalone Tomcat this would be something like
