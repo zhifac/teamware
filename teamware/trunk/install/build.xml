@@ -161,9 +161,11 @@
   <macrodef name="setTeamwareVersion">
     <sequential>
       <echo message="Recording current GATE Teamware version" />
-      <propertyfile file="${instanceDir}/gate-teamware.properties">
-        <entry key="version" value="${teamware.version}" />
-      </propertyfile>
+      <!-- I'd like to use <propertyfile> here but that isn't available
+           in the minimal Ant used by the installer -->
+      <echo file="${instanceDir}/gate-teamware.properties"
+        encoding="ISO-8859-1"
+        message="version=${teamware.version}" />
     </sequential>
   </macrodef>
 
