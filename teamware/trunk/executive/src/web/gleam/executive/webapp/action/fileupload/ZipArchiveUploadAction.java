@@ -259,7 +259,7 @@ public abstract class ZipArchiveUploadAction extends BaseAction {
 					docManager.createDocIntoCorpus(docName, corpusID, docXml, encoding);
 					log.debug("Document: " + docName + "added to corpus");
 				} catch(Exception e) {
-					log.debug("Document: " + docName + "NOT added to corpus!");
+					log.debug("Document: " + docName + "NOT added to corpus!", e);
 					errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("corpus.invalid", path));
 					return;
 				}
