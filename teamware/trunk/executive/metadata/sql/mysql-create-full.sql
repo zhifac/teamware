@@ -293,7 +293,7 @@ CREATE TABLE jforum_banlist (
   INDEX idx_user (user_id),
   INDEX (banlist_ip),
   INDEX (banlist_email)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_categories'
@@ -305,7 +305,7 @@ CREATE TABLE jforum_categories (
   display_order INT NOT NULL default '0',
   moderated TINYINT(1) DEFAULT '0',
   PRIMARY KEY  (categories_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_config'
@@ -316,7 +316,7 @@ CREATE TABLE jforum_config (
   config_value varchar(255) NOT NULL default '',
   config_id int not null auto_increment,
   PRIMARY KEY(config_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_forums'
@@ -334,7 +334,7 @@ CREATE TABLE jforum_forums (
   PRIMARY KEY  (forum_id),
   KEY (categories_id),
   INDEX idx_forums_cats (categories_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_forums_watch'
@@ -345,7 +345,7 @@ CREATE TABLE jforum_forums_watch (
   user_id INT NOT NULL,
   INDEX idx_fw_forum (forum_id),
   INDEX idx_fw_user (user_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_groups'
@@ -357,7 +357,7 @@ CREATE TABLE jforum_groups (
   group_description varchar(255) default NULL,
   parent_id INT default '0',
   PRIMARY KEY  (group_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 
 DROP TABLE IF EXISTS jforum_user_groups;
@@ -366,7 +366,7 @@ CREATE TABLE jforum_user_groups (
 	user_id INT NOT NULL,
 	INDEX idx_group (group_id),
 	INDEX idx_user (user_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_roles'
@@ -378,7 +378,7 @@ CREATE TABLE jforum_roles (
   name varchar(255) NOT NULL,
   INDEX idx_group (group_id),
   INDEX idx_name (name)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_role_values'
@@ -388,7 +388,7 @@ CREATE TABLE jforum_role_values (
   role_id INT NOT NULL,
   role_value VARCHAR(255),
   INDEX idx_role(role_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_posts'
@@ -416,7 +416,7 @@ CREATE TABLE jforum_posts (
   KEY (forum_id),
   KEY(post_time),
   INDEX (need_moderate)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_posts_text'
@@ -426,7 +426,7 @@ CREATE TABLE jforum_posts_text (
 	post_id INT NOT NULL PRIMARY KEY,
 	post_text TEXT,
 	post_subject VARCHAR(100)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_privmsgs'
@@ -445,14 +445,14 @@ CREATE TABLE jforum_privmsgs (
   privmsgs_enable_smilies tinyint(1) NOT NULL default '1',
   privmsgs_attach_sig tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (privmsgs_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS jforum_privmsgs_text;
 CREATE TABLE jforum_privmsgs_text (
 	privmsgs_id INT NOT NULL,
 	privmsgs_text TEXT,
 	PRIMARY KEY ( privmsgs_id )
-) Type=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_ranks'
@@ -465,7 +465,7 @@ CREATE TABLE jforum_ranks (
   rank_special tinyint(1) default NULL,
   rank_image varchar(255) default NULL,
   PRIMARY KEY  (rank_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_sessions'
@@ -480,7 +480,7 @@ CREATE TABLE jforum_sessions (
   session_page int(11) NOT NULL default '0',
   session_logged_int tinyint(1) default NULL,
   INDEX idx_sessions_users (session_user_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_smilies'
@@ -492,7 +492,7 @@ CREATE TABLE jforum_smilies (
   url varchar(100) default NULL,
   disk_name varchar(255),
   PRIMARY KEY  (smilie_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_themes'
@@ -503,7 +503,7 @@ CREATE TABLE jforum_themes (
   template_name varchar(30) NOT NULL default '',
   style_name varchar(30) NOT NULL default '',
   PRIMARY KEY  (themes_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_topics'
@@ -530,7 +530,7 @@ CREATE TABLE jforum_topics (
   KEY(topic_first_post_id),
   KEY(topic_last_post_id),
   KEY(topic_moved_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_topics_watch'
@@ -542,7 +542,7 @@ CREATE TABLE jforum_topics_watch (
   is_read tinyint(1) DEFAULT 1,
   INDEX idx_topic (topic_id),
   INDEX idx_user (user_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_users'
@@ -604,7 +604,7 @@ CREATE TABLE jforum_users (
   user_karma DOUBLE,
   user_authhash VARCHAR(32),
   PRIMARY KEY  (user_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_vote_desc'
@@ -618,7 +618,7 @@ CREATE TABLE jforum_vote_desc (
   vote_length int(11) NOT NULL default '0',
   PRIMARY KEY  (vote_id),
   INDEX(topic_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_vote_results'
@@ -630,7 +630,7 @@ CREATE TABLE jforum_vote_results (
   vote_option_text varchar(255) NOT NULL default '',
   vote_result int(11) NOT NULL default '0',
   INDEX(vote_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_vote_voters'
@@ -642,7 +642,7 @@ CREATE TABLE jforum_vote_voters (
   vote_user_ip varchar(15) NOT NULL default '',
   INDEX(vote_id),
   INDEX(vote_user_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_words'
@@ -653,7 +653,7 @@ CREATE TABLE jforum_words (
   word varchar(100) NOT NULL default '',
   replacement varchar(100) NOT NULL default '',
   PRIMARY KEY  (word_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_karma'
@@ -671,7 +671,7 @@ CREATE TABLE jforum_karma (
 	KEY(topic_id),
 	KEY(post_user_id),
 	KEY(from_user_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_bookmark'
@@ -687,7 +687,7 @@ CREATE TABLE jforum_bookmarks (
 	description varchar(255),
 	INDEX book_idx_relation (relation_id),
 	KEY(user_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 --
 -- Table structure for table 'jforum_quota_limit'
 --
@@ -697,7 +697,7 @@ CREATE TABLE jforum_quota_limit (
 	quota_desc VARCHAR(50) NOT NULL,
 	quota_limit INT NOT NULL,
 	quota_type TINYINT(1) DEFAULT '1'
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_extension_groups'
@@ -709,7 +709,7 @@ CREATE TABLE jforum_extension_groups (
 	allow TINYINT(1) DEFAULT '1',
 	upload_icon VARCHAR(100),
 	download_mode TINYINT(1) DEFAULT '1'
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_extensions'
@@ -724,7 +724,7 @@ CREATE TABLE jforum_extensions (
 	allow TINYINT(1) DEFAULT '1',
 	KEY(extension_group_id),
 	INDEX(extension)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_attach'
@@ -738,7 +738,7 @@ CREATE TABLE jforum_attach (
 	INDEX idx_att_post(post_id),
 	INDEX idx_att_priv(privmsgs_id),
 	INDEX idx_att_user(user_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_attach_desc'
@@ -758,7 +758,7 @@ CREATE TABLE jforum_attach_desc (
 	extension_id INT,
 	INDEX idx_att_d_att(attach_id),
 	INDEX idx_att_d_ext(extension_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_attach_quota'
@@ -769,7 +769,7 @@ CREATE TABLE jforum_attach_quota (
 	group_id INT NOT NULL,
 	quota_limit_id INT NOT NULL,
 	KEY(group_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_banner'
@@ -790,7 +790,7 @@ CREATE TABLE jforum_banner (
 	banner_width INT NOT NULL DEFAULT '0',
 	banner_height INT NOT NULL DEFAULT '0',
 	KEY(banner_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_mail_integration'
@@ -805,7 +805,7 @@ CREATE TABLE jforum_mail_integration (
 	pop_port INT DEFAULT 110,
 	pop_ssl TINYINT DEFAULT '0',
 	KEY(forum_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 
 --
@@ -816,7 +816,7 @@ CREATE TABLE jforum_api (
 	api_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	api_key VARCHAR(32) NOT NULL,
 	api_validity DATETIME NOT NULL
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table 'jforum_moderation_log'
@@ -834,5 +834,5 @@ CREATE TABLE jforum_moderation_log (
 	post_user_id INT DEFAULT 0,
 	KEY(user_id),
 	KEY(post_user_id)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 
