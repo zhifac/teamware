@@ -3,7 +3,7 @@
 ################################################################################
 IMPORTANT NOTES:
 1: teamware lives svn at
-   https://gate.svn.sourceforge.net/svnroot/gate/teamware/trunk
+   http://svn.code.sf.net/p/gate/code/teamware/trunk
 2: teamware works with mysql database, so you need to have one locally installed
 3. teamware requires a Java 6 JDK to build and run.
 4. teamware uses ant version 1.8.x for build, so you need to have ant locally
@@ -38,7 +38,7 @@ For development purposes, you can use the steps below:
    
 2. For the first time installation, database needs to be created and populated.
    Please do fresh checkout from:
-svn co https://gate.svn.sourceforge.net/svnroot/gate/teamware/trunk
+svn co http://svn.code.sf.net/p/gate/code/teamware/trunk
 (or .../gate/teamware/branches/X if you are working on a branch)
 
 Execute the following from teamware root dir:
