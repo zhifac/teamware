@@ -378,6 +378,9 @@ public class AnnotatorGUI implements Constants {
 				fos.close();
 				is.close();
 			}
+			// read a teamware-specific user config rather than the same one GATE Developer uses
+			File userConfig = new File(System.getProperty("user.home"), Gate.runningOnUnix() ? ".gate-teamware.xml" : "gate-teamware.xml");
+			Gate.setUserConfigFile(userConfig);
 			try {
 				Gate.init();
 				// apply font and L&F preferences from user config
