@@ -206,6 +206,9 @@ public class AnnotationDiffGUI implements Constants {
         is.close();
       }
 
+      // read a teamware-specific user config rather than the same one GATE Developer uses
+      File userConfig = new File(System.getProperty("user.home"), Gate.runningOnUnix() ? ".gate-teamware.xml" : "gate-teamware.xml");
+      Gate.setUserConfigFile(userConfig);
       // Initialize the framework Gate
       try {
         Gate.init();
