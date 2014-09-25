@@ -30,6 +30,7 @@
   <property name="cxf.xml" location="${conf.dir}/cxf.xml" />
 
   <property name="annotatorgui.jar.location" location="annotator-gui.jar" />
+  <property name="annotatorgui.manifest.template" location="${conf.dir}/manifest" />
   <property name="plugins.dir" location="resources/plugins" />
 
   <patternset id="build.required.libs">
@@ -136,7 +137,7 @@
 
   <!-- Create application JAR file -->
   <target name="jar" depends="compile, copy-https-truststore">
-    <jar destfile="${annotatorgui.jar.location}" update="false" index="true">
+    <jar destfile="${annotatorgui.jar.location}" update="false" index="true" manifest="${annotatorgui.manifest.template}">
       <fileset dir="${outputDir}/" />
     </jar>
     <signjar jar="${annotatorgui.jar.location}" alias="${alias}" keystore="${keystore}" storepass="${storepass}" keypass="${keypass}" />
