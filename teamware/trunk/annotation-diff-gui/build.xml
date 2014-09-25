@@ -29,6 +29,7 @@
   <property name="cxf.xml" location="${conf.dir}/cxf.xml" />
 
   <property name="annotationdiffgui.jar.location" location="annotation-diff-gui.jar" />
+  <property name="annotationdiffgui.manifest.template" location="${conf.dir}/manifest" />
 
   <patternset id="build.required.libs">
     <patternset refid="pattern.gate" />
@@ -132,7 +133,7 @@
 
   <!-- Create application JAR file -->
   <target name="jar" depends="compile, copy-https-truststore">
-    <jar destfile="${annotationdiffgui.jar.location}" update="false" index="true">
+    <jar destfile="${annotationdiffgui.jar.location}" update="false" index="true" manifest="${annotationdiffgui.manifest.template}">
       <fileset dir="${outputDir}/" />
     </jar>
     <signjar jar="${annotationdiffgui.jar.location}" alias="${alias}" keystore="${keystore}" storepass="${storepass}" keypass="${keypass}" />

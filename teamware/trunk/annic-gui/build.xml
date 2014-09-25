@@ -29,6 +29,7 @@
   <property name="cxf.xml" location="${conf.dir}/cxf.xml" />
 
   <property name="annicgui.jar.location" location="annicgui.jar" />
+  <property name="annicgui.manifest.template" location="${conf.dir}/manifest" />
 
   <patternset id="build.required.libs">
     <patternset refid="pattern.gate" />
@@ -132,7 +133,7 @@
 
   <!-- Create application JAR file -->
   <target name="jar" depends="compile, copy-https-truststore">
-    <jar destfile="${annicgui.jar.location}" update="false" index="true">
+    <jar destfile="${annicgui.jar.location}" update="false" index="true" manifest="${annicgui.manifest.template}">
       <fileset dir="${outputDir}/" />
     </jar>
     <signjar jar="${annicgui.jar.location}" alias="${alias}" keystore="${keystore}" storepass="${storepass}" keypass="${keypass}" />
