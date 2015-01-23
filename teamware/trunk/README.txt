@@ -21,7 +21,7 @@ IMPORTANT NOTES:
    need to specify -Dinstance.project.dir=/path/to/instance/directory in
    addition to the instance.name setting.
 
-The rest of this guide will assume that cloud-tw instance has been used.
+The rest of this guide will assume that the default "teamware" instance has been used.
 
 You can build a teamware installer package by performing:
 ant -propertyfile install.properties dist
@@ -32,7 +32,7 @@ which will run a wizard that will assist you in setting up a teamware instance.
 For development purposes, you can use the steps below:
 
 1. make a local copy of the build.properties file and name it as
-   ${instance.name}-build.properties, e.g cloud-tw-build.properties.
+   ${instance.name}-build.properties, e.g teamware-build.properties.
    Change entries according to your environment, e.g mysql db user name or
    password
    
@@ -42,27 +42,32 @@ svn co http://svn.code.sf.net/p/gate/code/teamware/trunk
 (or .../gate/teamware/branches/X if you are working on a branch)
 
 Execute the following from teamware root dir:
-ant -Dinstance.name=cloud-tw install
+
+    ant install
 
 4. In development, when you make some changes and want to call deploy of the all teamware components:
 Execute the following from teamware root dir:
-ant -Dinstance.name=cloud-tw clean undeploy-all deploy-all
+ant clean undeploy-all deploy-all
 Alternatively, if you are developing the specific component, e.g docservice, or
 executive do the following.
 Execute the following from component dir, for example:
 cd executive
-ant -Dinstance.name=cloud-tw clean undeploy deploy
+ant clean undeploy deploy
 The exceptions are JWS applications where you would need to to do the following:
 cd annotator-gui
-ant -Dinstance.name=cloud-tw clean war deploy
+ant clean war deploy
      
 5. start your tomcat6 which lives at teamware/tomcat6, 
 cd tomcat6/bin
 ./catalina.sh run (under linux)
 catalina run (under windows)
 
-6. You can access application at: 
-http://localhost:8080/cloud-tw/executive
+6. You can access application at: http://localhost:8080/cloud-tw/executive
+
+7. For a clean installation, the default password for both the "admin" and
+   "superadmin" users is "teamware" (without quotes).  You can change your
+   password via the "Edit profile" option on the home page, and create
+   additional user accounts (e.g. for annotators) from the "Admin" menu.
 
 
 
