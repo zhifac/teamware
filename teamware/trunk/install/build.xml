@@ -163,6 +163,7 @@
       <echo message="Recording current GATE Teamware version" />
       <!-- I'd like to use <propertyfile> here but that isn't available
            in the minimal Ant used by the installer -->
+      <mkdir dir="${instanceDir}"/>
       <echo file="${instanceDir}/gate-teamware.properties"
         encoding="ISO-8859-1"
         message="version=${teamware.version}" />
